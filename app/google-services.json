@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "658636761711",
+    "firebase_url": "https://smart-food-court-system.firebaseio.com",
+    "project_id": "smart-food-court-system",
+    "storage_bucket": "smart-food-court-system.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:658636761711:android:f9c375f483ecfa1755fb9a",
+        "android_client_info": {
+          "package_name": "com.example.smart_food_court_system"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "658636761711-75lrgqs2ggqs581vot7fosv17vq3hojd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smart_food_court_system",
+            "certificate_hash": "f03611d17883559f51bd7dc71e45ef358d4506da"
+          }
+        },
+        {
+          "client_id": "658636761711-04jh97p13oco3oqtmfjeeapadue2ccu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDr6X7OCD8TLiD_nRXELx39-k9FU7dg-_Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "658636761711-04jh97p13oco3oqtmfjeeapadue2ccu6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
