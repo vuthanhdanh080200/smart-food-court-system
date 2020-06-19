@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddFoodToCart">
+    tools:context=".SignUp">
 
     <LinearLayout
         android:orientation="vertical"
@@ -15,31 +15,26 @@
         android:layout_height="wrap_content">
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edtFoodID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone"
-            />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edtFoodName"
+            android:id="@+id/edtUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
             />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edtFoodQuantity"
+            android:id="@+id/edtName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edtPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"
             />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edtFoodPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone"
             />
     </LinearLayout>
 
@@ -51,16 +46,8 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/btnAddFoodToCart"
-            android:text="ADD FOOD TO CART"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"/>
-
-        <Button
-            android:id="@+id/btnViewFoodInCart"
-            android:text="View Food In Cart"
+            android:id="@+id/btnSignUp"
+            android:text="SIGN UP"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
