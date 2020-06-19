@@ -1,5 +1,13 @@
 package com.example.smart_food_court_system.model;
 
+// TO DO
+// Khoi tao class, bien,  va cac phuong thuc get, set cho cac truong sau
+// Name: string
+// EmailAddress: string
+// UserName: string
+// Password: string
+// PhoneNumber: string
+
 public class User {
     private String name;
     private String password;

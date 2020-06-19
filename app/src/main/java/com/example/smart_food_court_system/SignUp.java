@@ -17,11 +17,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+//TO DO
+//Kiem tra User name co trong database chua, neu co roi thi thong bao su dung user name khac
+//Them cac truong khac co trong User class
+//Password hien ****
+
 public class SignUp extends AppCompatActivity {
     EditText edtUserName, edtName, edtPassword;
     Button btnSignUp;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,7 @@ public class SignUp extends AppCompatActivity {
         //Init Firebase
 
         final DatabaseReference mDatabase;
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference("User");
 
        btnSignUp.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -49,8 +52,10 @@ public class SignUp extends AppCompatActivity {
 
                        User user = new User(edtName.getText().toString(), edtPassword.getText().toString());
 
-                       mDatabase.child("User").child(edtUserName.getText().toString()).setValue(user);
+                       mDatabase.child(edtUserName.getText().toString()).setValue(user);
                        Toast.makeText(SignUp.this, "Sign Up successfully !", Toast.LENGTH_SHORT).show();
+                       Intent signIn = new Intent(SignUp.this, SignIn.class);
+                       startActivity(signIn);
 
                    }
 
@@ -61,7 +66,6 @@ public class SignUp extends AppCompatActivity {
                });
            }
        });
-
 
     }
 

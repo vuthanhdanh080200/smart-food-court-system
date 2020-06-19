@@ -1,53 +1,59 @@
 package com.example.smart_food_court_system;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.smart_food_court_system.model.Food;
-import com.example.smart_food_court_system.model.Order;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseListOptions;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.firebase.database.Query;
 
 public class ViewFood extends AppCompatActivity {
     ListView listFoodView;
-    DatabaseReference mDatabase;
-
+    FirebaseListAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_food);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Food");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Food");
         listFoodView = (ListView)findViewById(R.id.listFoodView);
 
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e("Count " ,""+ dataSnapshot.getChildrenCount());
-                List<String> foodNameList = new ArrayList<>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    Food food = postSnapshot.getValue(Food.class);
-                    foodNameList.add(food.getFoodName());
-                }
-                ArrayAdapter<String> arrayAdapter
-                        = new ArrayAdapter<String>(ViewFood.this, android.R.layout.simple_list_item_1 , foodNameList);
-                listFoodView.setAdapter(arrayAdapter);
-            }
+        FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
+                .setLayout(R.layout.food_item)
+                .setQuery(query, Food.class)
+                .build();
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+        adapter = new FirebaseListAdapter<Food>(options)
+        {
+            protected void populateView(@NonNull View view, @NonNull Food food, int position) {
+                TextView foodName = view.findViewById(R.id.txtFoodName);
+                foodName.setText("Food Name: " + food.getFoodName().toString());
+                TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
+                foodPrice.setText("Food Price: " +food.getFoodPrice().toString());
             }
-        });
+        };
+
+        // Now set the adapter with a given layout
+        listFoodView.setAdapter(adapter);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 }

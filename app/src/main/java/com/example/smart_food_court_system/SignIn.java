@@ -19,6 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+// TO DO
+// Password hien ****
+
 public class SignIn extends AppCompatActivity {
     EditText edtUserName, edtPassword;
     Button btnSignIn;
