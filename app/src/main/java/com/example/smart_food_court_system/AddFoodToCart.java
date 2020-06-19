@@ -48,18 +48,6 @@ public class AddFoodToCart extends AppCompatActivity {
         btnAddFoodToCart.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                /*
-                Order order = new Order(
-                        edtFoodID.getText().toString(),
-                        edtFoodName.getText().toString(),
-                        edtFoodQuantity.getText().toString(),
-                        edtFoodPrice.getText().toString());
-
-                long result = new Database(getBaseContext()).addToCart(edtFoodID.getText().toString(), edtFoodName.getText().toString());
-                if(result !=- 1) {
-                    Toast.makeText(AddFoodToCart.this, "Add Food To Cart successfully !", Toast.LENGTH_SHORT).show();
-                }
-                */
 
                 mDatabase.addValueEventListener(new ValueEventListener() {
                     @Override

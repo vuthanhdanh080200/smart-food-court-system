@@ -56,8 +56,8 @@ public class SignIn extends AppCompatActivity {
                             User user = dataSnapshot.child(edtUserName.getText().toString()).getValue(User.class);
                             if (user.getPassword().equals(edtPassword.getText().toString())) {
                                 Toast.makeText(SignIn.this, "Sign in successfully !", Toast.LENGTH_SHORT).show();
-                                Intent addFoodToCart = new Intent(SignIn.this, AddFoodToCart.class);
-                                startActivity(addFoodToCart);
+                                Intent home = new Intent(SignIn.this, Home.class);
+                                startActivity(home);
                             }
                             else {
                                 Toast.makeText(SignIn.this, "Wrong password !", Toast.LENGTH_SHORT).show();
