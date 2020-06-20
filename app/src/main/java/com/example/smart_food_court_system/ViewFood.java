@@ -3,6 +3,7 @@ package com.example.smart_food_court_system;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -32,11 +33,19 @@ public class ViewFood extends AppCompatActivity {
 
         adapter = new FirebaseListAdapter<Food>(options)
         {
-            protected void populateView(@NonNull View view, @NonNull Food food, int position) {
+            protected void populateView(@NonNull View view, @NonNull Food food, final int position) {
                 TextView foodName = view.findViewById(R.id.txtFoodName);
-                foodName.setText("Food Name: " + food.getFoodName().toString());
+                foodName.setText("Food Name: " + food.getFoodName());
                 TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
-                foodPrice.setText("Food Price: " +food.getFoodPrice().toString());
+                foodPrice.setText("Food Price: " +food.getFoodPrice());
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent foodDetailIntent = new Intent(ViewFood.this, ViewFoodDetail.class);
+                        foodDetailIntent.putExtra("FoodID", adapter.getRef(position).getKey());
+                        startActivity(foodDetailIntent);
+                    }
+                });
             }
         };
 
