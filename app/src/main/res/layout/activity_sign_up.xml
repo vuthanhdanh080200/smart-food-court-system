@@ -14,28 +14,52 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edtUserName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <TextView
+            android:text="Đăng ký tài khoản mới"
+            android:textSize="35dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
             android:id="@+id/edtName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/Name"
             android:inputType="text"
             />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
+            android:id="@+id/edtUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/UserName"
+            android:inputType="text"
+            />
+
+        <EditText
             android:id="@+id/edtPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/Password"
+            android:inputType="textPassword"
+            />
+
+        <EditText
+            android:id="@+id/edtEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/EmailAddress"
+            android:inputType="textEmailAddress"
+            />
+
+        <EditText
+            android:id="@+id/edtPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/PhoneNumber"
             android:inputType="phone"
             />
 
-            />
     </LinearLayout>
 
     <LinearLayout
@@ -43,16 +67,20 @@
         android:layout_alignParentBottom="true"
         android:weightSum="2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30sp">
 
         <Button
             android:id="@+id/btnSignUp"
-            android:text="SIGN UP"
-            android:layout_weight="1"
+            android:text="ĐĂNG KÝ"
+            android:layout_weight="2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"/>
 
     </LinearLayout>
+
+
+
 
 </RelativeLayout>

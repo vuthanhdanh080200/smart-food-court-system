@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +24,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 //Password hien ****
 
 public class SignUp extends AppCompatActivity {
-    EditText edtUserName, edtName, edtPassword;
+    EditText edtName, edtUserName, edtPassword, edtEmailAddress, edtPhoneNumber;
     Button btnSignUp;
 
     @Override
@@ -31,9 +32,12 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        edtUserName = (MaterialEditText)findViewById(R.id.edtUserName);
-        edtName = (MaterialEditText)findViewById(R.id.edtName);
-        edtPassword = (MaterialEditText)findViewById(R.id.edtPassword);
+        edtName = (EditText)findViewById(R.id.edtName);
+        edtUserName = (EditText)findViewById(R.id.edtUserName);
+        edtPassword = (EditText)findViewById(R.id.edtPassword);
+        edtEmailAddress = (EditText)findViewById(R.id.edtEmailAddress);
+        edtPhoneNumber = (EditText)findViewById(R.id.edtPhoneNumber);
+
         btnSignUp = (Button)findViewById(R.id.btnSignUp);
 
 
@@ -45,23 +49,64 @@ public class SignUp extends AppCompatActivity {
        btnSignUp.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               mDatabase.addValueEventListener(new ValueEventListener() {
+               mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                    @Override
                    public void onDataChange(DataSnapshot dataSnapshot) {
                        //Get User information
+                       User user = new User(
+                                    edtName.getText().toString(),
+                                    edtUserName.getText().toString(),
+                                    edtPassword.getText().toString(),
+                                    edtEmailAddress.getText().toString(),
+                                    edtPhoneNumber.getText().toString());
 
-                       User user = new User(edtName.getText().toString(), edtPassword.getText().toString());
-
-                       mDatabase.child(edtUserName.getText().toString()).setValue(user);
-                       Toast.makeText(SignUp.this, "Sign Up successfully !", Toast.LENGTH_SHORT).show();
-                       Intent signIn = new Intent(SignUp.this, SignIn.class);
-                       startActivity(signIn);
+                       if(user.getName().isEmpty() || user.getUserName().isEmpty() || user.getPassword().isEmpty() ||
+                               user.getEmailAddress().isEmpty() || user.getPhoneNumber().isEmpty()){
+                           Toast.makeText(SignUp.this, "Please fill in all information!", Toast.LENGTH_SHORT).show();
+                       }
+                       else {
+                           if(dataSnapshot.child(user.getUserName()).exists()){
+                               Toast.makeText(SignUp.this, "Username " +  user.getUserName() + " exists, please choose another username.", Toast.LENGTH_SHORT).show();
+                           }
+                           else {
+                               boolean isEmailAddressExists = false, isPhoneNumberExists = false;
+                               for(DataSnapshot item : dataSnapshot.getChildren()){
+                                    if(user.getEmailAddress().equals(item.child("emailAddress").getValue())){
+                                        isEmailAddressExists = true;
+                                        break;
+                                    }
+                               }
+                               for(DataSnapshot item : dataSnapshot.getChildren()){
+                                   if(user.getPhoneNumber().equals(item.child("phoneNumber").getValue())){
+                                       isPhoneNumberExists = true;
+                                       break;
+                                   }
+                               }
+                               if(isEmailAddressExists || isPhoneNumberExists){
+                                   if(!isPhoneNumberExists){
+                                       Toast.makeText(SignUp.this, "This email address has been used!", Toast.LENGTH_SHORT).show();
+                                   }
+                                   else if(!isEmailAddressExists){
+                                       Toast.makeText(SignUp.this, "This phone number has been used!", Toast.LENGTH_SHORT).show();
+                                   }
+                                   else{
+                                       Toast.makeText(SignUp.this, "This email address and phone number has been used!", Toast.LENGTH_SHORT).show();
+                                   }
+                               }
+                               //Add to Database
+                               else {
+                                   mDatabase.child(edtUserName.getText().toString()).setValue(user);
+                                   Toast.makeText(SignUp.this, "Sign Up successfully!", Toast.LENGTH_SHORT).show();
+                                   Intent signIn = new Intent(SignUp.this, SignIn.class);
+                                   startActivity(signIn);
+                               }
+                           }
+                       }
 
                    }
 
                    @Override
                    public void onCancelled(DatabaseError databaseError) {
-
                    }
                });
            }

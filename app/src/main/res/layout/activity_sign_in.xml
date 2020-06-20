@@ -14,18 +14,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <TextView
+            android:text="Đăng nhập"
+            android:textSize="40sp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <EditText
             android:id="@+id/edtUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/UserName"
             android:inputType="text"
             />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/edtPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="phone"
+            android:hint="@string/Password"
+            android:inputType="textPassword"
             />
     </LinearLayout>
 
@@ -34,12 +42,13 @@
         android:layout_alignParentBottom="true"
         android:weightSum="2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="120dp">
 
         <Button
             android:id="@+id/btnSignIn"
-            android:text="SIGN IN"
-            android:layout_weight="1"
+            android:text="ĐĂNG NHẬP"
+            android:layout_weight="2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"/>

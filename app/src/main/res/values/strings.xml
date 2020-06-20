@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">smart-food-court-system</string>
+    <string name="app_name">SFCS</string>
+    <string name="Name">Tên</string>
+    <string name="UserName">Tên đăng nhập</string>
+    <string name="Password">Mật khẩu</string>
+    <string name="PhoneNumber">Số điện thoại</string>
+    <string name="EmailAddress">Địa chỉ email</string>
 </resources>
