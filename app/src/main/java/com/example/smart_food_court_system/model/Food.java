@@ -13,14 +13,19 @@ public class Food {
     private String foodID;
     private String foodName;
     private String foodPrice;
+    private String foodImage;
+    private String Remaining;
 
     public Food() {
     }
 
-    public Food(String foodID, String foodName, String foodPrice) {
+    public Food(String foodID, String foodName, String foodPrice, String foodImage, String remaining) {
         this.foodID = foodID;
         this.foodName = foodName;
         this.foodPrice = foodPrice;
+        this.foodImage = foodImage;
+        this.Remaining = remaining;
+
     }
 
     public String getFoodID() {
@@ -46,4 +51,21 @@ public class Food {
     public void setFoodPrice(String foodPrice) {
         this.foodPrice = foodPrice;
     }
+
+    public String getFoodImage() {
+        return foodImage;
+    }
+
+    public void setFoodImage(String foodImage) {
+        this.foodImage = foodImage;
+    }
+
+    public String getRemaining() {
+        return Remaining;
+    }
+
+    public void setRemaining(String remaining) {
+        Remaining = remaining;
+    }
+
 }

@@ -22,11 +22,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.util.ArrayList;
 import java.util.List;
 
-//TO DO
-//Tùy chỉnh điều kiện:
-//Không được add Food khi có quantity là 1
-//Không được add Food quá số lượng có hạn của food
-//và các điều kiện khác :> Hehe
+//TESTTTTTTTTTTTTTTTTTTT
 
 public class AddFoodToCart extends AppCompatActivity {
     EditText edtFoodID, edtFoodName, edtFoodQuantity, edtFoodPrice;
@@ -37,7 +33,7 @@ public class AddFoodToCart extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_food_to_cart);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Order");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Demo/Order");
 
         edtFoodID = (MaterialEditText)findViewById(R.id.edtFoodID);
         edtFoodName = (MaterialEditText)findViewById(R.id.edtFoodName);

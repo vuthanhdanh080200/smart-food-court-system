@@ -7,14 +7,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.smart_food_court_system.model.Category;
 import com.example.smart_food_court_system.model.Food;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
 
 //Duy DO--------------------------------------------------------
 //Hiển thị lên màn hình thông báo gì đó (LINE 62)
@@ -22,26 +25,35 @@ import com.google.firebase.database.Query;
 public class ViewFood extends AppCompatActivity {
     ListView listFoodView;
     FirebaseListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_food);
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("Food");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Danh-Food");
         listFoodView = (ListView)findViewById(R.id.listFoodView);
 
-        FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
+
+        FirebaseListOptions<Category> options = new FirebaseListOptions.Builder<Category>()
                 .setLayout(R.layout.food_item)
-                .setQuery(query, Food.class)
+                .setQuery(query, Category.class)
                 .build();
 
-        adapter = new FirebaseListAdapter<Food>(options)
+        adapter = new FirebaseListAdapter<Category>(options)
         {
-            protected void populateView(@NonNull View view, @NonNull Food food, final int position) {
+            protected void populateView(@NonNull View view, @NonNull Category category, final int position) {
                 TextView foodName = view.findViewById(R.id.txtFoodName);
-                foodName.setText("Food Name: " + food.getFoodName());
-                TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
-                foodPrice.setText("Food Price: " +food.getFoodPrice());
+                foodName.setText("Food Name: " + category.getFoodName());
+                //TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
+                //foodPrice.setText("Food Price: " +food.getFoodPrice());
+                ImageView imageFood;
+                imageFood = (ImageView)view.findViewById(R.id.imageFood);
+                Log.e("Error " ,""+ category.getFoodImage());
+                Picasso.with(getBaseContext())
+                        .load(""+category.getFoodImage())
+                        .into(imageFood);
+
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

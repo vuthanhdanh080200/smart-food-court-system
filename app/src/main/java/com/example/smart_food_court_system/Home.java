@@ -14,12 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.smart_food_court_system.common.Common;
+import com.example.smart_food_court_system.model.Category;
 import com.example.smart_food_court_system.model.Food;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
@@ -32,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -50,9 +53,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-        NavigationView navigationView = null;
-        Toolbar toolbar = null;
-        Button logout,cancel;
+    NavigationView navigationView = null;
+    Toolbar toolbar = null;
+    Button logout,cancel;
 
 
     ListView listFoodView;
@@ -65,6 +68,7 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        /*
         //DEFAULT FRAGMENT
 
         HomeFragment fragment = new HomeFragment();
@@ -72,7 +76,7 @@ public class Home extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.Fragment_container, fragment);
         fragmentTransaction.commit();
-
+        */
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -93,22 +97,24 @@ public class Home extends AppCompatActivity
         userName.setText(Common.currentUser.getUserName());
         email.setText(Common.currentUser.getEmailAddress());
 
-        /*
-        Query query = FirebaseDatabase.getInstance().getReference().child("Food");
-        listFoodView = (ListView)findViewById(R.id.listFoodView);
 
-        FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
+
+        Query query = FirebaseDatabase.getInstance().getReference().child("Demo").child("Category");
+        listFoodView = (ListView) findViewById(R.id.lVFood);
+
+        FirebaseListOptions<Category> options = new FirebaseListOptions.Builder<Category>()
                 .setLayout(R.layout.food_item)
-                .setQuery(query, Food.class)
+                .setQuery(query, Category.class)
                 .build();
 
-        adapter = new FirebaseListAdapter<Food>(options)
-        {
-            protected void populateView(@NonNull View view, @NonNull Food food, final int position) {
+        adapter = new FirebaseListAdapter<Category>(options) {
+            protected void populateView(@NonNull View view, @NonNull Category category, final int position) {
                 TextView foodName = view.findViewById(R.id.txtFoodName);
-                foodName.setText("Food Name: " + food.getFoodName());
-                TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
-                foodPrice.setText("Food Price: " +food.getFoodPrice());
+                foodName.setText("" + category.getFoodName());
+                ImageView imageFood = view.findViewById(R.id.imageFood);
+                Picasso.with(getBaseContext())
+                        .load("" + category.getFoodImage())
+                        .into(imageFood);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -128,10 +134,11 @@ public class Home extends AppCompatActivity
             //TO DO--------------------------------------------------------
             //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
         }
-        */
+
+
 
     }
-    /*
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -143,7 +150,7 @@ public class Home extends AppCompatActivity
         super.onStop();
         adapter.stopListening();
     }
-    */
+
 
     @Override
     public void onBackPressed() {

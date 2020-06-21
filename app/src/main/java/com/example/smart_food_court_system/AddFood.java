@@ -9,7 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.smart_food_court_system.common.Common;
 import com.example.smart_food_court_system.model.Food;
+import com.example.smart_food_court_system.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,11 +26,8 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 //FoodPrice giờ sẽ yêu cầu nhập dạng 24.000, không nhập số âm, chữ số, và các điều kiện liên quan
 //Tùy chỉnh lại code sau khi thêm các trường mới
 
-
-
-
 public class AddFood extends AppCompatActivity {
-    EditText edtFoodID, edtFoodName, edtFoodPrice;
+    EditText edtFoodID, edtFoodName, edtFoodPrice, edtFoodImage, edtFoodRemaining;;
     Button btnAddFood, btnViewFood;
     DatabaseReference mDatabase;
 
@@ -37,11 +36,13 @@ public class AddFood extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_food);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Food");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Demo/Food");
 
         edtFoodID = (MaterialEditText)findViewById(R.id.edtFoodID);
         edtFoodName = (MaterialEditText)findViewById(R.id.edtFoodName);
         edtFoodPrice = (MaterialEditText)findViewById(R.id.edtFoodPrice);
+        edtFoodImage = (MaterialEditText)findViewById(R.id.edtFoodImage);
+        edtFoodRemaining = (MaterialEditText)findViewById(R.id.edtFoodRemaining);
         btnAddFood = (Button)findViewById(R.id.btnAddFood);
         btnViewFood = (Button)findViewById(R.id.btnViewFood);
 
@@ -54,7 +55,9 @@ public class AddFood extends AppCompatActivity {
                     Food food = new Food(
                             edtFoodID.getText().toString(),
                             edtFoodName.getText().toString(),
-                            edtFoodPrice.getText().toString());
+                            edtFoodPrice.getText().toString(),
+                            edtFoodImage.getText().toString(),
+                            edtFoodRemaining.getText().toString());
 
                     mDatabase.child(edtFoodID.getText().toString()).setValue(food);
                     Toast.makeText(AddFood.this, "Add food successfully !", Toast.LENGTH_SHORT).show();
@@ -71,8 +74,9 @@ public class AddFood extends AppCompatActivity {
         btnViewFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-            Intent foodIntent = new Intent(AddFood.this, ViewFood.class);
-            startActivity(foodIntent);
+            Intent home = new Intent(AddFood.this, Home.class);
+            Common.currentUser = new User("Admin", "Admin", "1234", "Admin@gmail.com", "1234");
+            startActivity(home);
             }
         });
     }

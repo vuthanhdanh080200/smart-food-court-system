@@ -46,6 +46,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0-alpha3'
     //
     implementation 'de.hdodenhof:circleimageview:1.3.0'
+    implementation 'com.squareup.picasso:picasso:2.3.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

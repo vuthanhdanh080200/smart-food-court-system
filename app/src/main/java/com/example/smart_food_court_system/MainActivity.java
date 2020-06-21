@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnSignIn, btnSignUp;
+    Button btnSignIn, btnSignUp, btnAddFood;
     TextView txtSlogan;
 
     @Override
@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnSignIn = (Button)findViewById(R.id.SignIn);
         btnSignUp = (Button)findViewById(R.id.SignUp);
+        btnAddFood = (Button)findViewById(R.id.AddFood);
 
         txtSlogan = (TextView)findViewById(R.id.txtSlogan);
 
@@ -35,6 +36,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view){
                 Intent signUp = new Intent(MainActivity.this, SignUp.class);
                 startActivity(signUp);
+            }
+        });
+
+        btnAddFood.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent addFood = new Intent(MainActivity.this, AddFood.class);
+                startActivity(addFood);
             }
         });
 

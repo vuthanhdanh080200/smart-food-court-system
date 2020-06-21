@@ -8,7 +8,7 @@
     tools:context=".Cart">
 
     <ListView
-        android:id="@+id/listOrderView"
+        android:id="@+id/listCartView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"

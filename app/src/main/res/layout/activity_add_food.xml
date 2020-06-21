@@ -34,6 +34,20 @@
             android:layout_height="wrap_content"
             android:inputType="phone"
             />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edtFoodImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/edtFoodRemaining"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            />
     </LinearLayout>
 
     <LinearLayout
