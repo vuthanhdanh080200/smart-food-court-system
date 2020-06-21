@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,6 +15,9 @@ import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+//Duy DO--------------------------------------------------------
+//Hiển thị lên màn hình thông báo gì đó (LINE 62)
 
 public class ViewFood extends AppCompatActivity {
     ListView listFoodView;
@@ -50,7 +54,13 @@ public class ViewFood extends AppCompatActivity {
         };
 
         // Now set the adapter with a given layout
-        listFoodView.setAdapter(adapter);
+        try{
+            listFoodView.setAdapter(adapter);
+        }catch(Exception e){
+            Log.e("Error " ,""+ e.getMessage());
+            //TO DO--------------------------------------------------------
+            //Hiển thị lên màn hình thông báo gì đó
+        }
 
     }
 

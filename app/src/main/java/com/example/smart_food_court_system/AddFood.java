@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.smart_food_court_system.model.Food;
-import com.example.smart_food_court_system.model.Order;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,10 +17,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-import java.util.ArrayList;
-import java.util.List;
-
 //TO DO
+//Tự động tăng chỉ số ID của Food lên 1, tùy chỉnh các thứ liên quan tới food_ID
+//FoodName là duy nhất
+//Không được add khi chưa điền đầy đủ các trường cần thiết, các trường khác là option, và các thứ liên quan :)
+//FoodPrice giờ sẽ yêu cầu nhập dạng 24.000, không nhập số âm, chữ số, và các điều kiện liên quan
+//Tùy chỉnh lại code sau khi thêm các trường mới
+
+
+
 
 public class AddFood extends AppCompatActivity {
     EditText edtFoodID, edtFoodName, edtFoodPrice;

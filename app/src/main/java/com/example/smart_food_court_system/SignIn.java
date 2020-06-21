@@ -10,19 +10,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.smart_food_court_system.common.Common;
 import com.example.smart_food_court_system.model.User;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
 // TO DO
 // Hide password (*****)
 
-//PROBLEM: App's crashed after logging in successfully.
+// WILL DO
+// Thêm chức năng Forgot Password (tạm thời chưa làm)
+
+// TO DO
+// Thêm chức năng Remember me và các thứ liên quan
 
 public class SignIn extends AppCompatActivity {
     EditText edtUserName, edtPassword;
@@ -67,6 +70,7 @@ public class SignIn extends AppCompatActivity {
                                 if (user.getPassword().equals(edtPassword.getText().toString())) {
                                     Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
                                     Intent home = new Intent(SignIn.this, Home.class);
+                                    Common.currentUser = user;
                                     startActivity(home);
                                 } else {
                                     Toast.makeText(SignIn.this, "Wrong password!", Toast.LENGTH_SHORT).show();

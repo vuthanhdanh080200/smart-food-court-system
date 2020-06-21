@@ -5,4 +5,11 @@
     <string name="Password">Mật khẩu</string>
     <string name="PhoneNumber">Số điện thoại</string>
     <string name="EmailAddress">Địa chỉ email</string>
+    <string name="navigation_drawer_open">Drawer Open</string>
+    <string name="navigation_drawer_close">Drawer Closed</string>
+    <string name="action_settings">Settings</string>
+    <string name="dialog_title">Bạn có chắc chắn muốn thoát ?</string>
+    <string name="dialog_popup">SFCS</string>
+    <string name="ok" />
+    <string name="cancel" />
 </resources>

@@ -3,28 +3,35 @@ package com.example.smart_food_court_system;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.smart_food_court_system.model.Food;
+import com.example.smart_food_court_system.common.Common;
 import com.example.smart_food_court_system.model.Order;
-import com.example.smart_food_court_system.model.User;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
+//Danh DO
+//Trong giỏ hàng hiển thị thêm tổng tiền
+//Hiển thị nút "gì đó" để thanh toán,
+
+//Hiện thực chức năng thanh toán bằng app
+//Hàm kiểm tra các đồ ăn trong giỏ hàng còn không khi bấm nút "gì đó", và số lượng các đồ ăn tương ứng bị giảm xuống.
+//Sau khi thanh toán thì giỏ hàng của người đó biến mất, lấy Common.currentuser.getUserName() để lấy tên người đang sử dụng
+//Cập nhật database
+//Hiện thông báo
+//...
+
+//Hiện thực chức năng xóa món ăn ra khỏi giỏ hàng
+
+//Nếu không có món ăn trong giỏ hàng thì hiện thông báo
+//Hiển thị lên màn hình thông báo gì đó <LINE 68>
 
 public class Cart extends AppCompatActivity {
     ListView listOrderView;
@@ -36,7 +43,7 @@ public class Cart extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("Cart").child("nguyenvana").child("Order");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Cart").child(Common.currentUser.getUserName()).child("Order");
         listOrderView = (ListView)findViewById(R.id.listOrderView);
 
         FirebaseListOptions<Order> options = new FirebaseListOptions.Builder<Order>()
@@ -56,29 +63,14 @@ public class Cart extends AppCompatActivity {
 
             }
         };
-        listOrderView.setAdapter(adapter);
-        /*
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e("Count " ,""+ dataSnapshot.getChildrenCount());
-                List<String> foodNameList = new ArrayList<>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    Order order = postSnapshot.getValue(Order.class);
-                    foodNameList.add(order.getProductName());
-                }
-                ArrayAdapter<String> arrayAdapter
-                        = new ArrayAdapter<String>(Cart.this, android.R.layout.simple_list_item_1 , foodNameList);
-                listView.setAdapter(arrayAdapter);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-         */
+        try{
+            listOrderView.setAdapter(adapter);
+        }catch(Exception e){
+            Log.e("Error " ,""+ e.getMessage());
+            //TO DO--------------------------------------------------------
+            //Hiển thị lên màn hình thông báo gì đó
+        }
 
     }
 

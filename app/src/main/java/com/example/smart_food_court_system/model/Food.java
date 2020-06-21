@@ -1,5 +1,14 @@
 package com.example.smart_food_court_system.model;
 
+//Class Food có các trường
+//+Food_Id: int
+//+FoodStall_id: int
+//+FoodName: string
+//+Type: string
+//+Price: int
+//+Description: string
+//+Amount: int
+
 public class Food {
     private String foodID;
     private String foodName;

@@ -12,20 +12,21 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.smart_food_court_system.model.Order;
-import com.example.smart_food_court_system.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+//TO DO
+//Tùy chỉnh điều kiện:
+//Không được add Food khi có quantity là 1
+//Không được add Food quá số lượng có hạn của food
+//và các điều kiện khác :> Hehe
 
 public class AddFoodToCart extends AppCompatActivity {
     EditText edtFoodID, edtFoodName, edtFoodQuantity, edtFoodPrice;
