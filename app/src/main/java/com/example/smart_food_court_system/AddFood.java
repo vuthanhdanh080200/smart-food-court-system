@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.smart_food_court_system.common.Common;
+import com.example.smart_food_court_system.model.Category;
 import com.example.smart_food_court_system.model.Food;
 import com.example.smart_food_court_system.model.User;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +37,7 @@ public class AddFood extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_food);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Demo/Food");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Demo");
 
         edtFoodID = (MaterialEditText)findViewById(R.id.edtFoodID);
         edtFoodName = (MaterialEditText)findViewById(R.id.edtFoodName);
@@ -58,8 +59,11 @@ public class AddFood extends AppCompatActivity {
                             edtFoodPrice.getText().toString(),
                             edtFoodImage.getText().toString(),
                             edtFoodRemaining.getText().toString());
-
-                    mDatabase.child(edtFoodID.getText().toString()).setValue(food);
+                    Category category = new Category(
+                            edtFoodName.getText().toString(),
+                            edtFoodImage.getText().toString());
+                    mDatabase.child("Food").child(edtFoodID.getText().toString()).setValue(food);
+                    mDatabase.child("Category").child(edtFoodID.getText().toString()).setValue(category);
                     Toast.makeText(AddFood.this, "Add food successfully !", Toast.LENGTH_SHORT).show();
                 }
 

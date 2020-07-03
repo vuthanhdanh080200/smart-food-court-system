@@ -18,6 +18,7 @@
             android:id="@+id/edtFoodID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="ID = 12"
             android:inputType="phone"
             />
 
@@ -25,6 +26,7 @@
             android:id="@+id/edtFoodName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Food Name"
             android:inputType="text"
             />
 
@@ -32,6 +34,7 @@
             android:id="@+id/edtFoodPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Food Price"
             android:inputType="phone"
             />
 
@@ -39,13 +42,15 @@
             android:id="@+id/edtFoodImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="phone"
+            android:hint="Food Image"
+            android:inputType="text"
             />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/edtFoodRemaining"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Food Remaining"
             android:inputType="phone"
             />
     </LinearLayout>
