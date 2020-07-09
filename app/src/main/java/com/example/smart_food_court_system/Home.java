@@ -21,13 +21,10 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.smart_food_court_system.common.Common;
-import com.example.smart_food_court_system.model.Category;
 import com.example.smart_food_court_system.model.Food;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,18 +35,6 @@ import com.squareup.picasso.Picasso;
 
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentTransaction;
-
-//TO DO
-//Làm thanh menu
-//Trong thanh menu có Profile, Cart, Orders, SignOut
-
-
-//Duy DO
-//Hiện thực chức năng cập nhật Profile
-//Hiện thực chức năng tìm kiếm theo tên
-//Sửa lại sau khi thoát sẽ tự động xóa giỏ hàng đã đi chợ
-//Lấy database Query query = FirebaseDatabase.getInstance().getReference().child("Cart").child(Common.currentUser.getUserName())
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -67,17 +52,6 @@ public class Home extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        /*
-        //DEFAULT FRAGMENT
-
-        HomeFragment fragment = new HomeFragment();
-        FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.Fragment_container, fragment);
-        fragmentTransaction.commit();
-        */
-
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -99,27 +73,27 @@ public class Home extends AppCompatActivity
 
 
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("Demo").child("Category");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Danh").child("Food");
         listFoodView = (ListView) findViewById(R.id.lVFood);
 
-        FirebaseListOptions<Category> options = new FirebaseListOptions.Builder<Category>()
+        FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
                 .setLayout(R.layout.food_item)
-                .setQuery(query, Category.class)
+                .setQuery(query, Food.class)
                 .build();
 
-        adapter = new FirebaseListAdapter<Category>(options) {
-            protected void populateView(@NonNull View view, @NonNull Category category, final int position) {
+        adapter = new FirebaseListAdapter<Food>(options) {
+            protected void populateView(@NonNull View view, @NonNull Food food, final int position) {
                 TextView foodName = view.findViewById(R.id.txtFoodName);
-                foodName.setText("" + category.getFoodName());
+                foodName.setText("" + food.getFoodName());
                 ImageView imageFood = view.findViewById(R.id.imageFood);
                 Picasso.with(getBaseContext())
-                        .load("" + category.getFoodImage())
+                        .load("" + food.getFoodImage())
                         .into(imageFood);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent foodDetailIntent = new Intent(Home.this, ViewFoodDetail.class);
-                        foodDetailIntent.putExtra("FoodID", adapter.getRef(position).getKey());
+                        foodDetailIntent.putExtra("FoodName", adapter.getRef(position).getKey());
                         startActivity(foodDetailIntent);
                     }
                 });
@@ -227,23 +201,8 @@ public class Home extends AppCompatActivity
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                DatabaseReference mDatabase;
-                mDatabase = FirebaseDatabase.getInstance().getReference();
-                Query query = mDatabase.child("Order").child(Common.currentUser.getUserName());
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        dataSnapshot.getRef().removeValue();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-                Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
-                startActivity(loginIntent);
+            Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
+            startActivity(loginIntent);
             }
         });
 

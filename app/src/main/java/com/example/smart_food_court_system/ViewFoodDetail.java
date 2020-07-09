@@ -13,9 +13,8 @@ import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.smart_food_court_system.common.Common;
-import com.example.smart_food_court_system.model.CustomerCart;
 import com.example.smart_food_court_system.model.Food;
-import com.example.smart_food_court_system.model.Order;
+import com.example.smart_food_court_system.model.FoodOrder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,9 +27,9 @@ public class ViewFoodDetail extends AppCompatActivity {
     ImageView imageFood;
     Button btnAddFoodToCart, btnViewFoodInCart;
     DatabaseReference mDatabase, db;
-    String foodID = "";
+    String foodName = "";
     int FoodRemaining = 0;
-    CustomerCart cart = new CustomerCart();
+    FoodOrder foodOrder = new FoodOrder();
     public ElegantNumberButton btnOrderQuantity;
 
     @Override
@@ -62,17 +61,17 @@ public class ViewFoodDetail extends AppCompatActivity {
                     btnOrderQuantity.setNumber(Integer.toString(quantity - 1));
                 }
                 else {
-                    cart.setQuantity(btnOrderQuantity.getNumber());
-                    txtOrderQuantity.setText("Quantity " + cart.getQuantity());
+                    foodOrder.setQuantity(btnOrderQuantity.getNumber());
+                    txtOrderQuantity.setText("Quantity " + foodOrder.getQuantity());
                 }
             }
         });
 
         if(getIntent() != null){
-            foodID = getIntent().getStringExtra("FoodID");
+            foodName = getIntent().getStringExtra("FoodName");
         }
-        if(!foodID.isEmpty()){
-            getDetailFood(foodID);
+        if(!foodName.isEmpty()){
+            getDetailFood(foodName);
 
         }
 
@@ -88,7 +87,7 @@ public class ViewFoodDetail extends AppCompatActivity {
                             Toast.makeText(ViewFoodDetail.this, "Not a proper number", Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            db.child(Common.currentUser.getUserName()).child(cart.getProductName()).setValue(cart);
+                            db.child(Common.currentUser.getUserName()).child(foodOrder.getFoodName()).setValue(foodOrder);
                             Toast.makeText(ViewFoodDetail.this, "Add Food To Cart successfully !", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -111,14 +110,13 @@ public class ViewFoodDetail extends AppCompatActivity {
     }
 
     private void getDetailFood(final String foodID) {
-        mDatabase.child("Demo").child("Food").child(foodID).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Danh").child("Food").child(foodName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Food food = dataSnapshot.getValue(Food.class);
-                cart.setProductID(food.getFoodID());
-                cart.setProductName(food.getFoodName());
-                cart.setPrice(food.getFoodPrice());
-                FoodRemaining = Integer.parseInt(food.getRemaining());
+                foodOrder.setFoodName(food.getFoodName());
+                foodOrder.setPrice(food.getFoodPrice());
+                FoodRemaining = Integer.parseInt(food.getFoodRemaining());
                 txtFoodName.setText("Name " + food.getFoodName());
                 txtFoodPrice.setText("Price " + food.getFoodPrice());
                 Picasso.with(getBaseContext())

@@ -18,14 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-// TO DO
-// Hide password (*****)
-
-// WILL DO
-// Thêm chức năng Forgot Password (tạm thời chưa làm)
-
-// TO DO
-// Thêm chức năng Remember me và các thứ liên quan
 
 public class SignIn extends AppCompatActivity {
     EditText edtUserName, edtPassword;
@@ -43,7 +35,7 @@ public class SignIn extends AppCompatActivity {
 
         //Init Firebase
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("Demo/User");
+        final DatabaseReference table_user = database.getReference("Danh/User");
 
         btnSignIn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -68,10 +60,15 @@ public class SignIn extends AppCompatActivity {
                                 mDialog.dismiss();
                                 User user = dataSnapshot.child(edtUserName.getText().toString()).getValue(User.class);
                                 if (user.getPassword().equals(edtPassword.getText().toString())) {
-                                    Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
-                                    Intent home = new Intent(SignIn.this, Home.class);
+                                    if(user.getRole().equals("customer")) {
+                                        Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                        Intent home = new Intent(SignIn.this, Home.class);
+                                        startActivity(home);
+                                    }
+                                    else {
+                                        Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                    }
                                     Common.currentUser = user;
-                                    startActivity(home);
                                 } else {
                                     Toast.makeText(SignIn.this, "Wrong password!", Toast.LENGTH_SHORT).show();
                                 }

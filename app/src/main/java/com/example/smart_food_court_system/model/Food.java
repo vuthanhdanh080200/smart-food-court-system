@@ -1,39 +1,33 @@
 package com.example.smart_food_court_system.model;
 
-//Class Food có các trường
-//+Food_Id: int
-//+FoodStall_id: int
-//+FoodName: string
-//+Type: string
-//+Price: int
-//+Description: string
-//+Amount: int
-
 public class Food {
-    private String foodID;
+    private String foodStallName;
     private String foodName;
+    private String foodType;
     private String foodPrice;
+    private String foodDescription;
+    private String foodRemaining;
     private String foodImage;
-    private String Remaining;
 
     public Food() {
     }
 
-    public Food(String foodID, String foodName, String foodPrice, String foodImage, String remaining) {
-        this.foodID = foodID;
+    public Food(String foodStallName, String foodName, String foodType, String foodPrice, String foodDescription, String foodRemaining, String foodImage) {
+        this.foodStallName = foodStallName;
         this.foodName = foodName;
+        this.foodType = foodType;
         this.foodPrice = foodPrice;
+        this.foodDescription = foodDescription;
+        this.foodRemaining = foodRemaining;
         this.foodImage = foodImage;
-        this.Remaining = remaining;
-
     }
 
-    public String getFoodID() {
-        return foodID;
+    public String getFoodStallName() {
+        return foodStallName;
     }
 
-    public void setFoodID(String foodID) {
-        this.foodID = foodID;
+    public void setFoodStallName(String foodStallName) {
+        this.foodStallName = foodStallName;
     }
 
     public String getFoodName() {
@@ -44,12 +38,36 @@ public class Food {
         this.foodName = foodName;
     }
 
+    public String getFoodType() {
+        return foodType;
+    }
+
+    public void setFoodType(String foodType) {
+        this.foodType = foodType;
+    }
+
     public String getFoodPrice() {
         return foodPrice;
     }
 
     public void setFoodPrice(String foodPrice) {
         this.foodPrice = foodPrice;
+    }
+
+    public String getFoodDescription() {
+        return foodDescription;
+    }
+
+    public void setFoodDescription(String foodDescription) {
+        this.foodDescription = foodDescription;
+    }
+
+    public String getFoodRemaining() {
+        return foodRemaining;
+    }
+
+    public void setFoodRemaining(String foodRemaining) {
+        this.foodRemaining = foodRemaining;
     }
 
     public String getFoodImage() {
@@ -59,13 +77,4 @@ public class Food {
     public void setFoodImage(String foodImage) {
         this.foodImage = foodImage;
     }
-
-    public String getRemaining() {
-        return Remaining;
-    }
-
-    public void setRemaining(String remaining) {
-        Remaining = remaining;
-    }
-
 }

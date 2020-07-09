@@ -12,8 +12,7 @@ import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.smart_food_court_system.common.Common;
-import com.example.smart_food_court_system.model.CustomerCart;
-import com.example.smart_food_court_system.model.Order;
+import com.example.smart_food_court_system.model.FoodOrder;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -22,25 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
-
-//Danh DO
-//Trong giỏ hàng hiển thị thêm tổng tiền
-//Hiển thị nút "gì đó" để thanh toán,
-
-//Hiện thực chức năng thanh toán bằng app
-//Hàm kiểm tra các đồ ăn trong giỏ hàng còn không khi bấm nút "gì đó", và số lượng các đồ ăn tương ứng bị giảm xuống.
-//Sau khi thanh toán thì giỏ hàng của người đó biến mất, lấy Common.currentuser.getUserName() để lấy tên người đang sử dụng
-//Cập nhật database
-//Hiện thông báo
-//...
-
-//Hiện thực chức năng xóa món ăn ra khỏi giỏ hàng
-
-//Nếu không có món ăn trong giỏ hàng thì hiện thông báo
-//Hiển thị lên màn hình thông báo gì đó <LINE 68>
 
 public class Cart extends AppCompatActivity {
     ListView listCartView;
@@ -53,25 +33,23 @@ public class Cart extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        Query query = FirebaseDatabase.getInstance().getReference("Demo").child("Cart").child(Common.currentUser.getUserName());
+        Query query = FirebaseDatabase.getInstance().getReference("Danh").child("Cart").child(Common.currentUser.getUserName());
         listCartView = (ListView)findViewById(R.id.listCartView);
 
-        FirebaseListOptions<CustomerCart> options = new FirebaseListOptions.Builder<CustomerCart>()
+        FirebaseListOptions<FoodOrder> options = new FirebaseListOptions.Builder<FoodOrder>()
                 .setLayout(R.layout.cart_item)
-                .setQuery(query, CustomerCart.class)
+                .setQuery(query, FoodOrder.class)
                 .build();
 
-        adapter = new FirebaseListAdapter<CustomerCart>(options)
+        adapter = new FirebaseListAdapter<FoodOrder>(options)
         {
-            protected void populateView(@NonNull View view, @NonNull final CustomerCart cart, final int position) {
+            protected void populateView(@NonNull View view, @NonNull final FoodOrder foodOrder, final int position) {
                 final int remainingFood[] = {0};
-                DatabaseReference FoodDatabase = FirebaseDatabase.getInstance().getReference("Demo/Food");
+                DatabaseReference FoodDatabase = FirebaseDatabase.getInstance().getReference("Danh/Food");
                 FoodDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        remainingFood[0] = Integer.parseInt(dataSnapshot.child(cart.getProductID()).child("remaining").getValue().toString());
-                        //Log.e("LogsFunc", dataSnapshot.child(FoodID).child("remaining").getValue().toString());
-                        //Log.e("LogFuncIntInside", Integer.toString(Common.currentRemaining));
+                        remainingFood[0] = Integer.parseInt(dataSnapshot.child(foodOrder.getFoodName()).child("foodRemaining").getValue().toString());
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -82,16 +60,16 @@ public class Cart extends AppCompatActivity {
                 //Log.e("LogFuncIntOutside", Integer.toString(Common.currentRemaining));
 
                 TextView txtCartName = view.findViewById(R.id.txtCartName);
-                txtCartName.setText("Food Name: " + cart.getProductName());
+                txtCartName.setText("Food Name: " + foodOrder.getFoodName());
                 final TextView txtCartQuantity = view.findViewById(R.id.txtCartQuantity);
-                txtCartQuantity.setText("Food Quantity: " + cart.getQuantity());
+                txtCartQuantity.setText("Food Quantity: " + foodOrder.getQuantity());
                 //txtCartQuantity.setText("Food Quantity: " + cart.getQuantity() + "/" + getRemainingFood(cart.getProductID()));
                 TextView txtCartPrice = view.findViewById(R.id.txtCartPrice);
-                txtCartPrice.setText("Food Price : " + cart.getPrice());
+                txtCartPrice.setText("Food Price : " + foodOrder.getPrice());
                 final ElegantNumberButton btnCartQuantity = view.findViewById(R.id.btnCartQuantity);
 
                 btnCartQuantity.setRange(1, 50);
-                btnCartQuantity.setNumber(cart.getQuantity());
+                btnCartQuantity.setNumber(foodOrder.getQuantity());
 
                 btnCartQuantity.setOnClickListener(new ElegantNumberButton.OnClickListener() {
                     @Override
@@ -103,14 +81,14 @@ public class Cart extends AppCompatActivity {
                             btnCartQuantity.setNumber(Integer.toString(quantity - 1));
                         }
                         else {
-                            cart.setQuantity(btnCartQuantity.getNumber());
-                            txtCartQuantity.setText("Food Quantity: " + cart.getQuantity());
+                            foodOrder.setQuantity(btnCartQuantity.getNumber());
+                            txtCartQuantity.setText("Food Quantity: " + foodOrder.getQuantity());
                             //txtCartQuantity.setText("Food Quantity: " + cart.getQuantity() + "/" + getRemainingFood(cart.getProductID()));
                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    mDatabase.child("Cart").child(Common.currentUser.getUserName()).child(cart.getProductName())
-                                            .child("quantity").setValue(cart.getQuantity());
+                                    mDatabase.child("Danh/Cart").child(Common.currentUser.getUserName()).child(foodOrder.getFoodName())
+                                            .child("foodQuantity").setValue(foodOrder.getQuantity());
                                 }
 
                                 @Override
