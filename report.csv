@@ -1,0 +1,83 @@
+commit 52b6734111d643277537b12e345b99c9b2e9c3be
+Author: vuthanhdanh080200 <vuthanhdanh080200@gmail.com>
+Date:   Fri Jul 3 09:10:41 2020 +0700
+
+    demo1
+
+commit 80e5748983a2cf2f0679e24200bf1c574d1af45d
+Author: vuthanhdanh080200 <vuthanhdanh080200@gmail.com>
+Date:   Sun Jun 21 23:57:13 2020 +0700
+
+    - Merge cac chuc nang Duy va Vuong da chinh sua
+    - Them hinh anh cho food
+
+commit 8313959ab43f092e5aa4c86f7247bec991373789
+Author: vuthanhdanh080200 <vuthanhdanh080200@gmail.com>
+Date:   Sun Jun 21 07:58:35 2020 +0700
+
+    - Them To do Home
+    - Them To do Cart
+    - Them To do AddFood
+    - Them To do AddFoodToCart
+    - Them To do SignIn
+    - Them To do ViewFood
+    - Them Navigation Bar
+
+commit f40b701f3d0e704ded1af41ee7775a4c364c5c48
+Merge: 0a7f468 4f25dd6
+Author: vuthanhdanh080200 <49565984+vuthanhdanh080200@users.noreply.github.com>
+Date:   Sat Jun 20 11:59:20 2020 +0700
+
+    Merge pull request #2 from vuthanhdanh080200/demo1
+    
+    - Them chuc nang add food To Cart
+
+commit 0a7f468926c4e9f3be173e3842811d65e508fa48
+Merge: 0373e53 de30fc6
+Author: vuthanhdanh080200 <49565984+vuthanhdanh080200@users.noreply.github.com>
+Date:   Sat Jun 20 11:57:42 2020 +0700
+
+    Merge pull request #1 from vuthanhdanh080200/Duy-ChangeSignInAndSignUp
+    
+    Update Sign in, Sign up design and implementation.
+
+commit 4f25dd616fbe8de92ce4d4d563ad9e8f73a692c5
+Author: vuthanhdanh080200 <vuthanhdanh080200@gmail.com>
+Date:   Sat Jun 20 11:55:36 2020 +0700
+
+    - Them chuc nang add food To Cart
+    - Them chuc nang view cart
+
+commit de30fc6bb0c8cc28aea110a71240ac869e02179a
+Author: Duy Nguyen <hoanduy27@gmail.com>
+Date:   Sat Jun 20 11:50:11 2020 +0700
+
+    Update Sign in, Sign up design and implementation.
+
+commit 0373e53c21e5fbfb7858793bbaaeccb8b8484d48
+Author: vuthanhdanh080200 <vuthanhdanh080200@gmail.com>
+Date:   Fri Jun 19 20:32:14 2020 +0700
+
+    - Them To Do cho Sign Up
+    - Them To Do cho Sign In
+
+commit 6d32637a2804112c375178bfb59ef24dedf60f6d
+Author: vuthanhdanh080200 <vuthanhdanh080200@gmail.com>
+Date:   Fri Jun 19 16:20:07 2020 +0700
+
+    - Them chuc nang Add Food
+    - Them chuc nang View Food
+
+commit a29047933bdbef5b92c13fee531875ad095eb609
+Author: vuthanhdanh080200 <vuthanhdanh080200@gmail.com>
+Date:   Fri Jun 19 11:54:30 2020 +0700
+
+    - Delete Databases
+    - Them chuc nang AddFoodToCart
+    - Them chuc nang Sign Up
+
+commit 756d4b5f0f86a5e14b9030dcfc10e8121e8c3c0d
+Author: vuthanhdanh080200 <vuthanhdanh080200@gmail.com>
+Date:   Wed Jun 17 20:40:21 2020 +0700
+
+    Demo 17/06/2020

@@ -6,29 +6,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.example.smart_food_court_system.common.Common;
 import com.example.smart_food_court_system.model.Food;
-import com.example.smart_food_court_system.model.Order;
+import com.example.smart_food_court_system.model.FoodOrder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.rengwuxian.materialedittext.MaterialEditText;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.squareup.picasso.Picasso;
 
 public class ViewFoodDetail extends AppCompatActivity {
-    TextView txtFoodID, txtFoodName, txtFoodPrice;
+    TextView txtFoodRemaining, txtFoodName, txtFoodPrice, txtOrderQuantity;
+    ImageView imageFood;
     Button btnAddFoodToCart, btnViewFoodInCart;
     DatabaseReference mDatabase, db;
-    String foodID = "";
+    String foodName = "";
+    int FoodRemaining = 0;
+    FoodOrder foodOrder = new FoodOrder();
+    public ElegantNumberButton btnOrderQuantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,35 +39,57 @@ public class ViewFoodDetail extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        txtFoodID = (TextView)findViewById(R.id.txtFoodName);
+        txtFoodRemaining = (TextView)findViewById(R.id.txtFoodRemaining);
         txtFoodName = (TextView)findViewById(R.id.txtFoodName);
         txtFoodPrice = (TextView)findViewById(R.id.txtFoodPrice);
+        txtOrderQuantity = findViewById(R.id.txtOrderQuantity);
         btnAddFoodToCart = (Button)findViewById(R.id.btnAddFoodToCart);
         btnViewFoodInCart = (Button)findViewById(R.id.btnViewFoodInCart);
+        btnOrderQuantity = findViewById(R.id.btnOrderQuantity);
+        imageFood = findViewById(R.id.imageFood);
+
+
+        btnOrderQuantity.setRange(1, 50);
+
+        btnOrderQuantity.setOnClickListener(new ElegantNumberButton.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int quantity = Integer.parseInt(btnOrderQuantity.getNumber());
+
+                if(quantity > FoodRemaining){
+                    Toast.makeText(ViewFoodDetail.this, "Insufficient remaining food", Toast.LENGTH_SHORT).show();
+                    btnOrderQuantity.setNumber(Integer.toString(quantity - 1));
+                }
+                else {
+                    foodOrder.setQuantity(btnOrderQuantity.getNumber());
+                    txtOrderQuantity.setText("Quantity " + foodOrder.getQuantity());
+                }
+            }
+        });
 
         if(getIntent() != null){
-            foodID = getIntent().getStringExtra("FoodID");
+            foodName = getIntent().getStringExtra("FoodName");
         }
-        if(!foodID.isEmpty()){
-            getDetailFood(foodID);
+        if(!foodName.isEmpty()){
+            getDetailFood(foodName);
+
         }
 
         btnAddFoodToCart.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
 
-                db = FirebaseDatabase.getInstance().getReference("Cart");
-                db.addValueEventListener(new ValueEventListener() {
+                db = FirebaseDatabase.getInstance().getReference("Demo/Cart");
+                db.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        Order order = new Order(
-                                txtFoodID.getText().toString(),
-                                txtFoodName.getText().toString(),
-                                "1",
-                                txtFoodPrice.getText().toString());
-                        db.child("nguyenvana").child("Order").child(order.getProductName()).setValue(order);
-                        Toast.makeText(ViewFoodDetail.this, "Add Food To Cart successfully !", Toast.LENGTH_SHORT).show();
+                        if(btnOrderQuantity.getNumber().equals("0")){
+                            Toast.makeText(ViewFoodDetail.this, "Not a proper number", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            db.child(Common.currentUser.getUserName()).child(foodOrder.getFoodName()).setValue(foodOrder);
+                            Toast.makeText(ViewFoodDetail.this, "Add Food To Cart successfully !", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -85,14 +109,19 @@ public class ViewFoodDetail extends AppCompatActivity {
         });
     }
 
-    private void getDetailFood(String foodID) {
-        mDatabase.child("Food").child(foodID).addValueEventListener(new ValueEventListener() {
+    private void getDetailFood(final String foodID) {
+        mDatabase.child("Danh").child("Food").child(foodName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Food food = dataSnapshot.getValue(Food.class);
-                txtFoodID.setText(food.getFoodID());
-                txtFoodName.setText(food.getFoodName());
-                txtFoodPrice.setText(food.getFoodPrice());
+                foodOrder.setFoodName(food.getFoodName());
+                foodOrder.setPrice(food.getFoodPrice());
+                FoodRemaining = Integer.parseInt(food.getFoodRemaining());
+                txtFoodName.setText("Name " + food.getFoodName());
+                txtFoodPrice.setText("Price " + food.getFoodPrice());
+                Picasso.with(getBaseContext())
+                        .load(food.getFoodImage())
+                        .into(imageFood);
             }
 
             @Override

@@ -24,6 +24,8 @@
             />
     </LinearLayout>
 
+
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_alignParentTop="true"
@@ -31,6 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!--
         <Button
             android:id="@+id/AddFoodToCart"
             android:text="Add Food To Cart"
@@ -38,6 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"/>
+        -->
 
         <Button
             android:id="@+id/AddFood"
@@ -46,8 +50,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"/>
-
+        
     </LinearLayout>
+
 
     <LinearLayout
         android:orientation="horizontal"

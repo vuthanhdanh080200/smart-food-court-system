@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnSignIn, btnSignUp, btnAddFood, btnAddFoodToCart;
+    Button btnSignIn, btnSignUp, btnAddFood;
     TextView txtSlogan;
 
     @Override
@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
         btnSignIn = (Button)findViewById(R.id.SignIn);
         btnSignUp = (Button)findViewById(R.id.SignUp);
         btnAddFood = (Button)findViewById(R.id.AddFood);
-        btnAddFoodToCart = (Button)findViewById(R.id.AddFoodToCart);
 
         txtSlogan = (TextView)findViewById(R.id.txtSlogan);
 
@@ -43,17 +42,10 @@ public class MainActivity extends AppCompatActivity {
         btnAddFood.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent addFoodIntent = new Intent(MainActivity.this, AddFood.class);
-                startActivity(addFoodIntent);
+                Intent addFood = new Intent(MainActivity.this, AddFood.class);
+                startActivity(addFood);
             }
         });
 
-        btnAddFoodToCart.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                Intent addFoodToCartIntent = new Intent(MainActivity.this, AddFoodToCart.class);
-                startActivity(addFoodToCartIntent);
-            }
-        });
     }
 }

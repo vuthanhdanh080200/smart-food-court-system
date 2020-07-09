@@ -14,26 +14,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edtFoodID"
+        <EditText
+            android:id="@+id/edtFoodStallName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Stall"
             android:inputType="phone"
             />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
             android:id="@+id/edtFoodName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Name"
             android:inputType="text"
             />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
+        <EditText
+            android:id="@+id/edtFoodType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Type"
+            android:inputType="phone"
+            />
+
+        <EditText
+            android:id="@+id/edtFoodDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"
+            android:inputType="text"
+            />
+
+        <EditText
             android:id="@+id/edtFoodPrice"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Price"
             android:inputType="phone"
             />
+
+        <EditText
+            android:id="@+id/edtFoodRemaining"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Remaining"
+            android:inputType="phone"
+            />
+
+        <EditText
+            android:id="@+id/edtFoodImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Url Image"
+            android:inputType="text"
+            />
+
     </LinearLayout>
 
     <LinearLayout

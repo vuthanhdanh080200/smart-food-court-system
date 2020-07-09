@@ -1,0 +1,15 @@
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch demo1
+# Your branch is up to date with 'origin/demo1'.
+#
+# Changes to be committed:
+#	modified:   app/src/main/java/com/example/smart_food_court_system/AddFood.java
+#	modified:   app/src/main/java/com/example/smart_food_court_system/MainActivity.java
+#	modified:   app/src/main/res/layout/activity_add_food.xml
+#	modified:   app/src/main/res/layout/activity_main.xml
+#	modified:   app/src/main/res/layout/activity_sign_up.xml
+#
+

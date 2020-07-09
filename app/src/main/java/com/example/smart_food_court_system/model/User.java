@@ -14,16 +14,22 @@ public class User {
     private String Password;
     private String EmailAddress;
     private String PhoneNumber;
+    private String Role;
+    private String AccountBlance;
+    private String Stall;
 
     public User() {
     }
 
-    public User(String name, String userName, String password, String emailAddress, String phoneNumber) {
+    public User(String name, String userName, String password, String emailAddress, String phoneNumber, String role, String accountBlance, String stall) {
         Name = name;
         UserName = userName;
         Password = password;
         EmailAddress = emailAddress;
         PhoneNumber = phoneNumber;
+        Role = role;
+        AccountBlance = accountBlance;
+        Stall = stall;
     }
 
     public String getName() {
@@ -65,4 +71,30 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         PhoneNumber = phoneNumber;
     }
+
+    public String getRole() {
+        return Role;
+    }
+
+    public void setRole(String role) {
+        Role = role;
+    }
+
+    public String getAccountBlance() {
+        return AccountBlance;
+    }
+
+    public void setAccountBlance(String accountBlance) {
+        AccountBlance = accountBlance;
+    }
+
+    public String getStall() {
+        return Stall;
+    }
+
+    public void setStall(String stall) {
+        Stall = stall;
+    }
+
+
 }
