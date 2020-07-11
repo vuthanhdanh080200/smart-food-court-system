@@ -15,7 +15,14 @@
                 android:id="@+id/submit_order"
                 android:icon="@drawable/ic_event_available_black_24dp"
                 android:title="Submit Order" />
-
+            <item
+                android:id="@+id/recharge"
+                android:icon="@drawable/recharge"
+                android:title="Recharge" />
+            <item
+                android:id="@+id/view_cart"
+                android:icon="@drawable/shopping_cart"
+                android:title="View Cart" />
             <item
                 android:id="@+id/log_out"
                 android:icon="@drawable/ic_exit_to_app_black_24dp"

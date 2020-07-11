@@ -8,6 +8,11 @@
     android:padding="20dp"
     android:layout_margin="10dp">
 
+    <Button
+        android:id="@+id/btnRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="X" />
     <TextView
         android:id="@+id/txtCartName"
         android:layout_width="wrap_content"
@@ -31,6 +36,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/txtCartQuantity"
         android:layout_height="wrap_content" />
+
 </LinearLayout>
 
 

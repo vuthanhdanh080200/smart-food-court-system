@@ -1,11 +1,12 @@
 package com.example.smart_food_court_system.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Order {
     private String orderID;
     private String userName;
-    private ArrayList<FoodOrder> foodOrderList;
+    private HashMap<String, FoodOrder> foodOrderList;
     private String total;
     private String TimeStamp;
     private String Status;
@@ -13,7 +14,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(String orderID, String userName, ArrayList<FoodOrder> foodOrderList, String total, String timeStamp, String status) {
+    public Order(String orderID, String userName, HashMap<String, FoodOrder> foodOrderList, String total, String timeStamp, String status) {
         this.orderID = orderID;
         this.userName = userName;
         this.foodOrderList = foodOrderList;
@@ -38,11 +39,11 @@ public class Order {
         this.userName = userName;
     }
 
-    public ArrayList<FoodOrder> getFoodOrderList() {
+    public HashMap<String, FoodOrder> getFoodOrderList() {
         return foodOrderList;
     }
 
-    public void setFoodOrderList(ArrayList<FoodOrder> foodOrderList) {
+    public void setFoodOrderList(HashMap<String, FoodOrder> foodOrderList) {
         this.foodOrderList = foodOrderList;
     }
 

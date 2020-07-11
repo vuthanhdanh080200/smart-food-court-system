@@ -15,20 +15,20 @@ public class User {
     private String EmailAddress;
     private String PhoneNumber;
     private String Role;
-    private String AccountBlance;
+    private String AccountBalance;
     private String Stall;
 
     public User() {
     }
 
-    public User(String name, String userName, String password, String emailAddress, String phoneNumber, String role, String accountBlance, String stall) {
+    public User(String name, String userName, String password, String emailAddress, String phoneNumber, String role, String accountBalance, String stall) {
         Name = name;
         UserName = userName;
         Password = password;
         EmailAddress = emailAddress;
         PhoneNumber = phoneNumber;
         Role = role;
-        AccountBlance = accountBlance;
+        AccountBalance = accountBalance;
         Stall = stall;
     }
 
@@ -80,12 +80,12 @@ public class User {
         Role = role;
     }
 
-    public String getAccountBlance() {
-        return AccountBlance;
+    public String getAccountBalance() {
+        return AccountBalance;
     }
 
-    public void setAccountBlance(String accountBlance) {
-        AccountBlance = accountBlance;
+    public void setAccountBalance(String accountBalance) {
+        AccountBalance = accountBalance;
     }
 
     public String getStall() {

@@ -3,9 +3,12 @@ package com.example.smart_food_court_system;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +29,9 @@ public class Cart extends AppCompatActivity {
     ListView listCartView;
     DatabaseReference mDatabase;
     FirebaseListAdapter adapter;
+    TextView txtCartTotal;
+    Button btnCheckOut ;
+    final int CartTotal[] = {0};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +39,38 @@ public class Cart extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        Query query = FirebaseDatabase.getInstance().getReference("Danh").child("Cart").child(Common.currentUser.getUserName());
+        final Query query = FirebaseDatabase.getInstance().getReference("Duy").child("Cart")
+                .child(Common.currentUser.getUserName()).child("foodOrderList");
         listCartView = (ListView)findViewById(R.id.listCartView);
+        txtCartTotal = (TextView)findViewById(R.id.txtCartTotal);
+        btnCheckOut = (Button)findViewById(R.id.btnCheckOut);
+
+        txtCartTotal.setText("Please wait...");
+        btnCheckOut.setVisibility(View.GONE);
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    String total = dataSnapshot.child("Duy/Cart").child(Common.currentUser.getUserName())
+                            .child("total").getValue().toString();
+                    txtCartTotal.setText("Total: " + total);
+                    btnCheckOut.setVisibility(View.VISIBLE);
+                    CartTotal[0] = Integer.parseInt(total);
+                }
+                catch(Exception e){
+                    CartTotal[0] = 0;
+                }
+                if(CartTotal[0] == 0){
+                    txtCartTotal.setText("Your cart is empty.");
+                    btnCheckOut.setVisibility(View.INVISIBLE);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         FirebaseListOptions<FoodOrder> options = new FirebaseListOptions.Builder<FoodOrder>()
                 .setLayout(R.layout.cart_item)
@@ -45,7 +81,7 @@ public class Cart extends AppCompatActivity {
         {
             protected void populateView(@NonNull View view, @NonNull final FoodOrder foodOrder, final int position) {
                 final int remainingFood[] = {0};
-                DatabaseReference FoodDatabase = FirebaseDatabase.getInstance().getReference("Danh/Food");
+                DatabaseReference FoodDatabase = FirebaseDatabase.getInstance().getReference("Duy/Food");
                 FoodDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -64,31 +100,40 @@ public class Cart extends AppCompatActivity {
                 final TextView txtCartQuantity = view.findViewById(R.id.txtCartQuantity);
                 txtCartQuantity.setText("Food Quantity: " + foodOrder.getQuantity());
                 //txtCartQuantity.setText("Food Quantity: " + cart.getQuantity() + "/" + getRemainingFood(cart.getProductID()));
-                TextView txtCartPrice = view.findViewById(R.id.txtCartPrice);
+                final TextView txtCartPrice = view.findViewById(R.id.txtCartPrice);
                 txtCartPrice.setText("Food Price : " + foodOrder.getPrice());
                 final ElegantNumberButton btnCartQuantity = view.findViewById(R.id.btnCartQuantity);
+                Button btnRemove = (Button)view.findViewById(R.id.btnRemove);
 
-                btnCartQuantity.setRange(1, 50);
+                btnCartQuantity.setRange(1, 1000);
                 btnCartQuantity.setNumber(foodOrder.getQuantity());
 
                 btnCartQuantity.setOnClickListener(new ElegantNumberButton.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int quantity = Integer.parseInt(btnCartQuantity.getNumber());
+                        final int quantity[] = {Integer.parseInt(btnCartQuantity.getNumber())};
 
-                        if(quantity > remainingFood[0]){
+                        if(quantity[0] > remainingFood[0]){
                             Toast.makeText(Cart.this, "Insufficient remaining food", Toast.LENGTH_SHORT).show();
-                            btnCartQuantity.setNumber(Integer.toString(quantity - 1));
+                            btnCartQuantity.setNumber(Integer.toString(quantity[0] - 1));
                         }
                         else {
+                            final int oldQuantity[] = {0};
+                            oldQuantity[0] = Integer.parseInt(foodOrder.getQuantity());
+
                             foodOrder.setQuantity(btnCartQuantity.getNumber());
                             txtCartQuantity.setText("Food Quantity: " + foodOrder.getQuantity());
                             //txtCartQuantity.setText("Food Quantity: " + cart.getQuantity() + "/" + getRemainingFood(cart.getProductID()));
                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    mDatabase.child("Danh/Cart").child(Common.currentUser.getUserName()).child(foodOrder.getFoodName())
-                                            .child("foodQuantity").setValue(foodOrder.getQuantity());
+
+                                    mDatabase.child("Duy/Cart").child(Common.currentUser.getUserName())
+                                            .child("foodOrderList").child(foodOrder.getFoodName())
+                                            .child("quantity").setValue(foodOrder.getQuantity());
+                                    CartTotal[0] += (quantity[0] - oldQuantity[0])*Integer.parseInt(foodOrder.getPrice());
+                                    mDatabase.child("Duy/Cart").child(Common.currentUser.getUserName()).child("total").setValue(String.valueOf(CartTotal[0]));
+                                    txtCartTotal.setText(String.valueOf(CartTotal[0]));
                                 }
 
                                 @Override
@@ -96,6 +141,36 @@ public class Cart extends AppCompatActivity {
 
                                 }
                             });
+                        }
+                    }
+                });
+                btnRemove.setOnClickListener(new Button.OnClickListener(){
+                    @Override
+                    public void onClick(View view){
+                        int quantity = Integer.parseInt(foodOrder.getQuantity());
+                        int price = Integer.parseInt(foodOrder.getPrice());
+                        CartTotal[0] -= quantity*price;
+                        txtCartPrice.setText(String.valueOf(CartTotal[0]));
+
+                        if(CartTotal[0] == 0){
+                            txtCartTotal.setText("Your cart is empty.");
+                            btnCheckOut.setVisibility(View.INVISIBLE);
+                            mDatabase.child("Duy/Cart").child(Common.currentUser.getUserName()).getRef().removeValue();
+                        }
+                        else{
+                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    mDatabase.child("Duy/Cart").child(Common.currentUser.getUserName()).child("total").setValue(String.valueOf(CartTotal[0]));
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                            getRef(position).removeValue();
+                            notifyDataSetChanged();
                         }
                     }
                 });
@@ -109,6 +184,13 @@ public class Cart extends AppCompatActivity {
             //TO DO--------------------------------------------------------
             //Hiển thị lên màn hình thông báo gì đó
         }
+        btnCheckOut.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent cart = new Intent(Cart.this, Payment.class);
+                startActivity(cart);
+            }
+        });
 
     }
 

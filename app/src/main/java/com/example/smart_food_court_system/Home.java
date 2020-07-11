@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.smart_food_court_system.common.Common;
 import com.example.smart_food_court_system.model.Food;
+import com.example.smart_food_court_system.model.User;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
 import com.google.android.material.navigation.NavigationView;
@@ -42,10 +43,9 @@ public class Home extends AppCompatActivity
     Toolbar toolbar = null;
     Button logout,cancel;
 
-
     ListView listFoodView;
     FirebaseListAdapter adapter;
-    TextView userName, email;
+    TextView txtName, txtAccountBalance, txtEmail;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -66,14 +66,28 @@ public class Home extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         View headerView = navigationView.getHeaderView(0);
-        userName = (TextView)headerView.findViewById(R.id.txtUserName);
-        email = (TextView)headerView.findViewById(R.id.txtEmail);
-        userName.setText(Common.currentUser.getUserName());
-        email.setText(Common.currentUser.getEmailAddress());
+        txtName = (TextView)headerView.findViewById(R.id.txtName);
+        txtAccountBalance = (TextView)headerView.findViewById(R.id.txtAccountBalance);
+        txtEmail = (TextView)headerView.findViewById(R.id.txtEmail);
+
+        txtName.setText(Common.currentUser.getName());
+        txtEmail.setText(Common.currentUser.getEmailAddress());
+        DatabaseReference UserDB = FirebaseDatabase.getInstance().getReference("Duy/User")
+                .child(Common.currentUser.getUserName());
+        UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String balance = dataSnapshot.child("accountBalance").getValue().toString();
+                txtAccountBalance.setText("Account balance: " + balance + " VND");
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
-
-        Query query = FirebaseDatabase.getInstance().getReference().child("Danh").child("Food");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Food");
         listFoodView = (ListView) findViewById(R.id.lVFood);
 
         FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
@@ -163,12 +177,12 @@ public class Home extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-
-        userName = (TextView) findViewById(R.id.txtUserName);
-        email = (TextView) findViewById(R.id.txtEmail);
-        userName.setText(Common.currentUser.getUserName());
-        email.setText(Common.currentUser.getEmailAddress());
-
+        /*
+        txtName = (TextView) findViewById(R.id.txtName);
+        txtEmail = (TextView) findViewById(R.id.txtEmail);
+        txtName.setText(Common.currentUser.getUserName());
+        txtEmail.setText(Common.currentUser.getEmailAddress());
+        */
         int id = item.getItemId();
 
         if(id == R.id.order_details_drawer ){
@@ -180,6 +194,14 @@ public class Home extends AppCompatActivity
             Toast.makeText(getApplicationContext(),"Sorry, You don't order anything...",Toast.LENGTH_SHORT).show();
         }
 
+        else if(id == R.id.recharge){
+            Intent HomeToRecharge = new Intent(Home.this, Recharge.class);
+            startActivity(HomeToRecharge);
+        }
+        else if(id == R.id.view_cart){
+            Intent HomeToCart = new Intent(Home.this, Cart.class);
+            startActivity(HomeToCart);
+        }
         else if(id == R.id.log_out ){
             openDialog();
         }
