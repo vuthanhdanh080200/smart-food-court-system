@@ -109,8 +109,6 @@ public class Home extends AppCompatActivity
             //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
         }
 
-
-
     }
 
     @Override

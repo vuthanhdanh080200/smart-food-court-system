@@ -35,7 +35,6 @@ public class AddFood extends AppCompatActivity {
         setContentView(R.layout.activity_add_food);
 
         mDatabase = FirebaseDatabase.getInstance().getReference("Danh");
-
         edtFoodStallName = (EditText)findViewById(R.id.edtFoodStallName);
         edtFoodName = (EditText)findViewById(R.id.edtFoodName);
         edtFoodType = (EditText)findViewById(R.id.edtFoodType);
@@ -66,6 +65,7 @@ public class AddFood extends AppCompatActivity {
                     //Kiểm tra tên món ăn đã bị trùng chưa ?
                     //Kiểm tra tên quầy có chưa ? (quầy chưa có thì không được điền)
                     mDatabase.child("Food").child(edtFoodName.getText().toString()).setValue(food);
+
                     mDatabase.child("FoodStall").child(edtFoodStallName.getText().toString()).child(edtFoodName.getText().toString()).setValue(food);
                     Toast.makeText(AddFood.this, "Add food successfully !", Toast.LENGTH_SHORT).show();
                 }

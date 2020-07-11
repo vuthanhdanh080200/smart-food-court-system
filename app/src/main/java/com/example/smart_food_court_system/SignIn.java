@@ -65,8 +65,21 @@ public class SignIn extends AppCompatActivity {
                                         Intent home = new Intent(SignIn.this, Home.class);
                                         startActivity(home);
                                     }
-                                    else {
+                                    else if (user.getRole().equals("it staff")){
                                         Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                        Intent test = new Intent(SignIn.this, Test.class);
+                                        startActivity(test);
+                                    }
+                                    // Xoa dong duoi nay di khi commit
+                                    else if (user.getRole().equals("cook")){
+                                        Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                        Intent order = new Intent(SignIn.this, Order.class);
+                                        startActivity(order);
+                                    }
+                                    // Xoa dong tren nay di khi commit
+                                    else{
+                                        Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+
                                     }
                                     Common.currentUser = user;
                                 } else {
