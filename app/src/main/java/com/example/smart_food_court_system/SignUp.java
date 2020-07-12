@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.smart_food_court_system.common.Common;
 import com.example.smart_food_court_system.model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,69 +47,74 @@ public class SignUp extends AppCompatActivity {
        btnSignUp.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                   @Override
-                   public void onDataChange(DataSnapshot dataSnapshot) {
-                       //Get User information
-                       User user = new User(
-                                    edtName.getText().toString(),
-                                    edtUserName.getText().toString(),
-                                    edtPassword.getText().toString(),
-                                    edtEmailAddress.getText().toString(),
-                                    edtPhoneNumber.getText().toString(),
-                                    "customer",
-                                    "0",
-                                    "0");
 
-                       if(user.getName().isEmpty() || user.getUserName().isEmpty() || user.getPassword().isEmpty() ||
-                               user.getEmailAddress().isEmpty() || user.getPhoneNumber().isEmpty()){
-                           Toast.makeText(SignUp.this, "Please fill in all information!", Toast.LENGTH_SHORT).show();
-                       }
-                       else {
-                           if(dataSnapshot.child(user.getUserName()).exists()){
-                               Toast.makeText(SignUp.this, "Username " +  user.getUserName() + " exists, please choose another username.", Toast.LENGTH_SHORT).show();
+               if (Common.isConnectedToInternet(getBaseContext())) {
+
+                   mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                       @Override
+                       public void onDataChange(DataSnapshot dataSnapshot) {
+                           //Get User information
+                           User user = new User(
+                                   edtName.getText().toString(),
+                                   edtUserName.getText().toString(),
+                                   edtPassword.getText().toString(),
+                                   edtEmailAddress.getText().toString(),
+                                   edtPhoneNumber.getText().toString(),
+                                   "customer",
+                                   "0",
+                                   "0");
+
+                           if (user.getName().isEmpty() || user.getUserName().isEmpty() || user.getPassword().isEmpty() ||
+                                   user.getEmailAddress().isEmpty() || user.getPhoneNumber().isEmpty()) {
+                               Toast.makeText(SignUp.this, "Please fill in all information!", Toast.LENGTH_SHORT).show();
+                           } else {
+                               if (dataSnapshot.child(user.getUserName()).exists()) {
+                                   Toast.makeText(SignUp.this, "Username " + user.getUserName() + " exists, please choose another username.", Toast.LENGTH_SHORT).show();
+                               } else {
+                                   boolean isEmailAddressExists = false, isPhoneNumberExists = false;
+                                   for (DataSnapshot item : dataSnapshot.getChildren()) {
+                                       if (user.getEmailAddress().equals(item.child("emailAddress").getValue())) {
+                                           isEmailAddressExists = true;
+                                           break;
+                                       }
+                                   }
+                                   for (DataSnapshot item : dataSnapshot.getChildren()) {
+                                       if (user.getPhoneNumber().equals(item.child("phoneNumber").getValue())) {
+                                           isPhoneNumberExists = true;
+                                           break;
+                                       }
+                                   }
+                                   if (isEmailAddressExists || isPhoneNumberExists) {
+                                       if (!isPhoneNumberExists) {
+                                           Toast.makeText(SignUp.this, "This email address has been used!", Toast.LENGTH_SHORT).show();
+                                       } else if (!isEmailAddressExists) {
+                                           Toast.makeText(SignUp.this, "This phone number has been used!", Toast.LENGTH_SHORT).show();
+                                       } else {
+                                           Toast.makeText(SignUp.this, "This email address and phone number has been used!", Toast.LENGTH_SHORT).show();
+                                       }
+                                   }
+                                   //Add to Database
+                                   else {
+                                       mDatabase.child(edtUserName.getText().toString()).setValue(user);
+                                       Intent signIn = new Intent(SignUp.this, SignIn.class);
+                                       startActivity(signIn);
+                                       Toast.makeText(SignUp.this, "Sign Up successfully!", Toast.LENGTH_SHORT).show();
+                                   }
+                               }
                            }
-                           else {
-                               boolean isEmailAddressExists = false, isPhoneNumberExists = false;
-                               for(DataSnapshot item : dataSnapshot.getChildren()){
-                                    if(user.getEmailAddress().equals(item.child("emailAddress").getValue())){
-                                        isEmailAddressExists = true;
-                                        break;
-                                    }
-                               }
-                               for(DataSnapshot item : dataSnapshot.getChildren()){
-                                   if(user.getPhoneNumber().equals(item.child("phoneNumber").getValue())){
-                                       isPhoneNumberExists = true;
-                                       break;
-                                   }
-                               }
-                               if(isEmailAddressExists || isPhoneNumberExists){
-                                   if(!isPhoneNumberExists){
-                                       Toast.makeText(SignUp.this, "This email address has been used!", Toast.LENGTH_SHORT).show();
-                                   }
-                                   else if(!isEmailAddressExists){
-                                       Toast.makeText(SignUp.this, "This phone number has been used!", Toast.LENGTH_SHORT).show();
-                                   }
-                                   else{
-                                       Toast.makeText(SignUp.this, "This email address and phone number has been used!", Toast.LENGTH_SHORT).show();
-                                   }
-                               }
-                               //Add to Database
-                               else {
-                                   mDatabase.child(edtUserName.getText().toString()).setValue(user);
-                                   Intent signIn = new Intent(SignUp.this, SignIn.class);
-                                   startActivity(signIn);
-                                   Toast.makeText(SignUp.this, "Sign Up successfully!", Toast.LENGTH_SHORT).show();
-                               }
-                           }
+
                        }
 
-                   }
 
-                   @Override
-                   public void onCancelled(DatabaseError databaseError) {
-                   }
-               });
+                       @Override
+                       public void onCancelled(DatabaseError databaseError) {
+                       }
+                   });
+               }
+               else{
+                   Toast.makeText(SignUp.this, "Please check your connection!", Toast.LENGTH_SHORT).show();
+                   return;
+               }
            }
        });
 

@@ -15,7 +15,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:text="Đăng ký tài khoản mới"
+            android:text="@string/SignUp"
             android:textSize="35dp"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
             android:id="@+id/edtName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Tên"
+            android:hint="@string/Name"
             android:inputType="text"
             />
 
@@ -72,7 +72,7 @@
 
         <Button
             android:id="@+id/btnSignUp"
-            android:text="ĐĂNG KÝ"
+            android:text="@string/SignUp"
             android:layout_weight="2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

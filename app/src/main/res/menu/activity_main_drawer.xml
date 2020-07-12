@@ -5,6 +5,10 @@
 
     <item android:title="Profile">
         <menu>
+            <item
+                android:id="@+id/change_profile"
+                android:icon="@drawable/ic_baseline_account_circle_24"
+                android:title="Change Profile" />
 
             <item
                 android:id="@+id/order_details_drawer"
@@ -15,6 +19,11 @@
                 android:id="@+id/submit_order"
                 android:icon="@drawable/ic_event_available_black_24dp"
                 android:title="Submit Order" />
+
+            <item
+                android:id="@+id/change_password"
+                android:icon="@drawable/ic_baseline_security_24"
+                android:title="Change Password" />
 
             <item
                 android:id="@+id/log_out"

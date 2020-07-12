@@ -65,9 +65,8 @@ public class AddFood extends AppCompatActivity {
                     //Kiểm tra tên món ăn đã bị trùng chưa ?
                     //Kiểm tra tên quầy có chưa ? (quầy chưa có thì không được điền)
                     mDatabase.child("Food").child(edtFoodName.getText().toString()).setValue(food);
-
                     mDatabase.child("FoodStall").child(edtFoodStallName.getText().toString()).child(edtFoodName.getText().toString()).setValue(food);
-                    Toast.makeText(AddFood.this, "Add food successfully !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddFood.this, Common.addFoodSuccessMessage, Toast.LENGTH_SHORT).show();
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -80,7 +79,7 @@ public class AddFood extends AppCompatActivity {
             @Override
             public void onClick(View view){
             Intent home = new Intent(AddFood.this, Home.class);
-            Common.currentUser = new User("Admin", "Admin", "1234", "Admin@gmail.com", "1234", "Customer", "0", "0");
+            Common.currentUser = Common.admin;
             startActivity(home);
             }
         });

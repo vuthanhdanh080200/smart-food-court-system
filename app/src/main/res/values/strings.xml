@@ -1,15 +1,25 @@
 <resources>
     <string name="app_name">SFCS</string>
-    <string name="Name">Tên</string>
-    <string name="UserName">Tên đăng nhập</string>
-    <string name="Password">Mật khẩu</string>
-    <string name="PhoneNumber">Số điện thoại</string>
-    <string name="EmailAddress">Địa chỉ email</string>
+    <string name="SignIn">Sign In</string>
+    <string name="SignUp">Sign Up</string>
+    <string name="Name">Name</string>
+    <string name="UserName">Username</string>
+    <string name="Password">Password</string>
+    <string name="PhoneNumber">Phone Number</string>
+    <string name="EmailAddress">Email Address</string>
     <string name="navigation_drawer_open">Drawer Open</string>
     <string name="navigation_drawer_close">Drawer Closed</string>
     <string name="action_settings">Settings</string>
-    <string name="dialog_title">Bạn có chắc chắn muốn thoát ?</string>
+    <string name="dialog_title">Are you sure want to logout ?</string>
     <string name="dialog_popup">SFCS</string>
     <string name="ok" />
-    <string name="cancel" />
+    <string name="cancel">Cancel</string>
+    <string name="change">Change</string>
+    <string name="go">Continue</string>
+    <string name="change_password">Change Password</string>
+    <string name="old_password">Current Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_new_password">Confirm New Password</string>
+    <string name="change_profile">Change Profile</string>
+    <string name="restore_password">Account Recovery</string>
 </resources>

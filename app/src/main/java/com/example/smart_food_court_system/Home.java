@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.smart_food_court_system.common.Common;
 import com.example.smart_food_court_system.model.Food;
+import com.example.smart_food_court_system.model.User;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
 import com.google.android.material.navigation.NavigationView;
@@ -36,22 +38,29 @@ import com.squareup.picasso.Picasso;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+import io.paperdb.Paper;
+
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     NavigationView navigationView = null;
     Toolbar toolbar = null;
-    Button logout,cancel;
-
-
+    Button logout,cancel, changePassword, changeProfile;
     ListView listFoodView;
     FirebaseListAdapter adapter;
     TextView userName, email;
+    CircleImageView circleImageView;
+    EditText edtOldPassword, edtNewPassword, edtConfirmNewPassword;
+    EditText edtName, edtEmailAddress, edtPhoneNumber;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Paper.init(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,14 +73,13 @@ public class Home extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        circleImageView = (CircleImageView) findViewById(R.id.profile_image);
 
         View headerView = navigationView.getHeaderView(0);
-        userName = (TextView)headerView.findViewById(R.id.txtUserName);
-        email = (TextView)headerView.findViewById(R.id.txtEmail);
+        userName = (TextView) headerView.findViewById(R.id.txtUserName);
+        email = (TextView) headerView.findViewById(R.id.txtEmail);
         userName.setText(Common.currentUser.getUserName());
         email.setText(Common.currentUser.getEmailAddress());
-
-
 
         Query query = FirebaseDatabase.getInstance().getReference().child("Danh").child("Food");
         listFoodView = (ListView) findViewById(R.id.lVFood);
@@ -101,15 +109,24 @@ public class Home extends AppCompatActivity
         };
 
         // Now set the adapter with a given layout
-        try{
+        try {
             listFoodView.setAdapter(adapter);
-        }catch(Exception e){
-            Log.e("Error " ,""+ e.getMessage());
+        } catch (Exception e) {
+            Log.e("Error ", "" + e.getMessage());
             //TO DO--------------------------------------------------------
             //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
         }
+    /*
+    circleImageView.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(Home.this, "Profile_image", Toast.LENGTH_SHORT).show();
+        }
+    });
 
+     */
     }
+
 
     @Override
     protected void onStart() {
@@ -166,26 +183,29 @@ public class Home extends AppCompatActivity
         email = (TextView) findViewById(R.id.txtEmail);
         userName.setText(Common.currentUser.getUserName());
         email.setText(Common.currentUser.getEmailAddress());
-
         int id = item.getItemId();
+        if (Common.isConnectedToInternet(getBaseContext())) {
+            if (id == R.id.change_profile) {
+                openChangeProfile();
+            } else if (id == R.id.order_details_drawer) {
+                Toast.makeText(getApplicationContext(), "No details found because you didn't order something...", Toast.LENGTH_SHORT).show();
+            } else if (id == R.id.submit_order) {
 
-        if(id == R.id.order_details_drawer ){
-
-            Toast.makeText(getApplicationContext(),"No details found because you didn't order something...",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Sorry, You don't order anything...", Toast.LENGTH_SHORT).show();
+            } else if (id == R.id.change_password) {
+                openChangePassword();
+            }
         }
-        else if(id == R.id.submit_order ){
-
-            Toast.makeText(getApplicationContext(),"Sorry, You don't order anything...",Toast.LENGTH_SHORT).show();
+        else{
+            Toast.makeText(Home.this, "Please check your connection!", Toast.LENGTH_SHORT).show();
+            return true;
         }
-
-        else if(id == R.id.log_out ){
+        if (id == R.id.log_out) {
             openDialog();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-
     }
 
     public void openDialog() {
@@ -199,6 +219,7 @@ public class Home extends AppCompatActivity
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            Paper.book().destroy();
             Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
             startActivity(loginIntent);
             }
@@ -213,4 +234,156 @@ public class Home extends AppCompatActivity
         });
     }
 
+    public void openChangePassword() {
+
+        final Dialog builder = new Dialog(this); // Context, this, etc.
+        builder.setContentView(R.layout.change_password);
+        builder.setTitle(R.string.dialog_popup);
+        builder.show();
+        changePassword = (Button) builder.findViewById(R.id.dialog_change);
+        cancel = (Button) builder.findViewById(R.id.dialog_cancel);
+        edtOldPassword = (EditText) builder.findViewById(R.id.edtOldPassword);
+        edtNewPassword = (EditText) builder.findViewById(R.id.edtNewPassword);
+        edtConfirmNewPassword = (EditText) builder.findViewById(R.id.edtConfirmNewPassword);
+
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final DatabaseReference mDatabase;
+                mDatabase = FirebaseDatabase.getInstance().getReference("Danh/User");
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.child(Common.currentUser.getUserName()).getValue(User.class);
+                        if (user.getPassword().equals(edtOldPassword.getText().toString())){
+                            if(edtNewPassword.getText().toString().equals(edtConfirmNewPassword.getText().toString())){
+                                Toast.makeText(Home.this, Common.changePasswordSuccessMessage, Toast.LENGTH_SHORT).show();
+                                user.setPassword(edtNewPassword.getText().toString());
+                                Common.currentUser.setPassword(edtNewPassword.getText().toString());
+                                EditText password = (EditText)findViewById(R.id.edtPassword);
+                                mDatabase.child(Common.currentUser.getUserName()).child("password").setValue(edtNewPassword.getText().toString());
+                                builder.dismiss();
+                            }
+                            else{
+                                Toast.makeText(Home.this, Common.confirmPasswordErrorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else {
+                            Toast.makeText(Home.this, Common.currentPasswordIsNotCorrectErrorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.dismiss();
+            }
+        });
+    }
+
+    public void openChangeProfile(){
+        final Dialog builder = new Dialog(this); // Context, this, etc.
+        builder.setContentView(R.layout.change_profile);
+        builder.setTitle(R.string.dialog_popup);
+        builder.show();
+        changeProfile = (Button) builder.findViewById(R.id.dialog_change);
+        cancel = (Button) builder.findViewById(R.id.dialog_cancel);
+        edtName = (EditText) builder.findViewById(R.id.edtName);
+        edtEmailAddress = (EditText) builder.findViewById(R.id.edtEmailAddress);
+        edtPhoneNumber = (EditText) builder.findViewById(R.id.edtPhoneNumber);
+
+        edtName.setText("" + Common.currentUser.getName());
+        edtEmailAddress.setText("" + Common.currentUser.getEmailAddress());
+        edtPhoneNumber.setText("" + Common.currentUser.getPhoneNumber());
+
+
+        changeProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final DatabaseReference mDatabase;
+                mDatabase = FirebaseDatabase.getInstance().getReference("Danh/User");
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                        User user = new User(
+                                edtName.getText().toString(),
+                                Common.currentUser.getUserName(),
+                                Common.currentUser.getPassword(),
+                                edtEmailAddress.getText().toString(),
+                                edtPhoneNumber.getText().toString(),
+                                Common.currentUser.getRole(),
+                                Common.currentUser.getAccountBlance(),
+                                Common.currentUser.getStall());
+
+                        if(user.getName().isEmpty() || user.getUserName().isEmpty() || user.getPassword().isEmpty() ||
+                                user.getEmailAddress().isEmpty() || user.getPhoneNumber().isEmpty()){
+                                Toast.makeText(Home.this, Common.fillAllErrorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            boolean isEmailAddressExists = false, isPhoneNumberExists = false;
+                            for(DataSnapshot item : dataSnapshot.getChildren()){
+                                if(user.getEmailAddress().equals(item.child("emailAddress").getValue())){
+                                    if(!user.getEmailAddress().equals(Common.currentUser.getEmailAddress())) {
+                                        isEmailAddressExists = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            for(DataSnapshot item : dataSnapshot.getChildren()){
+                                if(user.getPhoneNumber().equals(item.child("phoneNumber").getValue())){
+                                    if(!user.getPhoneNumber().equals(Common.currentUser.getPhoneNumber())) {
+                                        isPhoneNumberExists = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(isEmailAddressExists || isPhoneNumberExists){
+                                if(!isPhoneNumberExists){
+                                    Toast.makeText(Home.this, Common.emailAddressExistsErrorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                                else if(!isEmailAddressExists){
+                                    Toast.makeText(Home.this, Common.phoneNumberExistsErrorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    Toast.makeText(Home.this, Common.emailAddressExistsErrorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            //Add to Database
+                            else {
+                                mDatabase.child(Common.currentUser.getUserName()).setValue(user);
+                                Common.currentUser = user;
+                                Toast.makeText(Home.this, Common.updateInforSuccessMessage, Toast.LENGTH_SHORT).show();
+                                builder.dismiss();
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.dismiss();
+            }
+        });
+    }
 }
