@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddFoodToCart">
+    tools:context=".AddFood">
 
     <LinearLayout
         android:orientation="vertical"
@@ -60,17 +60,20 @@
             android:inputType="phone"
             />
 
-        <ImageView
-            android:id="@+id/imgFood"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:srcCompat="@android:drawable/screen_background_light_transparent" />
-
         <Button
             android:id="@+id/btnChoose"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Upload Image" />
+
+        <ImageView
+            android:id="@+id/imgFood"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            app:srcCompat="@android:drawable/screen_background_light_transparent"
+            android:layout_below="@id/btnChoose"/>
+
+
 
     </LinearLayout>
 
@@ -87,15 +90,17 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"/>
+            android:layout_margin="8dp"
+            android:layout_below="@id/btnChoose"/>
 
         <Button
             android:id="@+id/btnViewFood"
-            android:text="View Food"
+            android:text="VIEW FOOD"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"/>
+            android:layout_margin="8dp"
+            android:layout_below="@id/btnChoose"/>
 
     </LinearLayout>
 

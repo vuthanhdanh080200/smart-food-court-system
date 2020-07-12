@@ -58,7 +58,7 @@ public class ViewFoodDetail extends AppCompatActivity {
         imageFood = findViewById(R.id.imageFood);
 
 
-        btnOrderQuantity.setRange(1, 50);
+        btnOrderQuantity.setRange(1, 1000);
 
         btnOrderQuantity.setOnClickListener(new ElegantNumberButton.OnClickListener() {
             @Override
@@ -175,7 +175,6 @@ public class ViewFoodDetail extends AppCompatActivity {
                 byte[] decodedString = Base64.decode(food.getFoodImage(), Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 imageFood.setImageBitmap(decodedByte);
-
             }
 
             @Override

@@ -43,13 +43,6 @@
             android:layout_margin="8dp"/>
         -->
 
-        <Button
-            android:id="@+id/AddFood"
-            android:text="Add Food"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"/>
         
     </LinearLayout>
 

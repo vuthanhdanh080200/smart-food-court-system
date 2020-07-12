@@ -30,14 +30,8 @@ public class HomeManager extends AppCompatActivity {
         btnAddFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent AddFood=new Intent(HomeManager.this, com.example.smart_food_court_system.AddFood.class);
+                Intent AddFood = new Intent(HomeManager.this, com.example.smart_food_court_system.AddFood.class);
                 startActivity(AddFood);
-            }
-        });
-        btnAddFood.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(HomeManager.this, "Not implemented yet!", Toast.LENGTH_SHORT).show();
             }
         });
     }

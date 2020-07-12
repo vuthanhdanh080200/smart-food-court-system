@@ -67,6 +67,8 @@ public class Home extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        Paper.init(this);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -78,6 +80,7 @@ public class Home extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        circleImageView = (CircleImageView) findViewById(R.id.profile_image);
 
         View headerView = navigationView.getHeaderView(0);
         txtName = (TextView)headerView.findViewById(R.id.txtName);
@@ -290,6 +293,7 @@ public class Home extends AppCompatActivity
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Paper.book().destroy();
                 Common.currentUser = new User();
                 Home.super.onBackPressed();
                 /*

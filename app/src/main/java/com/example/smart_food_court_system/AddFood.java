@@ -36,10 +36,8 @@ public class AddFood extends AppCompatActivity {
     Button btnAddFood, btnViewFood;
     DatabaseReference mDatabase;
     // new
-    Button btnChoose,
-            btnChooseIcon;
-    ImageView imgFood,
-            imgFoodIcon;
+    Button btnChoose;
+    ImageView imgFood;
     Bitmap selectedBitmap;
     String imgeEncoded;
 
@@ -48,7 +46,7 @@ public class AddFood extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_food);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Vuong");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Duy");
 
         edtFoodStallName = (EditText)findViewById(R.id.edtFoodStallName);
         edtFoodName = (EditText)findViewById(R.id.edtFoodName);
@@ -71,14 +69,6 @@ public class AddFood extends AppCompatActivity {
             }
         });
 
-        btnChooseIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickPhoto, 201);
-            }
-        });
 
         btnAddFood.setOnClickListener(new View.OnClickListener(){
 
@@ -142,22 +132,6 @@ public class AddFood extends AppCompatActivity {
             }
         }
 
-        if (requestCode == 201 && resultCode == RESULT_OK) {
-            try {
-                //xử lý lấy ảnh chọn từ điện thoại:
-                Uri imageUri = data.getData();
-                selectedBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                imgFoodIcon.setImageBitmap(selectedBitmap);
-                /*
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                selectedBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream .toByteArray();
-                imgeEncoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                */
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }
