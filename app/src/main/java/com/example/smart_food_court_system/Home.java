@@ -7,8 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,14 +19,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.smart_food_court_system.common.Common;
 import com.example.smart_food_court_system.model.Food;
+import com.example.smart_food_court_system.model.User;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +40,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 public class Home extends AppCompatActivity
@@ -46,6 +54,7 @@ public class Home extends AppCompatActivity
     ListView listFoodView;
     FirebaseListAdapter adapter;
     TextView userName, email;
+    FloatingActionButton btnViewCart;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -71,9 +80,16 @@ public class Home extends AppCompatActivity
         userName.setText(Common.currentUser.getUserName());
         email.setText(Common.currentUser.getEmailAddress());
 
+        btnViewCart = (FloatingActionButton)findViewById(R.id.fab_view_cart_home);
+        btnViewCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cart = new Intent(Home.this, Cart.class);
+                startActivity(cart);
+            }
+        });
 
-
-        Query query = FirebaseDatabase.getInstance().getReference().child("Danh").child("Food");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Vuong").child("Food");
         listFoodView = (ListView) findViewById(R.id.lVFood);
 
         FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
@@ -84,11 +100,16 @@ public class Home extends AppCompatActivity
         adapter = new FirebaseListAdapter<Food>(options) {
             protected void populateView(@NonNull View view, @NonNull Food food, final int position) {
                 TextView foodName = view.findViewById(R.id.txtFoodName);
-                foodName.setText("" + food.getFoodName());
+                foodName.setText(food.getFoodName());
+
+                TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
+                foodPrice.setText(food.getFoodPrice()+" VND");
+
                 ImageView imageFood = view.findViewById(R.id.imageFood);
-                Picasso.with(getBaseContext())
-                        .load("" + food.getFoodImage())
-                        .into(imageFood);
+                byte[] decodedString = Base64.decode(food.getFoodImage(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                imageFood.setImageBitmap(decodedByte);
+
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -118,13 +139,18 @@ public class Home extends AppCompatActivity
         super.onStart();
         adapter.startListening();
     }
-
+    /*
     @Override
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
     }
-
+    */
+    @Override
+    protected  void onDestroy() {
+        super.onDestroy();
+        adapter.stopListening();
+    }
 
     @Override
     public void onBackPressed() {
@@ -141,6 +167,22 @@ public class Home extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchFood(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newQuery) {
+                searchFood(newQuery);
+                return false;
+            }
+        });
+
         return true;
     }
 
@@ -153,6 +195,9 @@ public class Home extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        else if (id == R.id.action_search) {
             return true;
         }
 
@@ -201,8 +246,11 @@ public class Home extends AppCompatActivity
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
-            startActivity(loginIntent);
+                Common.currentUser = new User();
+                Home.super.onBackPressed();
+                /*
+                Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
+                startActivity(loginIntent);*/
             }
         });
 
@@ -213,6 +261,52 @@ public class Home extends AppCompatActivity
                 builder.dismiss();
             }
         });
+    }
+
+    private void searchFood(String searchText){
+        Query query = FirebaseDatabase.getInstance().getReference().child("Vuong").child("Food").orderByKey().startAt(searchText).endAt(searchText+"\uf8ff");
+        listFoodView = (ListView) findViewById(R.id.lVFood);
+
+        FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
+                .setLayout(R.layout.food_item)
+                .setQuery(query, Food.class)
+                .build();
+
+        adapter.stopListening();
+
+        adapter = new FirebaseListAdapter<Food>(options) {
+            protected void populateView(@NonNull View view, @NonNull Food food, final int position) {
+                TextView foodName = view.findViewById(R.id.txtFoodName);
+                foodName.setText(food.getFoodName());
+
+                TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
+                foodPrice.setText(food.getFoodPrice()+" VND");
+
+                ImageView imageFood = view.findViewById(R.id.imageFood);
+                byte[] decodedString = Base64.decode(food.getFoodImage(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                imageFood.setImageBitmap(decodedByte);
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent foodDetailIntent = new Intent(Home.this, ViewFoodDetail.class);
+                        foodDetailIntent.putExtra("FoodName", adapter.getRef(position).getKey());
+                        startActivity(foodDetailIntent);
+                    }
+                });
+            }
+        };
+        adapter.startListening();
+
+
+        try{
+            listFoodView.setAdapter(adapter);
+        }catch(Exception e){
+            Log.e("Error " ,""+ e.getMessage());
+            //TO DO--------------------------------------------------------
+            //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
+        }
     }
 
 }

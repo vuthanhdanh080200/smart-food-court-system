@@ -33,7 +33,7 @@ public class Cart extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        Query query = FirebaseDatabase.getInstance().getReference("Danh").child("Cart").child(Common.currentUser.getUserName());
+        Query query = FirebaseDatabase.getInstance().getReference("Vuong").child("Cart").child(Common.currentUser.getUserName());
         listCartView = (ListView)findViewById(R.id.listCartView);
 
         FirebaseListOptions<FoodOrder> options = new FirebaseListOptions.Builder<FoodOrder>()
@@ -45,7 +45,7 @@ public class Cart extends AppCompatActivity {
         {
             protected void populateView(@NonNull View view, @NonNull final FoodOrder foodOrder, final int position) {
                 final int remainingFood[] = {0};
-                DatabaseReference FoodDatabase = FirebaseDatabase.getInstance().getReference("Danh/Food");
+                DatabaseReference FoodDatabase = FirebaseDatabase.getInstance().getReference("Vuong/Food");
                 FoodDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -87,7 +87,7 @@ public class Cart extends AppCompatActivity {
                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    mDatabase.child("Danh/Cart").child(Common.currentUser.getUserName()).child(foodOrder.getFoodName())
+                                    mDatabase.child("Vuong/Cart").child(Common.currentUser.getUserName()).child(foodOrder.getFoodName())
                                             .child("foodQuantity").setValue(foodOrder.getQuantity());
                                 }
 

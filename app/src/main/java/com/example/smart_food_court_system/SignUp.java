@@ -41,7 +41,7 @@ public class SignUp extends AppCompatActivity {
         //Init Firebase
 
         final DatabaseReference mDatabase;
-        mDatabase = FirebaseDatabase.getInstance().getReference("Danh/User");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Vuong/User");
 
        btnSignUp.setOnClickListener(new View.OnClickListener() {
            @Override

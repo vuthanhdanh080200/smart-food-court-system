@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,6 +18,7 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.smart_food_court_system.common.Common;
 import com.example.smart_food_court_system.model.Food;
 import com.example.smart_food_court_system.model.FoodOrder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,9 +27,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class ViewFoodDetail extends AppCompatActivity {
-    TextView txtFoodRemaining, txtFoodName, txtFoodPrice, txtOrderQuantity;
+    TextView txtFoodRemaining, txtFoodName, txtFoodPrice, txtOrderQuantity, txtFoodType, txtFoodStall, txtFoodDescr;
     ImageView imageFood;
-    Button btnAddFoodToCart, btnViewFoodInCart;
+    Button btnAddFoodToCart;
+    FloatingActionButton fabViewFoodInCart;
     DatabaseReference mDatabase, db;
     String foodName = "";
     int FoodRemaining = 0;
@@ -43,9 +48,13 @@ public class ViewFoodDetail extends AppCompatActivity {
         txtFoodName = (TextView)findViewById(R.id.txtFoodName);
         txtFoodPrice = (TextView)findViewById(R.id.txtFoodPrice);
         txtOrderQuantity = findViewById(R.id.txtOrderQuantity);
+        txtFoodType = (TextView)findViewById(R.id.txtFoodType);
+        txtFoodStall = (TextView)findViewById(R.id.txtFoodStall);
+        txtFoodDescr = (TextView)findViewById(R.id.txtFoodDescr);
+
         btnAddFoodToCart = (Button)findViewById(R.id.btnAddFoodToCart);
-        btnViewFoodInCart = (Button)findViewById(R.id.btnViewFoodInCart);
         btnOrderQuantity = findViewById(R.id.btnOrderQuantity);
+        fabViewFoodInCart = (FloatingActionButton)findViewById(R.id.fab_view_cart);
         imageFood = findViewById(R.id.imageFood);
 
 
@@ -79,7 +88,7 @@ public class ViewFoodDetail extends AppCompatActivity {
             @Override
             public void onClick(View view){
 
-                db = FirebaseDatabase.getInstance().getReference("Demo/Cart");
+                db = FirebaseDatabase.getInstance().getReference("Vuong/Cart");
                 db.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -100,7 +109,7 @@ public class ViewFoodDetail extends AppCompatActivity {
             }
         });
 
-        btnViewFoodInCart.setOnClickListener(new View.OnClickListener(){
+        fabViewFoodInCart.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 Intent cart = new Intent(ViewFoodDetail.this, Cart.class);
@@ -110,18 +119,23 @@ public class ViewFoodDetail extends AppCompatActivity {
     }
 
     private void getDetailFood(final String foodID) {
-        mDatabase.child("Danh").child("Food").child(foodName).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Vuong").child("Food").child(foodName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Food food = dataSnapshot.getValue(Food.class);
                 foodOrder.setFoodName(food.getFoodName());
                 foodOrder.setPrice(food.getFoodPrice());
                 FoodRemaining = Integer.parseInt(food.getFoodRemaining());
-                txtFoodName.setText("Name " + food.getFoodName());
-                txtFoodPrice.setText("Price " + food.getFoodPrice());
-                Picasso.with(getBaseContext())
-                        .load(food.getFoodImage())
-                        .into(imageFood);
+                txtFoodName.setText(food.getFoodName());
+                txtFoodPrice.setText("Price : " + food.getFoodPrice()+" VND");
+                txtFoodType.setText("Type : "+food.getFoodType());
+                txtFoodStall.setText("Stall : "+food.getFoodStallName());
+                txtFoodRemaining.setText("Food Remaining :"+food.getFoodRemaining());
+                txtFoodDescr.setText(food.getFoodDescription());
+                byte[] decodedString = Base64.decode(food.getFoodImage(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                imageFood.setImageBitmap(decodedByte);
+
             }
 
             @Override
