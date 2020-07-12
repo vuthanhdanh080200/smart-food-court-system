@@ -45,7 +45,7 @@ public class SignIn extends AppCompatActivity {
         txtForgotPassword = (TextView)findViewById(R.id.txtForgotPassword);
         //Init Firebase
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("Duy/User");
+        final DatabaseReference table_user = database.getReference("Danh/User");
 
         btnSignIn.setOnClickListener(new View.OnClickListener(){
             @Override

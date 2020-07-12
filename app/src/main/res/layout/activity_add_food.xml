@@ -19,8 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Stall"
-            android:inputType="phone"
-            />
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/edtFoodName"
@@ -35,8 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Type"
-            android:inputType="phone"
-            />
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/edtFoodDescription"
@@ -62,13 +60,17 @@
             android:inputType="phone"
             />
 
-        <EditText
-            android:id="@+id/edtFoodImage"
+        <ImageView
+            android:id="@+id/imgFood"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:srcCompat="@android:drawable/screen_background_light_transparent" />
+
+        <Button
+            android:id="@+id/btnChoose"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Url Image"
-            android:inputType="text"
-            />
+            android:text="Upload Image" />
 
     </LinearLayout>
 

@@ -81,7 +81,7 @@ public class Cart extends AppCompatActivity {
         {
             protected void populateView(@NonNull View view, @NonNull final FoodOrder foodOrder, final int position) {
                 final int remainingFood[] = {0};
-                DatabaseReference FoodDatabase = FirebaseDatabase.getInstance().getReference("Duy/Food");
+                DatabaseReference FoodDatabase = FirebaseDatabase.getInstance().getReference("Danh/Food");
                 FoodDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

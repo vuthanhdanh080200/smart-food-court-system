@@ -8,50 +8,73 @@
     android:padding="20dp"
     android:layout_margin="10dp">
 
-    <ImageView
-        android:id="@+id/imageFood"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageFood"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginRight="8dp"
+        android:orientation="vertical">
+
 
         <TextView
             android:id="@+id/txtFoodName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/txtFoodPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/txtFoodRemaining"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/txtOrderQuantity"
             android:textSize="24sp"
             android:textStyle="bold"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txtFoodPrice"
+            android:textSize="18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
             android:id="@+id/btnOrderQuantity"
             android:layout_width="200dp"
-            app:textSize="8sp"
-            android:layout_marginTop="10dp"
-            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
             android:layout_below="@id/txtOrderQuantity"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            app:textSize="8sp" >
+
+        </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
+
+        <TextView
+            android:id="@+id/txtOrderQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtFoodDescr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/txtFoodType"
+            android:layout_width="match_parent"
+            android:textSize="18sp"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txtFoodStall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtFoodRemaining"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp" />
+
 
     </LinearLayout>
 
@@ -66,20 +89,36 @@
 
         <Button
             android:id="@+id/btnAddFoodToCart"
-            android:text="Add Food To Cart"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_margin="8dp"
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"/>
+            android:text="Add Food To Cart" />
 
-        <Button
-            android:id="@+id/btnViewFoodInCart"
-            android:text="View Food In Cart"
-            android:layout_weight="1"
-            android:layout_width="0dp"
+        <Space
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"/>
+            android:layout_weight="1" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_view_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_weight="1"
+            app:backgroundTint="?attr/colorPrimary"
+            app:fabCustomSize="80dp"
+            app:fabSize="normal"
+            app:maxImageSize="50dp"
+            app:srcCompat="@drawable/ic_action_cart"
+            tools:ignore="VectorDrawableCompat" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageFood"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginBottom="20dp" />
 
 </RelativeLayout>
