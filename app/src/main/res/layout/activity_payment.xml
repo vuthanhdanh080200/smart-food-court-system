@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Payment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:orientation="vertical">
+
+
+        <RadioGroup
+            android:id="@+id/grpPaymentOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Choose payment method:"
+                android:textSize="20dp" />
+
+            <RadioButton
+                android:id="@+id/rdCashSettlement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cash Settlement" />
+
+            <RadioButton
+                android:id="@+id/rdUseAccountBalance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pay using account balance" />
+
+            <RadioButton
+                android:id="@+id/rdEwallet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pay using e-wallet" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/txtCashSettlement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wait"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtUseAccountBalanceCurrent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Current balance: "
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtUseAccountBalanceUse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Use: "
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txtUseAccountBalanceRemaining"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Remaining: "
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnPay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="0"
+            android:clickable="false"
+            android:text="Pay"
+            android:textColorHint="#FFFFFF"
+            android:textColorLink="#2196F3" />
+    </LinearLayout>
+</RelativeLayout>

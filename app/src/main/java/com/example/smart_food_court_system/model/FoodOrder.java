@@ -4,14 +4,16 @@ public class FoodOrder {
     private String FoodName;
     private String Quantity;
     private String Price;
+    private String FoodStallName;
 
     public FoodOrder() {
     }
 
-    public FoodOrder(String foodName, String quantity, String price) {
+    public FoodOrder(String foodName, String quantity, String price, String foodStallName) {
         FoodName = foodName;
         Quantity = quantity;
         Price = price;
+        FoodStallName = foodStallName;
     }
 
     public String getFoodName() {
@@ -36,6 +38,14 @@ public class FoodOrder {
 
     public void setPrice(String price) {
         Price = price;
+    }
+
+    public String getFoodStallName() {
+        return FoodStallName;
+    }
+
+    public void setFoodStallName(String foodStallName) {
+        FoodStallName = foodStallName;
     }
 }
 

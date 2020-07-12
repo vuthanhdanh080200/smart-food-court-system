@@ -48,7 +48,7 @@ public class Home extends AppCompatActivity
     Button logout,cancel, changePassword, changeProfile;
     ListView listFoodView;
     FirebaseListAdapter adapter;
-    TextView userName, email;
+    TextView txtName, txtAccountBalance, txtEmail;
     CircleImageView circleImageView;
     EditText edtOldPassword, edtNewPassword, edtConfirmNewPassword;
     EditText edtName, edtEmailAddress, edtPhoneNumber;
@@ -56,11 +56,8 @@ public class Home extends AppCompatActivity
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        Paper.init(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -73,15 +70,31 @@ public class Home extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        circleImageView = (CircleImageView) findViewById(R.id.profile_image);
 
         View headerView = navigationView.getHeaderView(0);
-        userName = (TextView) headerView.findViewById(R.id.txtUserName);
-        email = (TextView) headerView.findViewById(R.id.txtEmail);
-        userName.setText(Common.currentUser.getUserName());
-        email.setText(Common.currentUser.getEmailAddress());
+        txtName = (TextView)headerView.findViewById(R.id.txtName);
+        txtAccountBalance = (TextView)headerView.findViewById(R.id.txtAccountBalance);
+        txtEmail = (TextView)headerView.findViewById(R.id.txtEmail);
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("Danh").child("Food");
+        txtName.setText(Common.currentUser.getName());
+        txtEmail.setText(Common.currentUser.getEmailAddress());
+        DatabaseReference UserDB = FirebaseDatabase.getInstance().getReference("Duy/User")
+                .child(Common.currentUser.getUserName());
+        Log.e("Error", Common.currentUser.getUserName());
+        UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String balance = dataSnapshot.child("accountBalance").getValue().toString();
+                txtAccountBalance.setText("Account balance: " + balance + " VND");
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Food");
         listFoodView = (ListView) findViewById(R.id.lVFood);
 
         FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
@@ -109,10 +122,10 @@ public class Home extends AppCompatActivity
         };
 
         // Now set the adapter with a given layout
-        try {
+        try{
             listFoodView.setAdapter(adapter);
-        } catch (Exception e) {
-            Log.e("Error ", "" + e.getMessage());
+        }catch(Exception e){
+            Log.e("Error " ,""+ e.getMessage());
             //TO DO--------------------------------------------------------
             //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
         }
@@ -179,20 +192,31 @@ public class Home extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
 
-        userName = (TextView) findViewById(R.id.txtUserName);
-        email = (TextView) findViewById(R.id.txtEmail);
-        userName.setText(Common.currentUser.getUserName());
-        email.setText(Common.currentUser.getEmailAddress());
+        txtName = (TextView) findViewById(R.id.txtName);
+        txtEmail = (TextView) findViewById(R.id.txtEmail);
+        txtName.setText(Common.currentUser.getName());
+        txtEmail.setText(Common.currentUser.getEmailAddress());
+
         int id = item.getItemId();
         if (Common.isConnectedToInternet(getBaseContext())) {
             if (id == R.id.change_profile) {
                 openChangeProfile();
-            } else if (id == R.id.order_details_drawer) {
+            }
+            else if (id == R.id.order_details_drawer) {
                 Toast.makeText(getApplicationContext(), "No details found because you didn't order something...", Toast.LENGTH_SHORT).show();
-            } else if (id == R.id.submit_order) {
-
+            }
+            else if (id == R.id.submit_order) {
                 Toast.makeText(getApplicationContext(), "Sorry, You don't order anything...", Toast.LENGTH_SHORT).show();
-            } else if (id == R.id.change_password) {
+            }
+            else if(id == R.id.recharge){
+                Intent HomeToRecharge = new Intent(Home.this, Recharge.class);
+                startActivity(HomeToRecharge);
+            }
+            else if(id == R.id.view_cart){
+                Intent HomeToCart = new Intent(Home.this, Cart.class);
+                startActivity(HomeToCart);
+            }
+            else if(id == R.id.change_password){
                 openChangePassword();
             }
         }
@@ -200,12 +224,14 @@ public class Home extends AppCompatActivity
             Toast.makeText(Home.this, "Please check your connection!", Toast.LENGTH_SHORT).show();
             return true;
         }
-        if (id == R.id.log_out) {
+        if(id == R.id.log_out ){
             openDialog();
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+
     }
 
     public void openDialog() {
@@ -219,7 +245,6 @@ public class Home extends AppCompatActivity
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            Paper.book().destroy();
             Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
             startActivity(loginIntent);
             }
@@ -250,7 +275,7 @@ public class Home extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 final DatabaseReference mDatabase;
-                mDatabase = FirebaseDatabase.getInstance().getReference("Danh/User");
+                mDatabase = FirebaseDatabase.getInstance().getReference("Duy/User");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -310,11 +335,10 @@ public class Home extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 final DatabaseReference mDatabase;
-                mDatabase = FirebaseDatabase.getInstance().getReference("Danh/User");
+                mDatabase = FirebaseDatabase.getInstance().getReference("Duy/User");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
 
                         User user = new User(
                                 edtName.getText().toString(),
@@ -323,7 +347,7 @@ public class Home extends AppCompatActivity
                                 edtEmailAddress.getText().toString(),
                                 edtPhoneNumber.getText().toString(),
                                 Common.currentUser.getRole(),
-                                Common.currentUser.getAccountBlance(),
+                                Common.currentUser.getAccountBalance(),
                                 Common.currentUser.getStall());
 
                         if(user.getName().isEmpty() || user.getUserName().isEmpty() || user.getPassword().isEmpty() ||

@@ -30,9 +30,9 @@ public class ChangeRoleUser extends AppCompatActivity {
         setContentView(R.layout.activity_change_role_user);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("Hieu");
+        final DatabaseReference table_user = database.getReference("Duy");
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("Hieu").child("User");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("User");
         listUserView = (ListView) findViewById(R.id.lvUser);
 
         FirebaseListOptions<User> options = new FirebaseListOptions.Builder<User>()

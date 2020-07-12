@@ -31,9 +31,9 @@ public class Order extends AppCompatActivity {
         setContentView(R.layout.activity_order);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("Hieu");
+        final DatabaseReference table_user = database.getReference("Duy");
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("Hieu").child("Order");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Order");
         listOrderView = (ListView) findViewById(R.id.lVOrder);
 
         FirebaseListOptions<com.example.smart_food_court_system.model.Order> options = new FirebaseListOptions.Builder<com.example.smart_food_court_system.model.Order>()

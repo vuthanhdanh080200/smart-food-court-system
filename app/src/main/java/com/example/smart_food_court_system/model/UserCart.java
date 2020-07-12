@@ -3,32 +3,18 @@ package com.example.smart_food_court_system.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Order {
-    private String orderID;
+//Unused class
+public class UserCart {
     private String userName;
     private HashMap<String, FoodOrder> foodOrderList;
     private String total;
-    private String TimeStamp;
-    private String Status;
 
-    public Order() {
-    }
+    public UserCart(){}
 
-    public Order(String orderID, String userName, HashMap<String, FoodOrder> foodOrderList, String total, String timeStamp, String status) {
-        this.orderID = orderID;
+    public UserCart(String userName, HashMap<String, FoodOrder> foodOrderList, String total) {
         this.userName = userName;
         this.foodOrderList = foodOrderList;
         this.total = total;
-        TimeStamp = timeStamp;
-        Status = status;
-    }
-
-    public String getOrderID() {
-        return orderID;
-    }
-
-    public void setOrderID(String orderID) {
-        this.orderID = orderID;
     }
 
     public String getUserName() {
@@ -53,21 +39,5 @@ public class Order {
 
     public void setTotal(String total) {
         this.total = total;
-    }
-
-    public String getTimeStamp() {
-        return TimeStamp;
-    }
-
-    public void setTimeStamp(String timeStamp) {
-        TimeStamp = timeStamp;
-    }
-
-    public String getStatus() {
-        return Status;
-    }
-
-    public void setStatus(String status) {
-        Status = status;
     }
 }

@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void login(final String userRe, final String pwd) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("Danh/User");
+        final DatabaseReference table_user = database.getReference("Duy/User");
         if (Common.isConnectedToInternet(getBaseContext())) {
 
             final ProgressDialog mDialog = new ProgressDialog(MainActivity.this);

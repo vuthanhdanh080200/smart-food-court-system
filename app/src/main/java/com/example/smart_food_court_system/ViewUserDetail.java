@@ -51,7 +51,7 @@ public class ViewUserDetail extends AppCompatActivity {
         btnChangeRole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db=FirebaseDatabase.getInstance().getReference("Hieu/User");
+                db=FirebaseDatabase.getInstance().getReference("Duy/User");
                 db.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -97,7 +97,7 @@ public class ViewUserDetail extends AppCompatActivity {
 
 
     private void getDetailUser(final String username) {
-        mDatabase.child("Hieu").child("User").child(username).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Duy").child("User").child(username).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user_detail = dataSnapshot.getValue(User.class);
@@ -107,9 +107,8 @@ public class ViewUserDetail extends AppCompatActivity {
                 txtEmailAdress.setText("EmailAddress: "+ user_detail.getEmailAddress());
                 txtPhoneNumber.setText("Phone Number: "+ user_detail.getPhoneNumber());
                 txtRole.setText("Role: "+ user_detail.getRole());
-                txtAccountBalance.setText("Account Balance: "+ user_detail.getAccountBlance());
+                txtAccountBalance.setText("Account Balance: "+ user_detail.getAccountBalance());
                 txtStall.setText("Stall: "+ user_detail.getStall());
-
             }
 
             @Override

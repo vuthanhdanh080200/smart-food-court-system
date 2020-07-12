@@ -3,7 +3,6 @@
     package="com.example.smart_food_court_system">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -21,6 +20,8 @@
         <activity android:name=".Order" />
         <activity android:name=".Test" />
         <activity android:name=".ViewFoodDetail" />
+        <activity android:name=".Recharge"></activity>
+        <activity android:name=".Payment" />
         <activity android:name=".AddFood" />
         <activity android:name=".Home" />
         <activity android:name=".Cart" />

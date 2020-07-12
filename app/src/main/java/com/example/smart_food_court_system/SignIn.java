@@ -45,7 +45,7 @@ public class SignIn extends AppCompatActivity {
         txtForgotPassword = (TextView)findViewById(R.id.txtForgotPassword);
         //Init Firebase
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("Danh/User");
+        final DatabaseReference table_user = database.getReference("Duy/User");
 
         btnSignIn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -149,7 +149,7 @@ public class SignIn extends AppCompatActivity {
         edtUserName = (EditText) builder.findViewById(R.id.edtUserName);
         edtPhoneNumber = (EditText) builder.findViewById(R.id.edtPhoneNumber);
         final DatabaseReference mDatabase;
-        mDatabase = FirebaseDatabase.getInstance().getReference("Danh/User");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Duy/User");
 
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override

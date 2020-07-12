@@ -46,7 +46,7 @@ public class ViewOrderDetail extends AppCompatActivity {
         btnBackStage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db=FirebaseDatabase.getInstance().getReference("Hieu/Order");
+                db=FirebaseDatabase.getInstance().getReference("Duy/Order");
                 db.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -82,7 +82,7 @@ public class ViewOrderDetail extends AppCompatActivity {
         btnNextStage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db=FirebaseDatabase.getInstance().getReference("Hieu/Order");
+                db=FirebaseDatabase.getInstance().getReference("Duy/Order");
                 db.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -115,7 +115,7 @@ public class ViewOrderDetail extends AppCompatActivity {
 
 
     private void getDetailOrder(final String OrderId) {
-        mDatabase.child("Hieu").child("Order").child(orderId).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Duy").child("Order").child(orderId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 com.example.smart_food_court_system.model.Order order_detail = dataSnapshot.getValue(com.example.smart_food_court_system.model.Order.class);

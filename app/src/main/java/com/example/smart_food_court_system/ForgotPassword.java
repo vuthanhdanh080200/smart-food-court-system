@@ -28,7 +28,7 @@ public class ForgotPassword extends AppCompatActivity {
         btnCancel = (Button)findViewById(R.id.dialog_cancel);
 
         final DatabaseReference mDatabase;
-        mDatabase = FirebaseDatabase.getInstance().getReference("Danh/User");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Duy/User");
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

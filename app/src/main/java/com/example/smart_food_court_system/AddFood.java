@@ -34,7 +34,8 @@ public class AddFood extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_food);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Danh");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Duy");
+
         edtFoodStallName = (EditText)findViewById(R.id.edtFoodStallName);
         edtFoodName = (EditText)findViewById(R.id.edtFoodName);
         edtFoodType = (EditText)findViewById(R.id.edtFoodType);
@@ -79,7 +80,7 @@ public class AddFood extends AppCompatActivity {
             @Override
             public void onClick(View view){
             Intent home = new Intent(AddFood.this, Home.class);
-            Common.currentUser = Common.admin;
+            Common.currentUser = new User("Admin", "Admin", "1234", "Admin@gmail.com", "1234", "Customer", "0", "0");
             startActivity(home);
             }
         });

@@ -74,22 +74,57 @@ public class ViewFoodDetail extends AppCompatActivity {
             getDetailFood(foodName);
 
         }
+        final int total[] = {0};
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    total[0] = Integer.parseInt(dataSnapshot.child("Duy/Cart")
+                            .child(Common.currentUser.getUserName())
+                            .child("total").getValue().toString());
+                }
+                catch(Exception e){
+                    total[0] = 0;
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         btnAddFoodToCart.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {
+            public void onClick(View view){
                 if (Common.isConnectedToInternet(getBaseContext())) {
-                    db = FirebaseDatabase.getInstance().getReference("Demo/Cart");
-                    db.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (btnOrderQuantity.getNumber().equals("0")) {
-                                Toast.makeText(ViewFoodDetail.this, "Not a proper number", Toast.LENGTH_SHORT).show();
-                            } else {
-                                db.child(Common.currentUser.getUserName()).child(foodOrder.getFoodName()).setValue(foodOrder);
-                                Toast.makeText(ViewFoodDetail.this, "Add Food To Cart successfully !", Toast.LENGTH_SHORT).show();
-                            }
+                db = FirebaseDatabase.getInstance().getReference("Duy/Cart")
+                        .child(Common.currentUser.getUserName()).child("foodOrderList");
+
+
+                db.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final int oldQuantity[] = {0};
+                        try {
+                            oldQuantity[0] = Integer.parseInt(dataSnapshot.child(foodName).child("quantity").getValue().toString());
                         }
+                        catch(Exception e){
+                            oldQuantity[0] = 0;
+                        }
+                        if(btnOrderQuantity.getNumber().equals("0")){
+                            Toast.makeText(ViewFoodDetail.this, "Not a proper number", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            int quantity = Integer.parseInt(btnOrderQuantity.getNumber());
+                            int price = Integer.parseInt(foodOrder.getPrice());
+                            total[0] += (quantity - oldQuantity[0])*price;
+
+                            db.child(foodOrder.getFoodName()).setValue(foodOrder);
+                            db.getParent().child("total").setValue(String.valueOf(total[0]));
+                            db.getParent().child("userName").setValue(Common.currentUser.getUserName());
+                            Toast.makeText(ViewFoodDetail.this, "Add Food To Cart successfully !", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
@@ -114,12 +149,13 @@ public class ViewFoodDetail extends AppCompatActivity {
     }
 
     private void getDetailFood(final String foodID) {
-        mDatabase.child("Danh").child("Food").child(foodName).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("Duy").child("Food").child(foodName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Food food = dataSnapshot.getValue(Food.class);
                 foodOrder.setFoodName(food.getFoodName());
                 foodOrder.setPrice(food.getFoodPrice());
+                foodOrder.setFoodStallName(food.getFoodStallName());
                 FoodRemaining = Integer.parseInt(food.getFoodRemaining());
                 txtFoodName.setText("Name " + food.getFoodName());
                 txtFoodPrice.setText("Price " + food.getFoodPrice());
