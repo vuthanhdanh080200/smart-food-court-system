@@ -60,7 +60,7 @@ public class SignIn extends AppCompatActivity {
                                 mDialog.dismiss();
                                 User user = dataSnapshot.child(edtUserName.getText().toString()).getValue(User.class);
                                 if (user.getPassword().equals(edtPassword.getText().toString())) {
-                                    if (user.getRole().equals("itstaff")) {
+                                    if (user.getRole().equals("it staff")) {
                                         Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
                                         Intent itstaffhome = new Intent(SignIn.this, ItStaffHome.class);
                                         startActivity(itstaffhome);
@@ -74,12 +74,6 @@ public class SignIn extends AppCompatActivity {
                                         Intent home = new Intent(SignIn.this, Home.class);
                                         startActivity(home);
                                     }
-                                    else if (user.getRole().equals("it staff")){
-                                        Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
-                                        Intent test = new Intent(SignIn.this, Test.class);
-                                        startActivity(test);
-                                    }
-
                                     else if (user.getRole().equals("cook")||user.getRole().equals("waitor")){
                                         Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
                                         Intent order = new Intent(SignIn.this, Order.class);

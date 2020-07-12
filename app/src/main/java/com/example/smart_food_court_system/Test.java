@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.smart_food_court_system.common.Common;
 import com.example.smart_food_court_system.common.Text;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +35,7 @@ public class Test extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private EditText editText;
-
+    String phoneNumber = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,26 +54,28 @@ public class Test extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressbar);
         editText = findViewById(R.id.editTextCode);
+        phoneNumber = getIntent().getStringExtra("phoneNumber");
+        if(!phoneNumber.isEmpty()) {
+            sendVerificationCode(phoneNumber);
+            findViewById(R.id.buttonSignIn).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-        String phonenumber = "+84963774129";
-        sendVerificationCode(phonenumber);
+                    String code = editText.getText().toString().trim();
 
-        findViewById(R.id.buttonSignIn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                    if (code.isEmpty() || code.length() < 6) {
 
-                String code = editText.getText().toString().trim();
-
-                if (code.isEmpty() || code.length() < 6) {
-
-                    editText.setError("Enter code...");
-                    editText.requestFocus();
-                    return;
+                        editText.setError("Enter code...");
+                        editText.requestFocus();
+                        return;
+                    }
+                    verifyCode(code);
                 }
-                verifyCode(code);
-            }
-        });
-
+            });
+        }
+        else{
+            Toast.makeText(Test.this, "Empty phone number!", Toast.LENGTH_SHORT).show();
+        }
 
 
     }
@@ -109,10 +112,8 @@ public class Test extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
-                            Intent intent = new Intent(Test.this, Home.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
+                            Intent intent = new Intent(Test.this, ForgotPassword.class);
+                            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
 
                         } else {

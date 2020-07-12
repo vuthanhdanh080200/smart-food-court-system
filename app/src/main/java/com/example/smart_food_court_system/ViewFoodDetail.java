@@ -77,26 +77,30 @@ public class ViewFoodDetail extends AppCompatActivity {
 
         btnAddFoodToCart.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view){
-
-                db = FirebaseDatabase.getInstance().getReference("Demo/Cart");
-                db.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(btnOrderQuantity.getNumber().equals("0")){
-                            Toast.makeText(ViewFoodDetail.this, "Not a proper number", Toast.LENGTH_SHORT).show();
+            public void onClick(View view) {
+                if (Common.isConnectedToInternet(getBaseContext())) {
+                    db = FirebaseDatabase.getInstance().getReference("Demo/Cart");
+                    db.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (btnOrderQuantity.getNumber().equals("0")) {
+                                Toast.makeText(ViewFoodDetail.this, "Not a proper number", Toast.LENGTH_SHORT).show();
+                            } else {
+                                db.child(Common.currentUser.getUserName()).child(foodOrder.getFoodName()).setValue(foodOrder);
+                                Toast.makeText(ViewFoodDetail.this, "Add Food To Cart successfully !", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else {
-                            db.child(Common.currentUser.getUserName()).child(foodOrder.getFoodName()).setValue(foodOrder);
-                            Toast.makeText(ViewFoodDetail.this, "Add Food To Cart successfully !", Toast.LENGTH_SHORT).show();
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                    });
+                }
+                else{
+                    Toast.makeText(ViewFoodDetail.this, "Please check your connection!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
         });
 

@@ -77,7 +77,7 @@ public class Cart extends AppCompatActivity {
                         int quantity = Integer.parseInt(btnCartQuantity.getNumber());
 
                         if(quantity > remainingFood[0]){
-                            Toast.makeText(Cart.this, "Insufficient remaining food", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Cart.this, Common.remainingFoodErrorMessage, Toast.LENGTH_SHORT).show();
                             btnCartQuantity.setNumber(Integer.toString(quantity - 1));
                         }
                         else {
