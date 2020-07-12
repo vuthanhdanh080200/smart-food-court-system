@@ -60,7 +60,16 @@ public class SignIn extends AppCompatActivity {
                                 mDialog.dismiss();
                                 User user = dataSnapshot.child(edtUserName.getText().toString()).getValue(User.class);
                                 if (user.getPassword().equals(edtPassword.getText().toString())) {
-                                    if(user.getRole().equals("customer")) {
+                                    if (user.getRole().equals("itstaff")) {
+                                        Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                        Intent itstaffhome = new Intent(SignIn.this, ItStaffHome.class);
+                                        startActivity(itstaffhome);
+                                    }
+                                    else if(Common.power.equals("tat")){
+                                        Intent turnoff = new Intent(SignIn.this, TurnOffSystem.class);
+                                        startActivity(turnoff);
+                                    }
+                                    else if(user.getRole().equals("customer")) {
                                         Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
                                         Intent home = new Intent(SignIn.this, Home.class);
                                         startActivity(home);
@@ -70,13 +79,17 @@ public class SignIn extends AppCompatActivity {
                                         Intent test = new Intent(SignIn.this, Test.class);
                                         startActivity(test);
                                     }
-                                    // Xoa dong duoi nay di khi commit
-                                    else if (user.getRole().equals("cook")){
+
+                                    else if (user.getRole().equals("cook")||user.getRole().equals("waitor")){
                                         Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
                                         Intent order = new Intent(SignIn.this, Order.class);
                                         startActivity(order);
                                     }
-                                    // Xoa dong tren nay di khi commit
+                                    else if(user.getRole().equals("manager")){
+                                        Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                        Intent homemanager = new Intent(SignIn.this, HomeManager.class);
+                                        startActivity(homemanager);
+                                    }
                                     else{
                                         Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
 

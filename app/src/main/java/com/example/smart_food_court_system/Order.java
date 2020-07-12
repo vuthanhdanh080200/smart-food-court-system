@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
-
+//Giao dien cua Waitor va cook
 public class Order extends AppCompatActivity {
     ListView listOrderView;
     FirebaseListAdapter adapter;
@@ -31,9 +31,9 @@ public class Order extends AppCompatActivity {
         setContentView(R.layout.activity_order);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("Danh");
+        final DatabaseReference table_user = database.getReference("Hieu");
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("Danh").child("Order/nva");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Hieu").child("Order");
         listOrderView = (ListView) findViewById(R.id.lVOrder);
 
         FirebaseListOptions<com.example.smart_food_court_system.model.Order> options = new FirebaseListOptions.Builder<com.example.smart_food_court_system.model.Order>()
@@ -44,22 +44,22 @@ public class Order extends AppCompatActivity {
         adapter = new FirebaseListAdapter<com.example.smart_food_court_system.model.Order>(options) {
             protected void populateView(@NonNull View view, @NonNull com.example.smart_food_court_system.model.Order order, final int position) {
                 TextView userName = view.findViewById(R.id.txtUserName);
-                userName.setText("" + order.getUserName());
+                userName.setText("User name: " + order.getUserName());
                 TextView totalPrice = view.findViewById(R.id.txtTotalPrice);
-                totalPrice.setText("" + order.getTotal());
+                totalPrice.setText("Total: " + order.getTotal());
                 TextView status = view.findViewById(R.id.txtStatus);
-                status.setText("" + order.getStatus());
-                /*
+                status.setText("Status order: " + order.getStatus());
+
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent foodDetailIntent = new Intent(Order.this, ViewFoodDetail.class);
-                        foodDetailIntent.putExtra("FoodName", adapter.getRef(position).getKey());
-                        startActivity(foodDetailIntent);
+                        Intent orderDetailIntent = new Intent(Order.this, ViewOrderDetail.class);
+                        orderDetailIntent.putExtra("ID", adapter.getRef(position).getKey());
+                        startActivity(orderDetailIntent);
                     }
                 });
 
-                 */
+
             }
         };
 
