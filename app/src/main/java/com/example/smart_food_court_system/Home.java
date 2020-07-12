@@ -107,8 +107,10 @@ public class Home extends AppCompatActivity
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
 
-        Query query = FirebaseDatabase.getInstance().getReference().child("Danh").child("Food");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Food");
         listFoodView = (ListView) findViewById(R.id.lVFood);
 
         FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
@@ -306,7 +308,7 @@ public class Home extends AppCompatActivity
     }
 
     private void searchFood(String searchText){
-        Query query = FirebaseDatabase.getInstance().getReference().child("Vuong").child("Food").orderByKey().startAt(searchText).endAt(searchText+"\uf8ff");
+        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Food").orderByKey().startAt(searchText).endAt(searchText+"\uf8ff");
         listFoodView = (ListView) findViewById(R.id.lVFood);
 
         FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()

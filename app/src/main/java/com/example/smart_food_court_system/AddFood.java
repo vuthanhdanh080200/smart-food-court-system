@@ -56,7 +56,6 @@ public class AddFood extends AppCompatActivity {
         edtFoodPrice = (EditText)findViewById(R.id.edtFoodPrice);
         edtFoodDescription = (EditText)findViewById(R.id.edtFoodDescription);
         edtFoodRemaining = (EditText)findViewById(R.id.edtFoodRemaining);
-        edtFoodImage = (EditText)findViewById(R.id.edtFoodImage);
         btnAddFood = (Button)findViewById(R.id.btnAddFood);
         btnViewFood = (Button)findViewById(R.id.btnViewFood);
         // new
