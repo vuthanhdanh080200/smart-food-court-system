@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="Profile">
+        <menu>
+            <item
+                android:id="@+id/change_profile"
+                android:icon="@drawable/ic_baseline_account_circle_24"
+                android:title="Change Profile" />
+
+            <item
+                android:id="@+id/change_password"
+                android:icon="@drawable/ic_baseline_security_24"
+                android:title="Change Password" />
+
+            <item
+                android:id="@+id/report"
+                android:icon="@drawable/ic_baseline_assessment_24"
+                android:title="Report" />
+
+            <item
+                android:id="@+id/food_management"
+                android:icon="@drawable/ic_food"
+                android:title="Food Management" />
+
+            <item
+                android:id="@+id/staff_management"
+                android:icon="@drawable/ic_baseline_group_24"
+                android:title="Staff Management" />
+
+            <item
+                android:id="@+id/log_out"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="Log Out" />
+
+        </menu>
+    </item>
+
+</menu>

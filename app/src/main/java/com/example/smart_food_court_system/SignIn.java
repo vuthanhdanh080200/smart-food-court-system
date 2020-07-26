@@ -56,7 +56,7 @@ public class SignIn extends AppCompatActivity {
                     mDialog.setMessage("Please wait...");
                     mDialog.show();
 
-                    table_user.addValueEventListener(new ValueEventListener() {
+                    table_user.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             //NEW: Check if all of the fields have been filled yet.
@@ -81,29 +81,35 @@ public class SignIn extends AppCompatActivity {
                                             }
                                             Intent home = new Intent(SignIn.this, Home.class);
                                             startActivity(home);
+                                            finish();
                                         } else if (user.getRole().equals("it staff")) {
                                             Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
                                             Intent itStaffHome = new Intent(SignIn.this, ItStaffHome.class);
                                             startActivity(itStaffHome);
+                                            finish();
                                         }
-                                        else if(Common.power.equals("tat")){
-                                            Intent turnoff = new Intent(SignIn.this, TurnOffSystem.class);
-                                            startActivity(turnoff);
-                                        }
-                                        else if (user.getRole().equals("cook")||user.getRole().equals("waitor")){
+                                        else if (user.getRole().equals("cook")){
                                             Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
-                                            Intent order = new Intent(SignIn.this, Order.class);
-                                            startActivity(order);
+                                            Intent intent = new Intent(SignIn.this, HomeCook.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                        else if (user.getRole().equals("waitor")){
+                                            Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(SignIn.this, HomeCook.class);
+                                            startActivity(intent);
+                                            finish();
                                         }
                                         else if(user.getRole().equals("manager")){
                                             Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
                                             Intent homeManager = new Intent(SignIn.this, HomeManager.class);
                                             startActivity(homeManager);
+                                            finish();
                                         }
-                                        else {
-                                            if (Common.currentUser == null) {
-                                                Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
-                                            }
+                                        else if(Common.power.equals("offSystem")) {
+                                            Intent turnoff = new Intent(SignIn.this, TurnOffSystem.class);
+                                            startActivity(turnoff);
+                                            finish();
                                         }
                                         Common.currentUser = user;
                                     } else {

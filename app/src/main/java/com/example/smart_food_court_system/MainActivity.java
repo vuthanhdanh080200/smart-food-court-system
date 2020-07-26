@@ -98,15 +98,20 @@ public class MainActivity extends AppCompatActivity {
                                     Intent test = new Intent(MainActivity.this, Test.class);
                                     startActivity(test);
                                 }
-                                // Xoa dong duoi nay di khi commit
                                 else if (user.getRole().equals("cook")) {
                                     if (Common.currentUser == null) {
                                         Toast.makeText(MainActivity.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
                                     }
-                                    Intent order = new Intent(MainActivity.this, Order.class);
-                                    startActivity(order);
+                                    Intent intent = new Intent(MainActivity.this, HomeCook.class);
+                                    startActivity(intent);
                                 }
-                                // Xoa dong tren nay di khi commit
+                                else if (user.getRole().equals("manager")) {
+                                    if (Common.currentUser == null) {
+                                        Toast.makeText(MainActivity.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                    }
+                                    Intent intent = new Intent(MainActivity.this, HomeManager.class);
+                                    startActivity(intent);
+                                }
                                 else {
                                     if (Common.currentUser == null) {
                                         Toast.makeText(MainActivity.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();

@@ -85,8 +85,8 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/btnAddFood"
-            android:text="ADD FOOD"
+            android:id="@+id/btnCancel"
+            android:text="@string/cancel"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -94,8 +94,8 @@
             android:layout_below="@id/btnChoose"/>
 
         <Button
-            android:id="@+id/btnViewFood"
-            android:text="VIEW FOOD"
+            android:id="@+id/btnAddFood"
+            android:text="@string/add"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

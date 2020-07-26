@@ -33,7 +33,7 @@ public class AddFood extends AppCompatActivity {
              edtFoodPrice,
              edtFoodDescription,
              edtFoodRemaining;
-    Button btnAddFood, btnViewFood;
+    Button btnAddFood, btnCancel;
     DatabaseReference mDatabase;
     // new
     Button btnChoose;
@@ -55,7 +55,7 @@ public class AddFood extends AppCompatActivity {
         edtFoodDescription = (EditText)findViewById(R.id.edtFoodDescription);
         edtFoodRemaining = (EditText)findViewById(R.id.edtFoodRemaining);
         btnAddFood = (Button)findViewById(R.id.btnAddFood);
-        btnViewFood = (Button)findViewById(R.id.btnViewFood);
+        btnCancel = (Button)findViewById(R.id.btnCancel);
         // new
         btnChoose = (Button)findViewById(R.id.btnChoose);
         imgFood = (ImageView)findViewById(R.id.imgFood);
@@ -92,7 +92,7 @@ public class AddFood extends AppCompatActivity {
                     //Kiểm tra tên món ăn đã bị trùng chưa ?
                     //Kiểm tra tên quầy có chưa ? (quầy chưa có thì không được điền)
                     mDatabase.child("Food").child(edtFoodName.getText().toString()).setValue(food);
-                    mDatabase.child("FoodStall").child(edtFoodStallName.getText().toString()).child(edtFoodName.getText().toString()).setValue(food);
+                    mDatabase.child("FoodStall").child(edtFoodStallName.getText().toString()).child("FoodList").child(edtFoodName.getText().toString()).setValue(food);
                     Toast.makeText(AddFood.this, Common.addFoodSuccessMessage, Toast.LENGTH_SHORT).show();
                 }
                 @Override
@@ -102,12 +102,17 @@ public class AddFood extends AppCompatActivity {
             }
         });
 
-        btnViewFood.setOnClickListener(new View.OnClickListener(){
+        btnCancel.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view){
-            Intent home = new Intent(AddFood.this, Home.class);
-            Common.currentUser = new User("Admin", "Admin", "1234", "Admin@gmail.com", "1234", "Customer", "0", "0");
-            startActivity(home);
+            public void onClick(View view) {
+                if (Common.currentUser.getRole().equals("cook")) {
+                    Intent intent = new Intent(AddFood.this, FoodManagement.class);
+                    startActivity(intent);
+                }
+                else if (Common.currentUser.getRole().equals("manager")) {
+                    Intent intent = new Intent(AddFood.this, HomeManager.class);
+                    startActivity(intent);
+                }
             }
         });
     }

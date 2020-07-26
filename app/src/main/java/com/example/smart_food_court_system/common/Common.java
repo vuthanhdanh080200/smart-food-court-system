@@ -18,6 +18,7 @@ public class Common {
     public static final String PASSWORD = "smartfoodcourthcmut123456789"; //Host Password
     public static final String textSubEmailConfirmOTPPasswordMessage = "Xác Nhận Mã OTP";
     public static final String addFoodSuccessMessage = "Add Food Success";
+    public static final String changeFoodSuccessMessage = "Change Food Success";
     public static final String remainingFoodErrorMessage = "Insufficient remaining food";
     public static final String fillAllErrorMessage = "Please Fill In All Information!";
     public static final String changePasswordSuccessMessage = "Change Password Success";

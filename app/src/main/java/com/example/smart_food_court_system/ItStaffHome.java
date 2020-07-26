@@ -16,7 +16,7 @@ public class ItStaffHome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_it_staff_home);
         btnSystem=(Button)findViewById(R.id.btnSystem);
-        if(Common.power.equals("bat")) {
+        if(Common.power.equals("offSystem")) {
             btnSystem.setText("Turn off system");
         }
         else{
@@ -27,15 +27,15 @@ public class ItStaffHome extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(Common.power.equals("bat")){
+                if(Common.power.equals("offSystem")){
                     Toast.makeText(ItStaffHome.this, "The system has been turned off!", Toast.LENGTH_SHORT).show();
-                    Common.power="tat";
+                    Common.power="offSystem";
                 }
                 else{
                     Toast.makeText(ItStaffHome.this, "The system has been turned on!", Toast.LENGTH_SHORT).show();
-                    Common.power="bat";
+                    Common.power="offSystem";
                 }
-                if(Common.power.equals("bat")) {
+                if(Common.power.equals("offSystem")) {
                     btnSystem.setText("Turn off system");
                 }
                 else{

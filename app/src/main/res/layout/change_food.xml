@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/txtChangeFood"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/change_food"/>
+
+    <EditText
+        android:id="@+id/txtFoodStallName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/stall"
+        android:layout_below="@id/txtChangeFood"/>
+
+    <EditText
+        android:id="@+id/edtFoodName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:hint="@string/Name"
+        android:inputType="text"
+        android:layout_below="@id/txtFoodStallName" />
+
+    <EditText
+        android:id="@+id/edtFoodType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:hint="@string/type"
+        android:inputType="text"
+        android:layout_below="@id/edtFoodName"/>
+
+    <EditText
+        android:id="@+id/edtFoodDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:hint="Description"
+        android:inputType="text"
+        android:layout_below="@id/edtFoodType"/>
+
+    <EditText
+        android:id="@+id/edtFoodPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:hint="Price"
+        android:inputType="phone"
+        android:layout_below="@id/edtFoodDescription"/>
+
+    <EditText
+        android:id="@+id/edtFoodRemaining"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:hint="Remaining"
+        android:inputType="phone"
+        android:layout_below="@id/edtFoodPrice"/>
+
+    <Button
+        android:id="@+id/btnChoose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtFoodRemaining"
+        android:text="Upload Image" />
+
+    <ImageView
+        android:id="@+id/imgFood"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:srcCompat="@android:drawable/screen_background_light_transparent"
+        android:layout_below="@id/btnChoose"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/imgFood">
+
+        <Button
+            android:id="@+id/dialog_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:background="#E0E0E0"
+            android:text="Cancel"
+            android:clickable="true"
+            />
+        <Button
+            android:id="@+id/dialog_change"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:background="#E0E0E0"
+            android:text="Change"
+            android:clickable="true"
+            android:icon="@drawable/shopping_cart"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>
+

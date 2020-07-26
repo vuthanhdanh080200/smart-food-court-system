@@ -7,30 +7,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.smart_food_court_system.common.Common;
-import com.example.smart_food_court_system.model.Food;
 import com.example.smart_food_court_system.model.User;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,34 +30,32 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import androidx.core.view.GravityCompat;
-import androidx.core.view.MenuCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
 
-public class Home extends AppCompatActivity
+public class HomeCook extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     NavigationView navigationView = null;
     Toolbar toolbar = null;
-    Button logout,cancel, changePassword, changeProfile;
-    ListView listFoodView;
+    Button changeProfile, changePassword, logout, cancel;
+    ListView listOrderView;
     FirebaseListAdapter adapter;
-    TextView txtName, txtAccountBalance, txtEmail;
+    TextView txtName, txtEmail, txtRole, txtStall;
     CircleImageView circleImageView;
     EditText edtOldPassword, edtNewPassword, edtConfirmNewPassword;
     EditText edtName, edtEmailAddress, edtPhoneNumber;
-    FloatingActionButton btnViewCart;
+    DatabaseReference mDatabase, db;
+    String orderId="";
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_home_cook);
 
         Paper.init(this);
 
@@ -84,70 +74,110 @@ public class Home extends AppCompatActivity
 
         View headerView = navigationView.getHeaderView(0);
         txtName = (TextView)headerView.findViewById(R.id.txtName);
-        txtAccountBalance = (TextView)headerView.findViewById(R.id.txtAccountBalance);
-        txtEmail = (TextView)headerView.findViewById(R.id.txtEmail);
+        txtEmail = (TextView)headerView.findViewById(R.id.txtEmailAddress);
+        txtRole = (TextView)headerView.findViewById(R.id.txtRole);
+        txtStall = (TextView)headerView.findViewById(R.id.txtStall);
 
         txtName.setText(Common.currentUser.getName());
         txtEmail.setText(Common.currentUser.getEmailAddress());
+        txtRole.setText(Common.currentUser.getRole());
+        txtStall.setText(Common.currentUser.getStall());
 
-        btnViewCart = (FloatingActionButton)findViewById(R.id.fab_view_cart_home);
-        btnViewCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent cart = new Intent(Home.this, Cart.class);
-                startActivity(cart);
-            }
-        });
-        DatabaseReference UserDB = FirebaseDatabase.getInstance().getReference("Duy/User")
-                .child(Common.currentUser.getUserName());
-        Log.e("Error", Common.currentUser.getUserName());
-        UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String balance = dataSnapshot.child("accountBalance").getValue().toString();
-                txtAccountBalance.setText("Account balance: " + balance + " VND");
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Order");
+        listOrderView = (ListView) findViewById(R.id.lVOrder);
 
-            }
-        });
-
-        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Food");
-        listFoodView = (ListView) findViewById(R.id.lVFood);
-
-        FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
-                .setLayout(R.layout.food_item)
-                .setQuery(query, Food.class)
+        FirebaseListOptions<com.example.smart_food_court_system.model.Order> options = new FirebaseListOptions.Builder<com.example.smart_food_court_system.model.Order>()
+                .setLayout(R.layout.order_item)
+                .setQuery(query, com.example.smart_food_court_system.model.Order.class)
                 .build();
 
-        adapter = new FirebaseListAdapter<Food>(options) {
-            protected void populateView(@NonNull View view, @NonNull Food food, final int position) {
-                TextView foodName = view.findViewById(R.id.txtFoodName);
-                foodName.setText(food.getFoodName());
+        adapter = new FirebaseListAdapter<com.example.smart_food_court_system.model.Order>(options) {
+            protected void populateView(@NonNull View view, @NonNull com.example.smart_food_court_system.model.Order order, final int position) {
+                TextView userName = view.findViewById(R.id.txtUserName);
+                userName.setText("User name: " + order.getUserName());
+                TextView totalPrice = view.findViewById(R.id.txtTotalPrice);
+                totalPrice.setText("Total: " + order.getTotal());
+                TextView status = view.findViewById(R.id.txtStatus);
+                status.setText("Status order: " + order.getStatus());
+                Button backStage = view.findViewById(R.id.btnBackStage);
+                Button nextStage = view.findViewById(R.id.btnNextStage);
 
-                TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
-                foodPrice.setText(food.getFoodPrice()+" VND");
-
-                ImageView imageFood = view.findViewById(R.id.imageFood);
-                byte[] decodedString = Base64.decode(food.getFoodImage(), Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                imageFood.setImageBitmap(decodedByte);
-
-                view.setOnClickListener(new View.OnClickListener() {
+                backStage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent foodDetailIntent = new Intent(Home.this, ViewFoodDetail.class);
-                        foodDetailIntent.putExtra("FoodName", adapter.getRef(position).getKey());
-                        startActivity(foodDetailIntent);
+                        orderId = adapter.getRef(position).getKey();
+                        db=FirebaseDatabase.getInstance().getReference("Duy/Order");
+                        db.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                com.example.smart_food_court_system.model.Order order=dataSnapshot.child(orderId).getValue(com.example.smart_food_court_system.model.Order.class);
+                                if(order.getStatus().equals("ready")){
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook")){
+                                    db.child(orderId).child("status").setValue("ready");
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook done")){
+                                    db.child(orderId).child("status").setValue("cook");
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("complete")){
+                                    db.child(orderId).child("status").setValue("cook done");
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                     }
                 });
+
+                nextStage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        orderId = adapter.getRef(position).getKey();
+                        db=FirebaseDatabase.getInstance().getReference("Duy/Order");
+                        db.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                com.example.smart_food_court_system.model.Order order=dataSnapshot.child(orderId).getValue(com.example.smart_food_court_system.model.Order.class);
+                                if(order.getStatus().equals("ready")){
+                                    db.child(orderId).child("status").setValue("cook");
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook")){
+                                    db.child(orderId).child("status").setValue("cook done");
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook done")){
+                                    db.child(orderId).child("status").setValue("complete");
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
+
             }
         };
 
-        // Now set the adapter with a given layout
         try{
-            listFoodView.setAdapter(adapter);
+            listOrderView.setAdapter(adapter);
         }catch(Exception e){
             Log.e("Error " ,""+ e.getMessage());
             //TO DO--------------------------------------------------------
@@ -186,32 +216,9 @@ public class Home extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchFood(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newQuery) {
-                searchFood(newQuery);
-                return false;
-            }
-        });
-
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
+        // automatically handle clicks on the HomeCook/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
@@ -232,7 +239,7 @@ public class Home extends AppCompatActivity
         // Handle navigation view item clicks here.
 
         txtName = (TextView) findViewById(R.id.txtName);
-        txtEmail = (TextView) findViewById(R.id.txtEmail);
+        txtEmail = (TextView) findViewById(R.id.txtEmailAddress);
         txtName.setText(Common.currentUser.getName());
         txtEmail.setText(Common.currentUser.getEmailAddress());
 
@@ -241,26 +248,19 @@ public class Home extends AppCompatActivity
             if (id == R.id.change_profile) {
                 openChangeProfile();
             }
-            else if (id == R.id.order_details_drawer) {
-                Toast.makeText(getApplicationContext(), "No details found because you didn't order something...", Toast.LENGTH_SHORT).show();
-            }
-            else if (id == R.id.submit_order) {
-                Toast.makeText(getApplicationContext(), "Sorry, You don't order anything...", Toast.LENGTH_SHORT).show();
-            }
-            else if(id == R.id.recharge){
-                Intent HomeToRecharge = new Intent(Home.this, Recharge.class);
-                startActivity(HomeToRecharge);
-            }
-            else if(id == R.id.view_cart){
-                Intent HomeToCart = new Intent(Home.this, Cart.class);
-                startActivity(HomeToCart);
-            }
-            else if(id == R.id.change_password){
+            else if (id == R.id.change_password) {
                 openChangePassword();
+            }
+            else if (id == R.id.order_management) {
+                Toast.makeText(HomeCook.this, "You are in order management!", Toast.LENGTH_SHORT).show();
+            }
+            else if(id == R.id.food_management){
+                Intent intent = new Intent(HomeCook.this, FoodManagement.class);
+                startActivity(intent);
             }
         }
         else{
-            Toast.makeText(Home.this, "Please check your connection!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(HomeCook.this, "Please check your connection!", Toast.LENGTH_SHORT).show();
             return true;
         }
         if(id == R.id.log_out ){
@@ -286,7 +286,7 @@ public class Home extends AppCompatActivity
             public void onClick(View view) {
                 Paper.book().destroy();
                 Common.currentUser = new User();
-                Home.super.onBackPressed();
+                HomeCook.super.onBackPressed();
                 /*
                 Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
                 startActivity(loginIntent);*/
@@ -300,51 +300,6 @@ public class Home extends AppCompatActivity
                 builder.dismiss();
             }
         });
-    }
-
-    private void searchFood(String searchText){
-        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Food").orderByKey().startAt(searchText).endAt(searchText+"\uf8ff");
-        listFoodView = (ListView) findViewById(R.id.lVFood);
-
-        FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
-                .setLayout(R.layout.food_item)
-                .setQuery(query, Food.class)
-                .build();
-
-        adapter.stopListening();
-
-        adapter = new FirebaseListAdapter<Food>(options) {
-            protected void populateView(@NonNull View view, @NonNull Food food, final int position) {
-                TextView foodName = view.findViewById(R.id.txtFoodName);
-                foodName.setText(food.getFoodName());
-
-                TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
-                foodPrice.setText(food.getFoodPrice()+" VND");
-
-                ImageView imageFood = view.findViewById(R.id.imageFood);
-                byte[] decodedString = Base64.decode(food.getFoodImage(), Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                imageFood.setImageBitmap(decodedByte);
-
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent foodDetailIntent = new Intent(Home.this, ViewFoodDetail.class);
-                        foodDetailIntent.putExtra("FoodName", adapter.getRef(position).getKey());
-                        startActivity(foodDetailIntent);
-                    }
-                });
-            }
-        };
-        adapter.startListening();
-
-        try{
-            listFoodView.setAdapter(adapter);
-        }catch(Exception e){
-            Log.e("Error " ,""+ e.getMessage());
-            //TO DO--------------------------------------------------------
-            //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
-        }
     }
 
     public void openChangePassword() {
@@ -370,7 +325,7 @@ public class Home extends AppCompatActivity
                         User user = dataSnapshot.child(Common.currentUser.getUserName()).getValue(User.class);
                         if (user.getPassword().equals(edtOldPassword.getText().toString())){
                             if(edtNewPassword.getText().toString().equals(edtConfirmNewPassword.getText().toString())){
-                                Toast.makeText(Home.this, Common.changePasswordSuccessMessage, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(HomeCook.this, Common.changePasswordSuccessMessage, Toast.LENGTH_SHORT).show();
                                 user.setPassword(edtNewPassword.getText().toString());
                                 Common.currentUser.setPassword(edtNewPassword.getText().toString());
                                 EditText password = (EditText)findViewById(R.id.edtPassword);
@@ -378,11 +333,11 @@ public class Home extends AppCompatActivity
                                 builder.dismiss();
                             }
                             else{
-                                Toast.makeText(Home.this, Common.confirmPasswordErrorMessage, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(HomeCook.this, Common.confirmPasswordErrorMessage, Toast.LENGTH_SHORT).show();
                             }
                         }
                         else {
-                            Toast.makeText(Home.this, Common.currentPasswordIsNotCorrectErrorMessage, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HomeCook.this, Common.currentPasswordIsNotCorrectErrorMessage, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -440,7 +395,7 @@ public class Home extends AppCompatActivity
 
                         if(user.getName().isEmpty() || user.getUserName().isEmpty() || user.getPassword().isEmpty() ||
                                 user.getEmailAddress().isEmpty() || user.getPhoneNumber().isEmpty()){
-                                Toast.makeText(Home.this, Common.fillAllErrorMessage, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HomeCook.this, Common.fillAllErrorMessage, Toast.LENGTH_SHORT).show();
                         }
                         else{
                             boolean isEmailAddressExists = false, isPhoneNumberExists = false;
@@ -462,20 +417,20 @@ public class Home extends AppCompatActivity
                             }
                             if(isEmailAddressExists || isPhoneNumberExists){
                                 if(!isPhoneNumberExists){
-                                    Toast.makeText(Home.this, Common.emailAddressExistsErrorMessage, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(HomeCook.this, Common.emailAddressExistsErrorMessage, Toast.LENGTH_SHORT).show();
                                 }
                                 else if(!isEmailAddressExists){
-                                    Toast.makeText(Home.this, Common.phoneNumberExistsErrorMessage, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(HomeCook.this, Common.phoneNumberExistsErrorMessage, Toast.LENGTH_SHORT).show();
                                 }
                                 else{
-                                    Toast.makeText(Home.this, Common.emailAddressExistsErrorMessage, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(HomeCook.this, Common.emailAddressExistsErrorMessage, Toast.LENGTH_SHORT).show();
                                 }
                             }
                             //Add to Database
                             else {
                                 mDatabase.child(Common.currentUser.getUserName()).setValue(user);
                                 Common.currentUser = user;
-                                Toast.makeText(Home.this, Common.updateInforSuccessMessage, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(HomeCook.this, Common.updateInforSuccessMessage, Toast.LENGTH_SHORT).show();
                                 builder.dismiss();
                             }
                         }

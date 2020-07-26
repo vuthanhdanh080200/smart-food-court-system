@@ -14,12 +14,16 @@
     <string name="dialog_popup">SFCS</string>
     <string name="ok" />
     <string name="cancel">Cancel</string>
+    <string name="stall">Stall</string>
+    <string name="type">Type</string>
     <string name="change">Change</string>
     <string name="go">Continue</string>
     <string name="change_password">Change Password</string>
+    <string name="change_food">Change Food</string>
     <string name="old_password">Current Password</string>
     <string name="new_password">New Password</string>
     <string name="confirm_new_password">Confirm New Password</string>
     <string name="change_profile">Change Profile</string>
     <string name="restore_password">Account Recovery</string>
+    <string name="add">Add</string>
 </resources>
