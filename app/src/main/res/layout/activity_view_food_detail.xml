@@ -36,13 +36,15 @@
             android:id="@+id/btnOrderQuantity"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txtOrderQuantity"
+            android:layout_below="@id/txtFoodDescr"
             android:layout_centerHorizontal="true"
+
             android:layout_marginTop="10dp"
             app:textSize="8sp" >
 
         </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
 
+        <!--
         <TextView
             android:id="@+id/txtOrderQuantity"
             android:layout_width="match_parent"
@@ -50,6 +52,7 @@
             android:layout_centerInParent="true"
             android:textSize="18sp"
             android:textStyle="bold" />
+            -->
 
         <TextView
             android:id="@+id/txtFoodDescr"
@@ -69,11 +72,13 @@
             android:layout_height="wrap_content"
             android:textSize="18sp" />
 
+        <!--
         <TextView
             android:id="@+id/txtFoodRemaining"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp" />
+        -->
 
 
     </LinearLayout>

@@ -3,6 +3,9 @@ package com.example.smart_food_court_system.common;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.smart_food_court_system.model.User;
 
@@ -30,6 +33,9 @@ public class Common {
     public static final String signInSuccessMessage = "Sign in successfully!";
     public static final String signUpSuccessMessage = "Sign up successfully!";
 
+    public static final String merchantName = "smartfoodcourthcmut";
+    public static final String merchantCode = "MOMOO1KC20200802";
+    public static final String merchantNameLabel = "Provider";
 
     public static boolean isConnectedToInternet(Context context){
         ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);

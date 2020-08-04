@@ -56,6 +56,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.3.2'
     //
     implementation 'io.paperdb:paperdb:2.7.1'
+    // Momo
+    implementation 'com.github.momodevelopment:androidsdkV2.2:1.1'
+    // OkHTTP
+    implementation("com.squareup.okhttp3:okhttp:4.8.0")
 
 }
 

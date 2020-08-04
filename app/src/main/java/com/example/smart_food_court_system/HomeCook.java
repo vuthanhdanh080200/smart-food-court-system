@@ -87,7 +87,7 @@ public class HomeCook extends AppCompatActivity
         listOrderView = (ListView) findViewById(R.id.lVOrder);
 
         FirebaseListOptions<com.example.smart_food_court_system.model.Order> options = new FirebaseListOptions.Builder<com.example.smart_food_court_system.model.Order>()
-                .setLayout(R.layout.order_item)
+                .setLayout(R.layout.order_management_item)
                 .setQuery(query, com.example.smart_food_court_system.model.Order.class)
                 .build();
 
@@ -98,7 +98,18 @@ public class HomeCook extends AppCompatActivity
                 TextView totalPrice = view.findViewById(R.id.txtTotalPrice);
                 totalPrice.setText("Total: " + order.getTotal());
                 TextView status = view.findViewById(R.id.txtStatus);
-                status.setText("Status order: " + order.getStatus());
+                if(order.getStatus().equals("ready " + order.getUserName())){
+                    status.setText("Status order: ready");
+                }
+                else if(order.getStatus().equals("cook " + order.getUserName())){
+                    status.setText("Status order: cook");
+                }
+                else if(order.getStatus().equals("cook done " + order.getUserName())){
+                    status.setText("Status order: cook done");
+                }
+                else if(order.getStatus().equals("complete " + order.getUserName())){
+                    status.setText("Status order: complete");
+                }
                 Button backStage = view.findViewById(R.id.btnBackStage);
                 Button nextStage = view.findViewById(R.id.btnNextStage);
 
@@ -111,19 +122,19 @@ public class HomeCook extends AppCompatActivity
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 com.example.smart_food_court_system.model.Order order=dataSnapshot.child(orderId).getValue(com.example.smart_food_court_system.model.Order.class);
-                                if(order.getStatus().equals("ready")){
+                                if(order.getStatus().equals("ready "+order.getUserName())){
                                     Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
                                 }
-                                else if(order.getStatus().equals("cook")){
-                                    db.child(orderId).child("status").setValue("ready");
+                                else if(order.getStatus().equals("cook "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("ready "+order.getUserName());
                                     Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
                                 }
-                                else if(order.getStatus().equals("cook done")){
-                                    db.child(orderId).child("status").setValue("cook");
+                                else if(order.getStatus().equals("cook done "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook "+order.getUserName());
                                     Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
                                 }
-                                else if(order.getStatus().equals("complete")){
-                                    db.child(orderId).child("status").setValue("cook done");
+                                else if(order.getStatus().equals("complete "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook done "+order.getUserName());
                                     Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
@@ -148,16 +159,16 @@ public class HomeCook extends AppCompatActivity
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 com.example.smart_food_court_system.model.Order order=dataSnapshot.child(orderId).getValue(com.example.smart_food_court_system.model.Order.class);
-                                if(order.getStatus().equals("ready")){
-                                    db.child(orderId).child("status").setValue("cook");
+                                if(order.getStatus().equals("ready "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook "+order.getUserName());
                                     Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
                                 }
-                                else if(order.getStatus().equals("cook")){
-                                    db.child(orderId).child("status").setValue("cook done");
+                                else if(order.getStatus().equals("cook "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook done "+order.getUserName());
                                     Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
                                 }
-                                else if(order.getStatus().equals("cook done")){
-                                    db.child(orderId).child("status").setValue("complete");
+                                else if(order.getStatus().equals("cook done "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("complete "+order.getUserName());
                                     Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
@@ -290,6 +301,7 @@ public class HomeCook extends AppCompatActivity
                 /*
                 Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
                 startActivity(loginIntent);*/
+                builder.dismiss();
             }
         });
 

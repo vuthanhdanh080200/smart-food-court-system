@@ -13,12 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StaffManagement"></activity>
+        <activity android:name=".OrderHistory"></activity>
+        <activity android:name=".TestPayment" />
+        <activity android:name=".StaffManagement" />
         <activity android:name=".FoodManagement" />
         <activity android:name=".HomeCook" />
         <activity android:name=".TurnOffSystem" />
         <activity android:name=".ItStaffHome" />
-        <activity android:name=".ViewUserDetail" />
         <activity android:name=".HomeManager" />
         <activity android:name=".Test" />
         <activity android:name=".ViewFoodDetail" />

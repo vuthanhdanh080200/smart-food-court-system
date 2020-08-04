@@ -199,7 +199,7 @@ public class Payment extends AppCompatActivity {
                 cart.getFoodOrderList(),
                 cart.getTotal(),
                 timestamp,
-                "Cook");
+                "ready" + Common.currentUser.getUserName());
         //Update order
         mDatabase.child("Order")
                 .child(String.valueOf(OrderID) + " : " + Common.currentUser.getUserName())
