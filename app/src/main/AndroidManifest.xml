@@ -27,8 +27,6 @@
         <activity android:name=".AddFood" />
         <activity android:name=".Home" />
         <activity android:name=".Cart" />
-        <activity android:name=".SignUp" />
-        <activity android:name=".SignIn" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,6 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SignUp" />
     </application>
 
 </manifest>

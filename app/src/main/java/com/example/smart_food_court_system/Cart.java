@@ -96,12 +96,12 @@ public class Cart extends AppCompatActivity {
                 //Log.e("LogFuncIntOutside", Integer.toString(Common.currentRemaining));
 
                 TextView txtCartName = view.findViewById(R.id.txtCartName);
-                txtCartName.setText("Food Name: " + foodOrder.getFoodName());
+                txtCartName.setText(foodOrder.getFoodName());
                 final TextView txtCartQuantity = view.findViewById(R.id.txtCartQuantity);
-                txtCartQuantity.setText("Food Quantity: " + foodOrder.getQuantity());
+                txtCartQuantity.setText("x " + foodOrder.getQuantity());
                 //txtCartQuantity.setText("Food Quantity: " + cart.getQuantity() + "/" + getRemainingFood(cart.getProductID()));
                 final TextView txtCartPrice = view.findViewById(R.id.txtCartPrice);
-                txtCartPrice.setText("Food Price : " + foodOrder.getPrice());
+                txtCartPrice.setText(foodOrder.getPrice() +" VND");
                 final ElegantNumberButton btnCartQuantity = view.findViewById(R.id.btnCartQuantity);
                 Button btnRemove = (Button)view.findViewById(R.id.btnRemove);
 
@@ -122,7 +122,7 @@ public class Cart extends AppCompatActivity {
                             oldQuantity[0] = Integer.parseInt(foodOrder.getQuantity());
 
                             foodOrder.setQuantity(btnCartQuantity.getNumber());
-                            txtCartQuantity.setText("Food Quantity: " + foodOrder.getQuantity());
+                            txtCartQuantity.setText("x " + foodOrder.getQuantity());
                             //txtCartQuantity.setText("Food Quantity: " + cart.getQuantity() + "/" + getRemainingFood(cart.getProductID()));
                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override

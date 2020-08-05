@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +30,7 @@ import com.squareup.picasso.Picasso;
 public class ViewFoodDetail extends AppCompatActivity {
     TextView txtFoodRemaining, txtFoodName, txtFoodPrice, txtOrderQuantity, txtFoodType, txtFoodStall, txtFoodDescr;
     ImageView imageFood;
-    Button btnAddFoodToCart;
+    ImageButton btnAddFoodToCart;
     FloatingActionButton fabViewFoodInCart;
     DatabaseReference mDatabase, db;
     String foodName = "";
@@ -52,7 +53,7 @@ public class ViewFoodDetail extends AppCompatActivity {
         txtFoodStall = (TextView)findViewById(R.id.txtFoodStall);
         txtFoodDescr = (TextView)findViewById(R.id.txtFoodDescr);
 
-        btnAddFoodToCart = (Button)findViewById(R.id.btnAddFoodToCart);
+        btnAddFoodToCart = (ImageButton)findViewById(R.id.btnAddFoodToCart);
         btnOrderQuantity = findViewById(R.id.btnOrderQuantity);
         fabViewFoodInCart = (FloatingActionButton)findViewById(R.id.fab_view_cart);
         imageFood = findViewById(R.id.imageFood);

@@ -29,6 +29,7 @@ public class ViewUserDetail extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*
         setContentView(R.layout.activity_view_user_detail);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -41,7 +42,7 @@ public class ViewUserDetail extends AppCompatActivity {
         txtAccountBalance = (TextView) findViewById(R.id.txtAcountBalance);
         txtStall = (TextView) findViewById(R.id.txtStall);
         btnChangeRole=(Button)findViewById(R.id.btnChangeRole);
-
+        */
         if (getIntent() != null) {
             username = getIntent().getStringExtra("UserName");
         }

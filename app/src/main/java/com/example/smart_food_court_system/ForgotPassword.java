@@ -38,7 +38,7 @@ public class ForgotPassword extends AppCompatActivity {
                 else {
                     if (edtNewPassword.getText().toString().equals(edtConfirmNewPassword.getText().toString())) {
                         Toast.makeText(ForgotPassword.this, Common.changePasswordSuccessMessage, Toast.LENGTH_SHORT).show();
-                        Intent signIn = new Intent(ForgotPassword.this, SignIn.class);
+                        Intent signIn = new Intent(ForgotPassword.this, MainActivity.class);
                         startActivity(signIn);
                         mDatabase.child(Common.userName).child("password").setValue(edtNewPassword.getText().toString());
                         Common.userName = "";
@@ -53,7 +53,7 @@ public class ForgotPassword extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent signIn = new Intent(ForgotPassword.this, SignIn.class);
+                Intent signIn = new Intent(ForgotPassword.this, MainActivity.class);
                 startActivity(signIn);
             }
         });
