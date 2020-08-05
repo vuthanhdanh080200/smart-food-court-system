@@ -1,42 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp"
+    android:background="#FFFFFF"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:layout_margin="10dp">
+    android:padding="10dp">
 
-    <Button
-        android:id="@+id/btnRemove"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="X" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/txtCartName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btnRemove"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:background="#00FF0000"
+            android:text="X"
+            android:textColor="#000000"
+            android:textSize="24sp" />
 
-    <TextView
-        android:id="@+id/txtCartQuantity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/txtCartName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#001CD4"
+            android:text="Food Name"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/txtCartPrice"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="Unit Price"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/txtCartQuantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quantity"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+
 
     <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
         android:id="@+id/btnCartQuantity"
-        android:layout_width="200dp"
-        app:textSize="8sp"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/txtCartQuantity"
-        android:layout_height="wrap_content" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:animationCache="true"
+        app:backGroundColor="#EDE38B"
+        app:textColor="#000000"
+        app:textSize="8sp" />
 
 </LinearLayout>
 

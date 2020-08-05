@@ -20,15 +20,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:textSize="24dp"
-        android:text = "Total: "/>
+        android:text="Total: "
+        android:textColor="#000000"
+        android:textSize="24dp" />
+
     <Button
         android:id="@+id/btnCheckOut"
-        android:text="Check Out"
-        android:layout_weight="0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"/>
+        android:layout_margin="8dp"
+        android:layout_weight="0"
+        android:background="#FF0000"
+        android:text="Check Out"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
     <ListView
         android:id="@+id/listCartView"
         android:layout_width="match_parent"

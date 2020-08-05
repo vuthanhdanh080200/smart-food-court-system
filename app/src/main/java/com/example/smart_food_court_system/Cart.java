@@ -54,7 +54,7 @@ public class Cart extends AppCompatActivity {
                 try {
                     String total = dataSnapshot.child("Duy/Cart").child(Common.currentUser.getUserName())
                             .child("total").getValue().toString();
-                    txtCartTotal.setText("Total: " + total);
+                    txtCartTotal.setText("Total: " + total + " VND");
                     btnCheckOut.setVisibility(View.VISIBLE);
                     CartTotal[0] = Integer.parseInt(total);
                 }
@@ -96,12 +96,12 @@ public class Cart extends AppCompatActivity {
                 //Log.e("LogFuncIntOutside", Integer.toString(Common.currentRemaining));
 
                 TextView txtCartName = view.findViewById(R.id.txtCartName);
-                txtCartName.setText("Food Name: " + foodOrder.getFoodName());
+                txtCartName.setText(foodOrder.getFoodName());
                 final TextView txtCartQuantity = view.findViewById(R.id.txtCartQuantity);
-                txtCartQuantity.setText("Food Quantity: " + foodOrder.getQuantity());
+                txtCartQuantity.setText("Quantity: " + foodOrder.getQuantity());
                 //txtCartQuantity.setText("Food Quantity: " + cart.getQuantity() + "/" + getRemainingFood(cart.getProductID()));
                 final TextView txtCartPrice = view.findViewById(R.id.txtCartPrice);
-                txtCartPrice.setText("Food Price : " + foodOrder.getPrice());
+                txtCartPrice.setText("Unit Price : " + foodOrder.getPrice());
                 final ElegantNumberButton btnCartQuantity = view.findViewById(R.id.btnCartQuantity);
                 Button btnRemove = (Button)view.findViewById(R.id.btnRemove);
 

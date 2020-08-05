@@ -61,18 +61,18 @@ public class ViewOrderDetails extends AppCompatActivity {
                     Order order = dataSnapshot.getValue(Order.class);
                     if(order!= null) {
                         txtUserName.setText("User name: " + order.getUserName());
-                        txtTotalPrice.setText("Total: " + order.getTotal());
+                        txtTotalPrice.setText("Total: " + order.getTotal() + " VND");
                         if (order.getStatus().equals("ready " + order.getUserName())) {
-                            txtStatus.setText("Status order: Food is waiting to cook");
+                            txtStatus.setText("Order status: Preparing for cooking");
                             btnCancelOrder.setVisibility(View.VISIBLE);
                         } else if (order.getStatus().equals("cook " + order.getUserName())) {
-                            txtStatus.setText("Status order: Food is cooking");
+                            txtStatus.setText("Order status: Food is being cooked");
                             btnCancelOrder.setVisibility(View.GONE);
                         } else if (order.getStatus().equals("cook done " + order.getUserName())) {
-                            txtStatus.setText("Status order: cook done, waiting for customer get");
+                            txtStatus.setText("Order status: Cook done, waiting for customer to get the food");
                             btnCancelOrder.setVisibility(View.GONE);
-                        } else if (order.getStatus().equals("complete " + order.getUserName())) {
-                            txtStatus.setText("Status order: complete");
+                        } else if (order.getStatus().equals("completed " + order.getUserName())) {
+                            txtStatus.setText("Order status: Completed");
                             btnCancelOrder.setVisibility(View.GONE);
                         }
                     }
@@ -108,13 +108,13 @@ public class ViewOrderDetails extends AppCompatActivity {
         adapter = new FirebaseListAdapter<FoodOrder>(options) {
             protected void populateView(@NonNull View view, @NonNull FoodOrder foodOrder, final int position) {
                 TextView foodName = view.findViewById(R.id.txtFoodName);
-                foodName.setText("Food name: " + foodOrder.getFoodName());
+                foodName.setText(foodOrder.getFoodName());
 
                 TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
-                foodPrice.setText("Food price: " + foodOrder.getPrice()+" VND");
+                foodPrice.setText("Unit price: " + foodOrder.getPrice()+" VND");
 
                 TextView foodQuantity = view.findViewById(R.id.txtFoodQuantity);
-                foodQuantity.setText("Food quantity: " + foodOrder.getQuantity());
+                foodQuantity.setText("Quantity: " + foodOrder.getQuantity());
 
                 TextView foodStall = view.findViewById(R.id.txtFoodStallName);
                 foodStall.setText("Food stall: " + foodOrder.getFoodStallName());

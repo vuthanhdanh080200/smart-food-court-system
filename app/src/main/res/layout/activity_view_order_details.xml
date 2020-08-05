@@ -10,61 +10,61 @@
     <TextView
         android:id="@+id/txtUserName"
         android:layout_width="match_parent"
-        android:text="User name"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:text="User name"
+        android:textColor="#000000"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/txtTotalPrice"
         android:layout_width="match_parent"
-        android:text="Total price"
         android:layout_height="wrap_content"
+        android:layout_below="@id/txtUserName"
         android:padding="10dp"
-        android:textSize="18sp"
-        android:layout_below="@id/txtUserName"/>
+        android:text="Total price"
+        android:textColor="#000000"
+        android:textSize="18sp" />
+
 
     <TextView
         android:id="@+id/txtStatus"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtTotalPrice"
+        android:padding="10dp"
         android:text="Status"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="18sp"
-        android:layout_below="@id/txtTotalPrice"/>
+        android:textColor="#000000"
+        android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/txtFoodList"
+    <Button
+        android:id="@+id/btnCancelOrder"
         android:layout_width="match_parent"
-        android:text="Food List:"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textSize="18sp"
-        android:layout_below="@id/txtStatus"/>
+        android:layout_below="@id/txtStatus"
+        android:layout_centerInParent="true"
+        android:background="#FFFF0000"
+        android:text="Cancel Order"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf = "@id/txtStatus"/>
 
     <ListView
         android:id="@+id/lVFoodOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/btnCancelOrder"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:layout_below="@id/txtFoodList"
+        android:background="#A4049DEA"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-    </ListView>
-
-    <Button
-        android:id="@+id/btnCancelOrder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/lVFoodOrder"
-        android:text="Cancel Order" />
+        app:layout_constraintTop_toTopOf="parent"></ListView>
 
 </RelativeLayout>

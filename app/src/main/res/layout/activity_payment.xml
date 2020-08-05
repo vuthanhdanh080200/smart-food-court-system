@@ -82,9 +82,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="0"
+            android:background="#0027FF"
             android:clickable="false"
             android:text="Pay"
+            android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF"
-            android:textColorLink="#2196F3" />
+            android:textColorLink="#2196F3"
+            android:textStyle="bold" />
     </LinearLayout>
 </RelativeLayout>
