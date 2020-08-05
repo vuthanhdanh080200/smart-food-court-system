@@ -181,6 +181,7 @@ public class ViewOrderDetails extends AppCompatActivity {
                             mDatabase.child("User").child(Common.currentUser.getUserName())
                                     .child("accountBalance")
                                     .setValue(String.valueOf(newBalance));
+                            Common.currentUser.setAccountBalance(Integer.toString(newBalance));
                         }
                         Toast.makeText(ViewOrderDetails.this, "Cancel order successfully!", Toast.LENGTH_SHORT).show();
                         builder.dismiss();

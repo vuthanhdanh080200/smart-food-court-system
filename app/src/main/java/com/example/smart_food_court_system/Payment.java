@@ -175,6 +175,7 @@ public class Payment extends AppCompatActivity {
                             mDatabase.child("User").child(Common.currentUser.getUserName())
                                     .child("accountBalance")
                                     .setValue(String.valueOf(newBalance));
+                            Common.currentUser.setAccountBalance(Integer.toString(newBalance));
                         }
                     }
 
