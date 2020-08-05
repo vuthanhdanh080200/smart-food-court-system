@@ -10,17 +10,19 @@ public class Order {
     private String total;
     private String TimeStamp;
     private String Status;
+    private String MethodPayment;
 
     public Order() {
     }
 
-    public Order(String orderID, String userName, HashMap<String, FoodOrder> foodOrderList, String total, String timeStamp, String status) {
+    public Order(String orderID, String userName, HashMap<String, FoodOrder> foodOrderList, String total, String timeStamp, String status, String methodPayment) {
         this.orderID = orderID;
         this.userName = userName;
         this.foodOrderList = foodOrderList;
         this.total = total;
         TimeStamp = timeStamp;
         Status = status;
+        MethodPayment = methodPayment;
     }
 
     public String getOrderID() {
@@ -69,5 +71,13 @@ public class Order {
 
     public void setStatus(String status) {
         Status = status;
+    }
+
+    public String getMethodPayment() {
+        return MethodPayment;
+    }
+
+    public void setMethodPayment(String methodPayment) {
+        MethodPayment = methodPayment;
     }
 }

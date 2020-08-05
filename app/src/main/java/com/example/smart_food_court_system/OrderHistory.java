@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.smart_food_court_system.common.Common;
+import com.example.smart_food_court_system.common.Text;
 import com.example.smart_food_court_system.model.Food;
 import com.example.smart_food_court_system.model.Order;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -40,15 +41,18 @@ public class OrderHistory extends AppCompatActivity {
     FirebaseListAdapter adapter;
     ListView listOrderView;
     DatabaseReference mDatabase, db;
-    String orderId="";
+    TextView textView;
+    String order="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_history);
-
+        textView = (TextView)findViewById(R.id.txtOrderNotify);
+        textView.setText("Your order is empty");
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Order").orderByChild("userName").equalTo(Common.currentUser.getUserName());
         listOrderView = (ListView) findViewById(R.id.lVOrder);
 
@@ -59,33 +63,41 @@ public class OrderHistory extends AppCompatActivity {
 
         adapter = new FirebaseListAdapter<com.example.smart_food_court_system.model.Order>(options) {
             protected void populateView(@NonNull View view, @NonNull com.example.smart_food_court_system.model.Order order, final int position) {
+                textView.setText("Your order");
                 TextView userName = view.findViewById(R.id.txtUserName);
                 userName.setText("User name: " + order.getUserName());
                 TextView totalPrice = view.findViewById(R.id.txtTotalPrice);
                 totalPrice.setText("Total: " + order.getTotal());
                 TextView status = view.findViewById(R.id.txtStatus);
-                if(order.getStatus().equals("ready " + Common.currentUser.getUserName())){
-                    status.setText("Status order: ready");
+                if(order.getStatus().equals("ready " + order.getUserName())){
+                    status.setText("Status order: Food is waiting to cook");
                 }
-                else if(order.getStatus().equals("cook " + Common.currentUser.getUserName())){
-                    status.setText("Status order: cook");
+                else if(order.getStatus().equals("cook " + order.getUserName())){
+                    status.setText("Status order: Food is cooking");
                 }
-                else if(order.getStatus().equals("cook done " + Common.currentUser.getUserName())){
-                    status.setText("Status order: cook done");
+                else if(order.getStatus().equals("cook done " + order.getUserName())){
+                    status.setText("Status order: cook done, waiting for customer get");
                 }
-                else if(order.getStatus().equals("complete " + Common.currentUser.getUserName())){
+                else if(order.getStatus().equals("complete " + order.getUserName())){
                     status.setText("Status order: complete");
                 }
 
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(OrderHistory.this, ViewOrderDetails.class);
+                        intent.putExtra("userName", adapter.getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
             }
         };
 
         try{
             listOrderView.setAdapter(adapter);
         }catch(Exception e){
-            Log.e("Error " ,""+ e.getMessage());
             //TO DO--------------------------------------------------------
-            //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
         }
     }
 
@@ -145,11 +157,9 @@ public class OrderHistory extends AppCompatActivity {
     }
 
     private void listOrderByStatus(String status){
-
+        textView.setText("Your order with this status is empty");
         Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Order")
                 .orderByChild("status").equalTo(status + " " + Common.currentUser.getUserName());
-
-
 
         listOrderView = (ListView) findViewById(R.id.lVOrder);
 
@@ -167,25 +177,35 @@ public class OrderHistory extends AppCompatActivity {
                 TextView totalPrice = view.findViewById(R.id.txtTotalPrice);
                 totalPrice.setText("Total: " + order.getTotal());
                 TextView status = view.findViewById(R.id.txtStatus);
-                if(order.getStatus().equals("ready " + Common.currentUser.getUserName())){
-                    status.setText("Status order: ready");
+                if(order.getStatus().equals("ready " + order.getUserName())){
+                    textView.setText("Order is waiting to cook");
+                    status.setText("Status order: Food is waiting to cook");
                 }
-                else if(order.getStatus().equals("cook " + Common.currentUser.getUserName())){
-                    status.setText("Status order: cook");
+                else if(order.getStatus().equals("cook " + order.getUserName())){
+                    textView.setText("Order is cooking");
+                    status.setText("Status order: Food is cooking");
                 }
-                else if(order.getStatus().equals("cook done " + Common.currentUser.getUserName())){
-                    status.setText("Status order: cook done");
+                else if(order.getStatus().equals("cook done " + order.getUserName())){
+                    textView.setText("Order cook done, waiting for customer get");
+                    status.setText("Status order: cook done, waiting for customer get");
                 }
-                else if(order.getStatus().equals("complete " + Common.currentUser.getUserName())){
+                else if(order.getStatus().equals("complete " + order.getUserName())){
+                    textView.setText("Order complete");
                     status.setText("Status order: complete");
                 }
 
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(OrderHistory.this, ViewOrderDetails.class);
+                        intent.putExtra("userName", adapter.getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
 
             }
         };
         adapter.startListening();
-
-
         try{
             listOrderView.setAdapter(adapter);
         }catch(Exception e){

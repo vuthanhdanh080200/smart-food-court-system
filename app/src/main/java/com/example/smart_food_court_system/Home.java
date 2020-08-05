@@ -122,7 +122,7 @@ public class Home extends AppCompatActivity
         DatabaseReference UserDB = FirebaseDatabase.getInstance().getReference("Duy/User")
                 .child(Common.currentUser.getUserName());
         Log.e("Error", Common.currentUser.getUserName());
-        UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
+        UserDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String balance = dataSnapshot.child("accountBalance").getValue().toString();
@@ -262,9 +262,11 @@ public class Home extends AppCompatActivity
             if (id == R.id.change_profile) {
                 openChangeProfile();
             }
+            /*
             else if (id == R.id.order_details_drawer) {
                 Toast.makeText(getApplicationContext(), "No details found because you didn't order something...", Toast.LENGTH_SHORT).show();
             }
+             */
             else if (id == R.id.submit_order) {
                 Intent intent = new Intent(Home.this, OrderHistory.class);
                 startActivity(intent);
@@ -308,6 +310,7 @@ public class Home extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Paper.book().destroy();
+                builder.dismiss();
                 Common.currentUser = new User();
                 Home.super.onBackPressed();
                 Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);

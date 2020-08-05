@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GenerateReport">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/app_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/txtChoosePeriod"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="Choose period:"
+            android:textSize="24sp"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/txtDateFrom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date From:"
+            android:textSize="18sp"
+            android:layout_below="@id/txtChoosePeriod"/>
+
+        <EditText
+            android:id="@+id/edtGenerateReportFrom"
+            android:clickable="true"
+            android:editable="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtDateFrom"/>
+
+        <TextView
+            android:id="@+id/txtDateTo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date To:"
+            android:textSize="18sp"
+            android:layout_below="@id/edtGenerateReportFrom"/>
+
+        <EditText
+            android:id="@+id/edtGenerateReportTo"
+            android:clickable="true"
+            android:editable="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtDateTo" />
+
+        <Button
+            android:id="@+id/btnGenerateReport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Export Data"
+            android:layout_below="@id/edtGenerateReportTo"
+            />
+    </LinearLayout>
+
+
+</RelativeLayout>

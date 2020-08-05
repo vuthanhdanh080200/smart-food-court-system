@@ -73,6 +73,7 @@ public class ViewFoodDetail extends AppCompatActivity {
                 FoodRemaining = Integer.parseInt(food.getFoodRemaining());
                 btnOrderQuantity.setVisibility(View.VISIBLE);
                 btnOrderQuantity.setNumber("1");
+                foodOrder.setQuantity(btnOrderQuantity.getNumber());
                 if(FoodRemaining > 0) {
 
                     btnOrderQuantity.setOnClickListener(new ElegantNumberButton.OnClickListener() {
@@ -85,7 +86,7 @@ public class ViewFoodDetail extends AppCompatActivity {
                                 btnOrderQuantity.setNumber(Integer.toString(quantity - 1));
                             } else {
                                 foodOrder.setQuantity(btnOrderQuantity.getNumber());
-                                //txtOrderQuantity.setText("Quantity " + foodOrder.getQuantity());
+                                Log.e("Error quantity", btnOrderQuantity.getNumber());
                             }
                         }
                     });

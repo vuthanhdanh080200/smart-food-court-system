@@ -99,13 +99,13 @@ public class HomeCook extends AppCompatActivity
                 totalPrice.setText("Total: " + order.getTotal());
                 TextView status = view.findViewById(R.id.txtStatus);
                 if(order.getStatus().equals("ready " + order.getUserName())){
-                    status.setText("Status order: ready");
+                    status.setText("Status order: Food is waiting to cook");
                 }
                 else if(order.getStatus().equals("cook " + order.getUserName())){
-                    status.setText("Status order: cook");
+                    status.setText("Status order: Food is cooking");
                 }
                 else if(order.getStatus().equals("cook done " + order.getUserName())){
-                    status.setText("Status order: cook done");
+                    status.setText("Status order: cook done, waiting for customer get");
                 }
                 else if(order.getStatus().equals("complete " + order.getUserName())){
                     status.setText("Status order: complete");
