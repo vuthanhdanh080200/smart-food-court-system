@@ -42,7 +42,7 @@ public class ForgotPassword extends AppCompatActivity {
                         startActivity(signIn);
                         mDatabase.child(Common.userName).child("password").setValue(edtNewPassword.getText().toString());
                         Common.userName = "";
-                        Common.phoneNumber = "";
+                        Common.emailAddress = "";
                     } else {
                         Toast.makeText(ForgotPassword.this, Common.confirmPasswordErrorMessage, Toast.LENGTH_SHORT).show();
                     }

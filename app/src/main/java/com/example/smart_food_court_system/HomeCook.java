@@ -173,6 +173,14 @@ public class HomeCook extends AppCompatActivity
                     }
                 });
 
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(HomeCook.this, ViewOrderDetails.class);
+                        intent.putExtra("userName", adapter.getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
             }
         };
 

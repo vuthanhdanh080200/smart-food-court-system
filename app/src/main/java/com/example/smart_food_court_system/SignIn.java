@@ -27,7 +27,7 @@ import io.paperdb.Paper;
 
 
 public class SignIn extends AppCompatActivity {
-    EditText edtUserName, edtPassword, edtPhoneNumber;
+    EditText edtUserName, edtPassword, edtEmailAddress;
     Button btnSignIn, btnChangePassword, btnCancel;
     CheckBox ckbRememberMe;
     TextView txtForgotPassword;
@@ -45,7 +45,7 @@ public class SignIn extends AppCompatActivity {
         txtForgotPassword = (TextView)findViewById(R.id.txtForgotPassword);
         //Init Firebase
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("Duy/User");
+        final DatabaseReference table_user = database.getReference("Duy");
 
         btnSignIn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -65,7 +65,7 @@ public class SignIn extends AppCompatActivity {
                                 Toast.makeText(SignIn.this, "Please fill in all information.", Toast.LENGTH_SHORT).show();
                             } else {
                                 //Check if user not exist in database
-                                if (dataSnapshot.child(edtUserName.getText().toString()).exists()) {
+                                if (dataSnapshot.child("User").child(edtUserName.getText().toString()).exists()) {
                                     //Save user and password - Remember me
                                     if(ckbRememberMe.isChecked()){
                                         Paper.book().write(Common.USER_KEY, edtUserName.getText().toString());
@@ -73,19 +73,27 @@ public class SignIn extends AppCompatActivity {
                                     }
                                     //Get User information
                                     mDialog.dismiss();
-                                    User user = dataSnapshot.child(edtUserName.getText().toString()).getValue(User.class);
+                                    User user = dataSnapshot.child("User").child(edtUserName.getText().toString()).getValue(User.class);
                                     if (user.getPassword().equals(edtPassword.getText().toString())) {
-                                        if (user.getRole().equals("customer")) {
+                                        String powerMode = dataSnapshot.child("PowerMode").getValue(String.class);
+                                        if (user.getRole().equals("it staff")) {
+                                            Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                            Intent itStaffHome = new Intent(SignIn.this, ItStaffHome.class);
+                                            Common.currentUser = user;
+                                            startActivity(itStaffHome);
+                                            finish();
+                                        }
+                                        else if(powerMode.equals("maintenance")) {
+                                            Intent turnoff = new Intent(SignIn.this, TurnOffSystem.class);
+                                            startActivity(turnoff);
+                                            finish();
+                                        }
+                                        else if (user.getRole().equals("customer")) {
                                             if (Common.currentUser == null) {
                                                 Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
                                             }
                                             Intent home = new Intent(SignIn.this, Home.class);
                                             startActivity(home);
-                                            finish();
-                                        } else if (user.getRole().equals("it staff")) {
-                                            Toast.makeText(SignIn.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
-                                            Intent itStaffHome = new Intent(SignIn.this, ItStaffHome.class);
-                                            startActivity(itStaffHome);
                                             finish();
                                         }
                                         else if (user.getRole().equals("cook")){
@@ -106,13 +114,9 @@ public class SignIn extends AppCompatActivity {
                                             startActivity(homeManager);
                                             finish();
                                         }
-                                        else if(Common.power.equals("offSystem")) {
-                                            Intent turnoff = new Intent(SignIn.this, TurnOffSystem.class);
-                                            startActivity(turnoff);
-                                            finish();
-                                        }
                                         Common.currentUser = user;
-                                    } else {
+                                    }
+                                    else {
                                         if (Common.currentUser == null) {
                                             Toast.makeText(SignIn.this, "Wrong password!", Toast.LENGTH_SHORT).show();
                                         }
@@ -146,6 +150,7 @@ public class SignIn extends AppCompatActivity {
     }
 
     public void openForgotPassword(){
+
         final Dialog builder = new Dialog(this); // Context, this, etc.
         builder.setContentView(R.layout.dialog_user_otp_confirm);
         builder.setTitle(R.string.dialog_popup);
@@ -153,34 +158,42 @@ public class SignIn extends AppCompatActivity {
         btnChangePassword = (Button) builder.findViewById(R.id.dialog_go);
         btnCancel = (Button) builder.findViewById(R.id.dialog_cancel);
         edtUserName = (EditText) builder.findViewById(R.id.edtUserName);
-        edtPhoneNumber = (EditText) builder.findViewById(R.id.edtPhoneNumber);
+        edtEmailAddress = (EditText) builder.findViewById(R.id.edtEmailAddress);
         final DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference("Duy/User");
 
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final ProgressDialog mDialog = new ProgressDialog(SignIn.this);
+                mDialog.setMessage("Please wait...");
+                mDialog.show();
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Common.userName = edtUserName.getText().toString();
-                        Common.phoneNumber = edtPhoneNumber.getText().toString();
-                        if(Common.userName.isEmpty() || Common.phoneNumber.isEmpty()){
+                        Common.emailAddress = edtEmailAddress.getText().toString();
+                        if(Common.userName.isEmpty() || Common.emailAddress.isEmpty()){
+                            mDialog.dismiss();
                             Toast.makeText(SignIn.this, "Please fill in all information!", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             if (!dataSnapshot.child(Common.userName).exists()) {
+                                mDialog.dismiss();
                                 Toast.makeText(SignIn.this, "Username " + Common.userName + " doesn't exist, please choose another username.", Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 User user = dataSnapshot.child(Common.userName).getValue(User.class);
-                                if(!user.getPhoneNumber().equals(Common.phoneNumber)){
-                                    Toast.makeText(SignIn.this, "Phone number of " + Common.userName + " incorrect, please choose another phone number.", Toast.LENGTH_SHORT).show();
+                                if(!user.getEmailAddress().equals(Common.emailAddress)){
+                                    mDialog.dismiss();
+                                    Toast.makeText(SignIn.this, "Email address of " + Common.userName + " incorrect, please choose another email.", Toast.LENGTH_SHORT).show();
                                 }
                                 else {
-                                    Intent test = new Intent(SignIn.this, Test.class);
-                                    test.putExtra("phoneNumber", Common.phoneNumber);
-                                    startActivity(test);
+                                    mDialog.dismiss();
+                                    Intent intent = new Intent(SignIn.this, OTPVerification.class);
+                                    intent.putExtra("Email Address", Common.emailAddress);
+                                    intent.putExtra("Start Activity", "Forgot Password");
+                                    startActivity(intent);
                                 }
                             }
                         }
@@ -200,6 +213,10 @@ public class SignIn extends AppCompatActivity {
                 builder.dismiss();
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+
     }
 
 }

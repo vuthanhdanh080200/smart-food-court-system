@@ -6,6 +6,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,28 +46,52 @@ import androidx.core.view.MenuCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.paperdb.Paper;
+import vn.momo.momo_partner.AppMoMoLib;
+import vn.momo.momo_partner.MoMoParameterNameMap;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    ProgressDialog mDialog;
     NavigationView navigationView = null;
     Toolbar toolbar = null;
-    Button logout,cancel, changePassword, changeProfile;
+    Button logout,cancel, changePassword, changeProfile, btnRecharge;
     ListView listFoodView;
     FirebaseListAdapter adapter;
     TextView txtName, txtAccountBalance, txtEmail;
     CircleImageView circleImageView;
-    EditText edtOldPassword, edtNewPassword, edtConfirmNewPassword;
+    EditText edtOldPassword, edtNewPassword, edtConfirmNewPassword, edtRechargeAmount;
     EditText edtName, edtEmailAddress, edtPhoneNumber;
     FloatingActionButton btnViewCart;
+    DatabaseReference mDatabase;
+
+    private String merchantName = Common.merchantName;
+    private String merchantCode = Common.merchantCode;
+    private String merchantNameLabel = Common.merchantNameLabel;
+    private String description = "Recharge";
+    private String amount = "0";
+    private String fee = "0";
+    int environment = 0;//developer default
+    TextView tvMessage;
+    int total_amount = 0;
+    int total_fee = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mDialog = new ProgressDialog(Home.this);
+        mDialog.setMessage("Please wait...");
+        mDialog.show();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        AppMoMoLib.getInstance().setEnvironment(AppMoMoLib.ENVIRONMENT.DEVELOPMENT); // AppMoMoLib.ENVIRONMENT.PRODUCTION
         Paper.init(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -101,7 +126,7 @@ public class Home extends AppCompatActivity
         DatabaseReference UserDB = FirebaseDatabase.getInstance().getReference("Duy/User")
                 .child(Common.currentUser.getUserName());
         Log.e("Error", Common.currentUser.getUserName());
-        UserDB.addListenerForSingleValueEvent(new ValueEventListener() {
+        UserDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String balance = dataSnapshot.child("accountBalance").getValue().toString();
@@ -148,6 +173,7 @@ public class Home extends AppCompatActivity
         // Now set the adapter with a given layout
         try{
             listFoodView.setAdapter(adapter);
+            mDialog.dismiss();
         }catch(Exception e){
             Log.e("Error " ,""+ e.getMessage());
             //TO DO--------------------------------------------------------
@@ -241,15 +267,19 @@ public class Home extends AppCompatActivity
             if (id == R.id.change_profile) {
                 openChangeProfile();
             }
+            /*
             else if (id == R.id.order_details_drawer) {
                 Toast.makeText(getApplicationContext(), "No details found because you didn't order something...", Toast.LENGTH_SHORT).show();
             }
+             */
             else if (id == R.id.submit_order) {
-                Toast.makeText(getApplicationContext(), "Sorry, You don't order anything...", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Home.this, OrderHistory.class);
+                startActivity(intent);
             }
             else if(id == R.id.recharge){
-                Intent HomeToRecharge = new Intent(Home.this, Recharge.class);
-                startActivity(HomeToRecharge);
+                //Intent HomeToRecharge = new Intent(Home.this, Recharge.class);
+                //startActivity(HomeToRecharge);
+                openRecharge();
             }
             else if(id == R.id.view_cart){
                 Intent HomeToCart = new Intent(Home.this, Cart.class);
@@ -285,11 +315,11 @@ public class Home extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Paper.book().destroy();
+                builder.dismiss();
                 Common.currentUser = new User();
                 Home.super.onBackPressed();
-                /*
                 Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
-                startActivity(loginIntent);*/
+                startActivity(loginIntent);
             }
         });
 
@@ -302,7 +332,155 @@ public class Home extends AppCompatActivity
         });
     }
 
+    public void openRecharge() {
+
+        final Dialog builder = new Dialog(this); // Context, this, etc.
+        builder.setContentView(R.layout.dialog_recharge);
+        builder.setTitle(R.string.dialog_popup);
+        builder.show();
+        btnRecharge = (Button) builder.findViewById(R.id.btnRecharge);
+        cancel = (Button) builder.findViewById(R.id.dialog_cancel);
+        edtRechargeAmount = (EditText)builder.findViewById(R.id.edtRechargeAmount);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Duy");
+        btnRecharge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ProgressDialog mDiaglog = new ProgressDialog(Home.this);
+                mDiaglog.setMessage("Please wait");
+                mDiaglog.show();
+                final String rechargeAmount = edtRechargeAmount.getText().toString();
+                Log.e("Error", rechargeAmount);
+                if(rechargeAmount.isEmpty()){
+                    mDiaglog.dismiss();
+                    Toast.makeText(Home.this, "You haven't type recharge amount", Toast.LENGTH_SHORT).show();
+                }
+                else if(rechargeAmount.equals("0")){
+                    mDiaglog.dismiss();
+                    Toast.makeText(Home.this, "Not a proper amount", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    total_amount = Integer.parseInt(edtRechargeAmount.getText().toString());
+                    requestPayment();
+                }
+
+            }
+        });
+
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.dismiss();
+            }
+        });
+    }
+
+    private void requestPayment() {
+        AppMoMoLib.getInstance().setAction(AppMoMoLib.ACTION.PAYMENT);
+        AppMoMoLib.getInstance().setActionType(AppMoMoLib.ACTION_TYPE.GET_TOKEN);
+        if (edtRechargeAmount.getText().toString() != null && edtRechargeAmount.getText().toString().trim().length() != 0)
+            amount = edtRechargeAmount.getText().toString().trim();
+
+        Map<String, Object> eventValue = new HashMap<>();
+        //client Required
+        eventValue.put("merchantname", merchantName); //Tên đối tác. được đăng ký tại https://business.momo.vn. VD: Google, Apple, Tiki , CGV Cinemas
+        eventValue.put("merchantcode", merchantCode); //Mã đối tác, được cung cấp bởi MoMo tại https://business.momo.vn
+        eventValue.put("amount", total_amount); //Kiểu integer
+        eventValue.put("orderId", "orderId123456789"); //uniqueue id cho Bill order, giá trị duy nhất cho mỗi đơn hàng
+        eventValue.put("orderLabel", "Mã đơn hàng"); //gán nhãn
+
+        //client Optional - bill info
+        eventValue.put("merchantnamelabel", "Dịch vụ");//gán nhãn
+        eventValue.put("fee", total_fee); //Kiểu integer
+        eventValue.put("description", description); //mô tả đơn hàng - short description
+
+        //client extra data
+        eventValue.put("requestId",  merchantCode+"merchant_billId_"+System.currentTimeMillis());
+        eventValue.put("partnerCode", merchantCode);
+        //Example extra data
+        JSONObject objExtraData = new JSONObject();
+        try {
+            objExtraData.put("site_code", "008");
+            objExtraData.put("site_name", "CGV Cresent Mall");
+            objExtraData.put("screen_code", 0);
+            objExtraData.put("screen_name", "Special");
+            objExtraData.put("movie_name", "Kẻ Trộm Mặt Trăng 3");
+            objExtraData.put("movie_format", "2D");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        eventValue.put("extraData", objExtraData.toString());
+
+        eventValue.put("extra", "");
+        AppMoMoLib.getInstance().requestMoMoCallBack(this, eventValue);
+
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == AppMoMoLib.getInstance().REQUEST_CODE_MOMO && resultCode == -1) {
+            if(data != null) {
+                if(data.getIntExtra("status", -1) == 0) {
+                    //TOKEN IS AVAILABLE
+                    //tvMessage.setText("message: " + "Get token " + data.getStringExtra("message"));
+                    String token = data.getStringExtra("data"); //Token response
+                    String phoneNumber = data.getStringExtra("phonenumber");
+                    String env = data.getStringExtra("env");
+                    if(env == null){
+                        env = "app";
+                    }
+
+                    if(token != null && !token.equals("")) {
+                        // TODO: send phoneNumber & token to your server side to process payment with MoMo server
+                        // IF Momo topup success, continue to process your order
+
+                        /*
+                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String currentBalance = dataSnapshot.child("User")
+                                        .child(Common.currentUser.getUserName())
+                                        .child("accountBalance").getValue().toString();
+                                String newBalance = String.valueOf(Integer.parseInt(currentBalance) + total_amount);
+                                mDatabase.child("User")
+                                        .child(Common.currentUser.getUserName())
+                                        .child("accountBalance").setValue(newBalance);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                         */
+                    Toast.makeText(Home.this, "Recharge successfully", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        //tvMessage.setText("message: " + this.getString(R.string.not_receive_info));
+                    }
+                } else if(data.getIntExtra("status", -1) == 1) {
+                    //TOKEN FAIL
+                    String message = data.getStringExtra("message") != null?data.getStringExtra("message"):"Thất bại";
+                    //tvMessage.setText("message: " + message);
+                } else if(data.getIntExtra("status", -1) == 2) {
+                    //TOKEN FAIL
+                    tvMessage.setText("message: " + this.getString(R.string.not_receive_info));
+                } else {
+                    //TOKEN FAIL
+                    tvMessage.setText("message: " + this.getString(R.string.not_receive_info));
+                }
+            } else {
+                tvMessage.setText("message: " + this.getString(R.string.not_receive_info));
+            }
+        } else {
+            tvMessage.setText("message: " + this.getString(R.string.not_receive_info_err));
+        }
+    }
+
     private void searchFood(String searchText){
+        mDialog.show();
         Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Food").orderByKey().startAt(searchText).endAt(searchText+"\uf8ff");
         listFoodView = (ListView) findViewById(R.id.lVFood);
 
@@ -340,6 +518,7 @@ public class Home extends AppCompatActivity
 
         try{
             listFoodView.setAdapter(adapter);
+            mDialog.dismiss();
         }catch(Exception e){
             Log.e("Error " ,""+ e.getMessage());
             //TO DO--------------------------------------------------------
@@ -362,6 +541,7 @@ public class Home extends AppCompatActivity
         changePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mDialog.show();
                 final DatabaseReference mDatabase;
                 mDatabase = FirebaseDatabase.getInstance().getReference("Duy/User");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -370,6 +550,7 @@ public class Home extends AppCompatActivity
                         User user = dataSnapshot.child(Common.currentUser.getUserName()).getValue(User.class);
                         if (user.getPassword().equals(edtOldPassword.getText().toString())){
                             if(edtNewPassword.getText().toString().equals(edtConfirmNewPassword.getText().toString())){
+                                mDialog.dismiss();
                                 Toast.makeText(Home.this, Common.changePasswordSuccessMessage, Toast.LENGTH_SHORT).show();
                                 user.setPassword(edtNewPassword.getText().toString());
                                 Common.currentUser.setPassword(edtNewPassword.getText().toString());
@@ -378,10 +559,12 @@ public class Home extends AppCompatActivity
                                 builder.dismiss();
                             }
                             else{
+                                mDialog.dismiss();
                                 Toast.makeText(Home.this, Common.confirmPasswordErrorMessage, Toast.LENGTH_SHORT).show();
                             }
                         }
                         else {
+                            mDialog.dismiss();
                             Toast.makeText(Home.this, Common.currentPasswordIsNotCorrectErrorMessage, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -422,6 +605,7 @@ public class Home extends AppCompatActivity
         changeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mDialog.show();
                 final DatabaseReference mDatabase;
                 mDatabase = FirebaseDatabase.getInstance().getReference("Duy/User");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -440,6 +624,7 @@ public class Home extends AppCompatActivity
 
                         if(user.getName().isEmpty() || user.getUserName().isEmpty() || user.getPassword().isEmpty() ||
                                 user.getEmailAddress().isEmpty() || user.getPhoneNumber().isEmpty()){
+                                mDialog.dismiss();
                                 Toast.makeText(Home.this, Common.fillAllErrorMessage, Toast.LENGTH_SHORT).show();
                         }
                         else{
@@ -462,17 +647,21 @@ public class Home extends AppCompatActivity
                             }
                             if(isEmailAddressExists || isPhoneNumberExists){
                                 if(!isPhoneNumberExists){
+                                    mDialog.dismiss();
                                     Toast.makeText(Home.this, Common.emailAddressExistsErrorMessage, Toast.LENGTH_SHORT).show();
                                 }
                                 else if(!isEmailAddressExists){
+                                    mDialog.dismiss();
                                     Toast.makeText(Home.this, Common.phoneNumberExistsErrorMessage, Toast.LENGTH_SHORT).show();
                                 }
                                 else{
+                                    mDialog.dismiss();
                                     Toast.makeText(Home.this, Common.emailAddressExistsErrorMessage, Toast.LENGTH_SHORT).show();
                                 }
                             }
                             //Add to Database
                             else {
+                                mDialog.dismiss();
                                 mDatabase.child(Common.currentUser.getUserName()).setValue(user);
                                 Common.currentUser = user;
                                 Toast.makeText(Home.this, Common.updateInforSuccessMessage, Toast.LENGTH_SHORT).show();

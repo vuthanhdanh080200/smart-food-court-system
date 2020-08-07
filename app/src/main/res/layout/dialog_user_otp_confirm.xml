@@ -9,6 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:textSize="24sp"
+        android:textColor="@color/colorPrimary"
         android:text="@string/restore_password"/>
 
     <EditText
@@ -21,18 +23,18 @@
         android:layout_below="@id/txtRestorePassword"/>
 
     <EditText
-        android:id="@+id/edtPhoneNumber"
+        android:id="@+id/edtEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:inputType="phone"
-        android:hint="@string/PhoneNumber"
+        android:inputType="text"
+        android:hint="Email Address"
         android:layout_below="@id/edtUserName"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/edtPhoneNumber">
+        android:layout_below="@id/edtEmailAddress">
 
         <Button
             android:id="@+id/dialog_cancel"

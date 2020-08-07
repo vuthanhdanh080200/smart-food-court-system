@@ -7,11 +7,10 @@ import android.net.NetworkInfo;
 import com.example.smart_food_court_system.model.User;
 
 public class Common {
-    public static String power="bat";
     public static User currentUser;
     public static User admin = new User("Admin", "Admin", "1234", "Admin@gmail.com", "1234", "Customer", "0", "0");
     public static String userName; // Forgot password: store username
-    public static String phoneNumber; // Forgot password: store phone number
+    public static String emailAddress; // Forgot password: store email address
     public static final String USER_KEY = "User"; // Remember me user
     public static final String PWD_KEY = "Password"; // Remember me password
     public static final String EMAIL = "smartfoodcourthcmut@gmail.com";  //Host Email

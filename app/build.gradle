@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.chaquo.python'
 
 android {
     compileSdkVersion 30
@@ -10,8 +11,27 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        sourceSets{
+            main{
+                python {
+                    srcDirs = ["src/main/python"]
+                }
+            }
+        }
+        python{
+            buildPython "/urs/local/bin/python3"
+            buildPython "python3"
+            pip {
+                // A pip requirement specifier, with or without a version number:
+                install "pycryptodome"
+            }
+        }
+
+        ndk.abiFilters 'armeabi-v7a','arm64-v8a','x86','x86_64'
+
     }
 
     buildTypes {
@@ -37,6 +57,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:10.2.0'
     implementation 'com.google.firebase:firebase-database:10.2.0'
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+    implementation 'com.android.support:multidex:1.0.3'
     // FirebaseUI for Firebase Realtime Database
     implementation 'com.firebaseui:firebase-ui-database:6.2.1'
     //
@@ -52,8 +73,8 @@ dependencies {
     implementation files('libs/additionnal.jar')
     implementation files('libs/mail.jar')
     //
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.9.7'
     implementation 'com.google.firebase:firebase-auth:19.3.2'
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
     //
     implementation 'io.paperdb:paperdb:2.7.1'
 

@@ -18,9 +18,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 //Duy DO
-//Kiem tra User name co trong database chua, neu co roi thi thong bao su dung user name khac
-//Them cac truong khac co trong User class
-//Password hien ****
 
 public class SignUp extends AppCompatActivity {
     EditText edtName, edtUserName, edtPassword, edtEmailAddress, edtPhoneNumber;
@@ -95,10 +92,19 @@ public class SignUp extends AppCompatActivity {
                                    }
                                    //Add to Database
                                    else {
-                                       mDatabase.child(edtUserName.getText().toString()).setValue(user);
-                                       Intent signIn = new Intent(SignUp.this, SignIn.class);
-                                       startActivity(signIn);
-                                       Toast.makeText(SignUp.this, "Sign Up successfully!", Toast.LENGTH_SHORT).show();
+                                       Common.currentUser = new User(
+                                               user.getName(),
+                                               user.getUserName(),
+                                               user.getPassword(),
+                                               user.getEmailAddress(),
+                                               user.getPhoneNumber(),
+                                               user.getRole(),
+                                               user.getAccountBalance(),
+                                               user.getStall());
+                                       Intent intent = new Intent(SignUp.this, OTPVerification.class);
+                                       intent.putExtra("Email Address", user.getEmailAddress());
+                                       intent.putExtra("Start Activity", "Sign In");
+                                       startActivity(intent);
                                    }
                                }
                            }
@@ -119,7 +125,5 @@ public class SignUp extends AppCompatActivity {
        });
 
     }
-
-
 
 }

@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view){
                 Intent signIn = new Intent(MainActivity.this, SignIn.class);
+                //Intent signIn = new Intent(MainActivity.this, TestPayment.class);
                 startActivity(signIn);
             }
         });
@@ -49,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent signUp = new Intent(MainActivity.this, SignUp.class);
+                //Intent signUp = new Intent(MainActivity.this, SignUp.class);
+                Intent signUp = new Intent(MainActivity.this, TestPayment.class);
                 startActivity(signUp);
             }
         });
@@ -95,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
                                     if (Common.currentUser == null) {
                                         Toast.makeText(MainActivity.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
                                     }
-                                    Intent test = new Intent(MainActivity.this, Test.class);
-                                    startActivity(test);
+                                    Intent intent = new Intent(MainActivity.this, ItStaffHome.class);
+                                    startActivity(intent);
                                 }
                                 else if (user.getRole().equals("cook")) {
                                     if (Common.currentUser == null) {
