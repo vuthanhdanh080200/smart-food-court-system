@@ -98,7 +98,7 @@ public class Cart extends AppCompatActivity {
                 TextView txtCartName = view.findViewById(R.id.txtCartName);
                 txtCartName.setText(foodOrder.getFoodName());
                 final TextView txtCartQuantity = view.findViewById(R.id.txtCartQuantity);
-                txtCartQuantity.setText("Quantity: " + foodOrder.getQuantity());
+                txtCartQuantity.setText("x " + foodOrder.getQuantity());
                 //txtCartQuantity.setText("Food Quantity: " + cart.getQuantity() + "/" + getRemainingFood(cart.getProductID()));
                 final TextView txtCartPrice = view.findViewById(R.id.txtCartPrice);
                 txtCartPrice.setText("Unit Price : " + foodOrder.getPrice());
@@ -122,7 +122,7 @@ public class Cart extends AppCompatActivity {
                             oldQuantity[0] = Integer.parseInt(foodOrder.getQuantity());
 
                             foodOrder.setQuantity(btnCartQuantity.getNumber());
-                            txtCartQuantity.setText("Food Quantity: " + foodOrder.getQuantity());
+                            txtCartQuantity.setText("x " + foodOrder.getQuantity());
                             //txtCartQuantity.setText("Food Quantity: " + cart.getQuantity() + "/" + getRemainingFood(cart.getProductID()));
                             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override

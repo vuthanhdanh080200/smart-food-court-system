@@ -154,6 +154,9 @@ public class Home extends AppCompatActivity
                 TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
                 foodPrice.setText(food.getFoodPrice()+" VND");
 
+                TextView foodDesc = view.findViewById(R.id.txtFoodDesc);
+                foodDesc.setText(food.getFoodDescription());
+
                 ImageView imageFood = view.findViewById(R.id.imageFood);
                 byte[] decodedString = Base64.decode(food.getFoodImage(), Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -187,13 +190,12 @@ public class Home extends AppCompatActivity
         super.onStart();
         adapter.startListening();
     }
-    /*
+
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening();
     }
-    */
+
     @Override
     protected  void onDestroy() {
         super.onDestroy();

@@ -22,36 +22,33 @@ import com.google.firebase.database.ValueEventListener;
 import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnSignIn, btnSignUp, btnAddFood;
-    TextView txtSlogan;
+    EditText edtUserName, edtPassword, edtPhoneNumber;
+    Button btnSignIn, btnChangePassword, btnCancel;
+    CheckBox ckbRememberMe;
+    TextView txtForgotPassword, txtSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnSignIn = (Button)findViewById(R.id.SignIn);
-        btnSignUp = (Button)findViewById(R.id.SignUp);
-
-        txtSlogan = (TextView)findViewById(R.id.txtSlogan);
+        edtUserName = (EditText)findViewById(R.id.edtUserName);
+        edtPassword = (EditText)findViewById(R.id.edtPassword);
+        btnSignIn = (Button)findViewById(R.id.btnSignIn);
+        ckbRememberMe = (CheckBox)findViewById(R.id.ckbRememberMe);
+        txtForgotPassword = (TextView)findViewById(R.id.txtForgotPassword);
+        txtSignUp = (TextView)findViewById(R.id.txtSignUp);
+        //Init Firebase
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference table_user = database.getReference("Duy/User");
 
         //Init paper
         Paper.init(this);
 
-        btnSignIn.setOnClickListener(new View.OnClickListener(){
+        txtSignUp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent signIn = new Intent(MainActivity.this, SignIn.class);
-                //Intent signIn = new Intent(MainActivity.this, TestPayment.class);
-                startActivity(signIn);
-            }
-        });
-
-        btnSignUp.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                //Intent signUp = new Intent(MainActivity.this, SignUp.class);
-                Intent signUp = new Intent(MainActivity.this, TestPayment.class);
+                Intent signUp = new Intent(MainActivity.this, SignUp.class);
                 startActivity(signUp);
             }
         });
@@ -59,12 +56,170 @@ public class MainActivity extends AppCompatActivity {
         //Check remember me
         String userRe = Paper.book().read(Common.USER_KEY);
         String pwd = Paper.book().read(Common.PWD_KEY);
+
+        edtUserName.setText(userRe);
+        edtPassword.setText(pwd);
+
         if(userRe != null && pwd != null){
             if(!userRe.isEmpty() && !pwd.isEmpty()){
                 login(userRe, pwd);
             }
         }
 
+        btnSignIn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                if (Common.isConnectedToInternet(getBaseContext())) {
+
+                    final ProgressDialog mDialog = new ProgressDialog(MainActivity.this);
+                    mDialog.setMessage("Please wait...");
+                    mDialog.show();
+
+                    table_user.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            //NEW: Check if all of the fields have been filled yet.
+                            if (edtUserName.getText().toString().isEmpty() || edtPassword.getText().toString().isEmpty()) {
+                                mDialog.dismiss();
+                                Toast.makeText(MainActivity.this, "Please fill in all information.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                //Check if user not exist in database
+                                if (dataSnapshot.child(edtUserName.getText().toString()).exists()) {
+                                    //Save user and password - Remember me
+                                    if(ckbRememberMe.isChecked()){
+                                        Paper.book().write(Common.USER_KEY, edtUserName.getText().toString());
+                                        Paper.book().write(Common.PWD_KEY, edtPassword.getText().toString());
+                                    }
+                                    //Get User information
+                                    mDialog.dismiss();
+                                    User user = dataSnapshot.child(edtUserName.getText().toString()).getValue(User.class);
+                                    if (user.getPassword().equals(edtPassword.getText().toString())) {
+                                        if (user.getRole().equals("customer")) {
+                                            if (Common.currentUser == null) {
+                                                Toast.makeText(MainActivity.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                            }
+                                            Intent home = new Intent(MainActivity.this, Home.class);
+                                            startActivity(home);
+                                            finish();
+                                        } else if (user.getRole().equals("it staff")) {
+                                            Toast.makeText(MainActivity.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                            Intent itStaffHome = new Intent(MainActivity.this, ItStaffHome.class);
+                                            startActivity(itStaffHome);
+                                            finish();
+                                        }
+                                        else if (user.getRole().equals("cook")){
+                                            Toast.makeText(MainActivity.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(MainActivity.this, HomeCook.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                        else if (user.getRole().equals("waitor")){
+                                            Toast.makeText(MainActivity.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(MainActivity.this, HomeCook.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                        else if(user.getRole().equals("manager")){
+                                            Toast.makeText(MainActivity.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
+                                            Intent homeManager = new Intent(MainActivity.this, HomeManager.class);
+                                            startActivity(homeManager);
+                                            finish();
+                                        }
+                                        else if(Common.power.equals("offSystem")) {
+                                            Intent turnoff = new Intent(MainActivity.this, TurnOffSystem.class);
+                                            startActivity(turnoff);
+                                            finish();
+                                        }
+                                        Common.currentUser = user;
+                                    } else {
+                                        if (Common.currentUser == null) {
+                                            Toast.makeText(MainActivity.this, "Wrong password!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                } else {
+                                    mDialog.dismiss();
+                                    Toast.makeText(MainActivity.this, "User not found!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Please check your connection!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+        });
+
+        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openForgotPassword();
+            }
+        });
+
+    }
+
+    public void openForgotPassword(){
+        final Dialog builder = new Dialog(this); // Context, this, etc.
+        builder.setContentView(R.layout.dialog_user_otp_confirm);
+        builder.setTitle(R.string.dialog_popup);
+        builder.show();
+        btnChangePassword = (Button) builder.findViewById(R.id.dialog_go);
+        btnCancel = (Button) builder.findViewById(R.id.dialog_cancel);
+        edtUserName = (EditText) builder.findViewById(R.id.edtUserName);
+        edtPhoneNumber = (EditText) builder.findViewById(R.id.edtPhoneNumber);
+        final DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance().getReference("Duy/User");
+
+        btnChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Common.userName = edtUserName.getText().toString();
+                        Common.phoneNumber = edtPhoneNumber.getText().toString();
+                        if(Common.userName.isEmpty() || Common.phoneNumber.isEmpty()){
+                            Toast.makeText(MainActivity.this, "Please fill in all information!", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            if (!dataSnapshot.child(Common.userName).exists()) {
+                                Toast.makeText(MainActivity.this, "Username " + Common.userName + " doesn't exist, please choose another username.", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                User user = dataSnapshot.child(Common.userName).getValue(User.class);
+                                if(!user.getPhoneNumber().equals(Common.phoneNumber)){
+                                    Toast.makeText(MainActivity.this, "Phone number of " + Common.userName + " incorrect, please choose another phone number.", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Intent test = new Intent(MainActivity.this, Test.class);
+                                    test.putExtra("phoneNumber", Common.phoneNumber);
+                                    startActivity(test);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.dismiss();
+            }
+        });
     }
 
     private void login(final String userRe, final String pwd) {
@@ -97,8 +252,8 @@ public class MainActivity extends AppCompatActivity {
                                     if (Common.currentUser == null) {
                                         Toast.makeText(MainActivity.this, "Sign in successfully!", Toast.LENGTH_SHORT).show();
                                     }
-                                    Intent intent = new Intent(MainActivity.this, ItStaffHome.class);
-                                    startActivity(intent);
+                                    Intent test = new Intent(MainActivity.this, Test.class);
+                                    startActivity(test);
                                 }
                                 else if (user.getRole().equals("cook")) {
                                     if (Common.currentUser == null) {

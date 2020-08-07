@@ -9,9 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorAccent"
-        android:textStyle="bold"
-        android:orientation="horizontal">
+        android:background="#FFFFFF"
+        android:orientation="horizontal"
+        android:textStyle="bold">
 
         <RelativeLayout
             android:layout_width="100dp"
@@ -33,20 +33,35 @@
             <TextView
                 android:id="@+id/txtFoodName"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
+                android:autoText="false"
+                android:layout_marginLeft="10dp"
                 android:background="@color/colorText"
-                android:gravity="center|center_vertical"
+                android:gravity="center_vertical"
                 android:text="Name of food"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtFoodPrice"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="28dp"
+                android:layout_marginRight="20dp"
                 android:background="@color/design_default_color_background"
-                android:gravity="center"
+                android:gravity="right"
                 android:text="Price"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/txtFoodDesc"
+                android:layout_width="match_parent"
+                android:layout_height="18sp"
+                android:autoText="true"
+                android:background="@color/design_default_color_background"
+                android:gravity="left"
+                android:layout_marginLeft="8dp"
+                android:text="Discription"
+                android:textSize="14sp" />
         </LinearLayout>
 
     </LinearLayout>

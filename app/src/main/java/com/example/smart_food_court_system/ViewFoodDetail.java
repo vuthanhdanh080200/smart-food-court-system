@@ -8,9 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,14 +30,13 @@ import com.squareup.picasso.Picasso;
 public class ViewFoodDetail extends AppCompatActivity {
     TextView txtFoodRemaining, txtFoodName, txtFoodPrice, txtOrderQuantity, txtFoodType, txtFoodStall, txtFoodDescr;
     ImageView imageFood;
-    Button btnAddFoodToCart;
+    ImageButton btnAddFoodToCart;
     FloatingActionButton fabViewFoodInCart;
     DatabaseReference mDatabase, db;
     String foodName = "";
     int FoodRemaining = 0;
     FoodOrder foodOrder = new FoodOrder();
     public ElegantNumberButton btnOrderQuantity;
-    String str3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +52,13 @@ public class ViewFoodDetail extends AppCompatActivity {
         txtFoodType = (TextView)findViewById(R.id.txtFoodType);
         txtFoodStall = (TextView)findViewById(R.id.txtFoodStall);
         txtFoodDescr = (TextView)findViewById(R.id.txtFoodDescr);
-        imageFood = findViewById(R.id.imageFood);
+
+        btnAddFoodToCart = (ImageButton)findViewById(R.id.btnAddFoodToCart);
         btnOrderQuantity = findViewById(R.id.btnOrderQuantity);
-        btnAddFoodToCart = (Button)findViewById(R.id.btnAddFoodToCart);
         fabViewFoodInCart = (FloatingActionButton)findViewById(R.id.fab_view_cart);
+        imageFood = findViewById(R.id.imageFood);
+
+
         btnOrderQuantity.setRange(1, 1000);
 
         if(getIntent() != null){
