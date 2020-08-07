@@ -23,11 +23,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="0">
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Choose payment method:"
-                android:textSize="20dp" />
+                android:textSize="24sp"
+                android:layout_marginBottom="10dp"/>
 
             <RadioButton
                 android:id="@+id/rdCashSettlement"
@@ -45,7 +50,8 @@
                 android:id="@+id/rdEwallet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pay using e-wallet" />
+                android:text="Pay using e-wallet"
+                android:layout_marginBottom="10dp"/>
         </RadioGroup>
 
         <TextView

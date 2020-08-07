@@ -8,8 +8,12 @@
         android:id="@+id/dialog_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:padding="10dp"
-        android:text="@string/dialog_title"/>
+        android:text="@string/dialog_title"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold|italic"/>
 
     <LinearLayout
         android:layout_width="match_parent"

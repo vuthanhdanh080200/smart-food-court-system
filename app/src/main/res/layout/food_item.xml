@@ -56,10 +56,10 @@
                 android:id="@+id/txtFoodDesc"
                 android:layout_width="match_parent"
                 android:layout_height="18sp"
-                android:autoText="true"
+                android:layout_marginLeft="8dp"
+                android:autoText="false"
                 android:background="@color/design_default_color_background"
                 android:gravity="left"
-                android:layout_marginLeft="8dp"
                 android:text="Discription"
                 android:textSize="14sp" />
         </LinearLayout>

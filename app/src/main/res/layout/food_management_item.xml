@@ -43,7 +43,8 @@
                 android:background="@color/colorText"
                 android:gravity="center|center_vertical"
                 android:text="Name of food"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/txtFoodPrice"

@@ -14,11 +14,15 @@
         android:layout_marginRight="8dp"
         android:orientation="vertical">
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Recharge:"
-            android:textSize="20dp" />
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/edtRechargeAmount"
