@@ -26,4 +26,6 @@
     <string name="change_profile">Change Profile</string>
     <string name="restore_password">Account Recovery</string>
     <string name="add">Add</string>
+    <string name='not_receive_info'>Not receive info</string>
+    <string name='not_receive_info_err'>Not receive info error</string>
 </resources>

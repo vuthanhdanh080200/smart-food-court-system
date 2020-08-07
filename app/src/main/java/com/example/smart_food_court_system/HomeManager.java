@@ -234,7 +234,8 @@ public class HomeManager extends AppCompatActivity
                 openChangePassword();
             }
             else if (id == R.id.report) {
-                Toast.makeText(HomeManager.this, "Not implemented!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(HomeManager.this, GenerateReport.class);
+                startActivity(intent);
             }
             else if(id == R.id.food_management){
                 Toast.makeText(HomeManager.this, "You are in food management!", Toast.LENGTH_SHORT).show();
@@ -272,9 +273,9 @@ public class HomeManager extends AppCompatActivity
                 Paper.book().destroy();
                 Common.currentUser = new User();
                 HomeManager.super.onBackPressed();
-                /*
+                builder.dismiss();
                 Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
-                startActivity(loginIntent);*/
+                startActivity(loginIntent);
             }
         });
 

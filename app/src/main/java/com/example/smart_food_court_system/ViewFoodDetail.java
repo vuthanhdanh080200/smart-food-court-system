@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,6 +37,7 @@ public class ViewFoodDetail extends AppCompatActivity {
     int FoodRemaining = 0;
     FoodOrder foodOrder = new FoodOrder();
     public ElegantNumberButton btnOrderQuantity;
+    String str3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,115 +46,138 @@ public class ViewFoodDetail extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        txtFoodRemaining = (TextView)findViewById(R.id.txtFoodRemaining);
+        //txtFoodRemaining = (TextView)findViewById(R.id.txtFoodRemaining);
         txtFoodName = (TextView)findViewById(R.id.txtFoodName);
         txtFoodPrice = (TextView)findViewById(R.id.txtFoodPrice);
-        txtOrderQuantity = findViewById(R.id.txtOrderQuantity);
+        //txtOrderQuantity = findViewById(R.id.txtOrderQuantity);
         txtFoodType = (TextView)findViewById(R.id.txtFoodType);
         txtFoodStall = (TextView)findViewById(R.id.txtFoodStall);
         txtFoodDescr = (TextView)findViewById(R.id.txtFoodDescr);
-
-        btnAddFoodToCart = (Button)findViewById(R.id.btnAddFoodToCart);
-        btnOrderQuantity = findViewById(R.id.btnOrderQuantity);
-        fabViewFoodInCart = (FloatingActionButton)findViewById(R.id.fab_view_cart);
         imageFood = findViewById(R.id.imageFood);
-
-
+        btnOrderQuantity = findViewById(R.id.btnOrderQuantity);
+        btnAddFoodToCart = (Button)findViewById(R.id.btnAddFoodToCart);
+        fabViewFoodInCart = (FloatingActionButton)findViewById(R.id.fab_view_cart);
         btnOrderQuantity.setRange(1, 1000);
-
-        btnOrderQuantity.setOnClickListener(new ElegantNumberButton.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int quantity = Integer.parseInt(btnOrderQuantity.getNumber());
-
-                if(quantity > FoodRemaining){
-                    Toast.makeText(ViewFoodDetail.this, "Insufficient remaining food", Toast.LENGTH_SHORT).show();
-                    btnOrderQuantity.setNumber(Integer.toString(quantity - 1));
-                }
-                else {
-                    foodOrder.setQuantity(btnOrderQuantity.getNumber());
-                    txtOrderQuantity.setText("Quantity " + foodOrder.getQuantity());
-                }
-            }
-        });
 
         if(getIntent() != null){
             foodName = getIntent().getStringExtra("FoodName");
         }
         if(!foodName.isEmpty()){
             getDetailFood(foodName);
-
         }
-        final int total[] = {0};
-        mDatabase.addValueEventListener(new ValueEventListener() {
+
+        mDatabase.child("Duy").child("Food").child(foodName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                try {
-                    total[0] = Integer.parseInt(dataSnapshot.child("Duy/Cart")
-                            .child(Common.currentUser.getUserName())
-                            .child("total").getValue().toString());
+                Food food = dataSnapshot.getValue(Food.class);
+                FoodRemaining = Integer.parseInt(food.getFoodRemaining());
+                btnOrderQuantity.setVisibility(View.VISIBLE);
+                btnOrderQuantity.setNumber("1");
+                foodOrder.setQuantity(btnOrderQuantity.getNumber());
+                if(FoodRemaining > 0) {
+
+                    btnOrderQuantity.setOnClickListener(new ElegantNumberButton.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            int quantity = Integer.parseInt(btnOrderQuantity.getNumber());
+
+                            if (quantity > FoodRemaining) {
+                                Toast.makeText(ViewFoodDetail.this, "Insufficient remaining food", Toast.LENGTH_SHORT).show();
+                                btnOrderQuantity.setNumber(Integer.toString(quantity - 1));
+                            } else {
+                                foodOrder.setQuantity(btnOrderQuantity.getNumber());
+                                Log.e("Error quantity", btnOrderQuantity.getNumber());
+                            }
+                        }
+                    });
+
+                    final int total[] = {0};
+                    mDatabase.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            try {
+                                total[0] = Integer.parseInt(dataSnapshot.child("Duy/Cart")
+                                        .child(Common.currentUser.getUserName())
+                                        .child("total").getValue().toString());
+                            }
+                            catch(Exception e){
+                                total[0] = 0;
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    btnAddFoodToCart.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View view){
+                            if (Common.isConnectedToInternet(getBaseContext())) {
+                                db = FirebaseDatabase.getInstance().getReference("Duy/Cart")
+                                        .child(Common.currentUser.getUserName()).child("foodOrderList");
+
+                                db.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        final int oldQuantity[] = {0};
+                                        try {
+                                            oldQuantity[0] = Integer.parseInt(dataSnapshot.child(foodName).child("quantity").getValue().toString());
+                                        }
+                                        catch(Exception e){
+                                            oldQuantity[0] = 0;
+                                        }
+                                        if(btnOrderQuantity.getNumber().equals("0")){
+                                            Toast.makeText(ViewFoodDetail.this, "Not a proper number", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else {
+                                            int quantity = Integer.parseInt(btnOrderQuantity.getNumber());
+                                            int price = Integer.parseInt(foodOrder.getPrice());
+                                            total[0] += (quantity - oldQuantity[0])*price;
+
+                                            db.child(foodOrder.getFoodName()).setValue(foodOrder);
+                                            db.getParent().child("total").setValue(String.valueOf(total[0]));
+                                            db.getParent().child("userName").setValue(Common.currentUser.getUserName());
+                                            Toast.makeText(ViewFoodDetail.this, "Add Food To Cart successfully !", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                            else{
+                                Toast.makeText(ViewFoodDetail.this, "Please check your connection!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
+                    });
+
+                    fabViewFoodInCart.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View view){
+                            Intent cart = new Intent(ViewFoodDetail.this, Cart.class);
+                            startActivity(cart);
+                        }
+                    });
                 }
-                catch(Exception e){
-                    total[0] = 0;
+                else{
+                    btnOrderQuantity.setVisibility(View.GONE);
+                    btnAddFoodToCart.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Toast.makeText(ViewFoodDetail.this, "Insufficient remaining food", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    Toast.makeText(ViewFoodDetail.this, "Insufficient remaining food", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-        btnAddFoodToCart.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                if (Common.isConnectedToInternet(getBaseContext())) {
-                db = FirebaseDatabase.getInstance().getReference("Duy/Cart")
-                        .child(Common.currentUser.getUserName()).child("foodOrderList");
-
-
-                db.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final int oldQuantity[] = {0};
-                        try {
-                            oldQuantity[0] = Integer.parseInt(dataSnapshot.child(foodName).child("quantity").getValue().toString());
-                        }
-                        catch(Exception e){
-                            oldQuantity[0] = 0;
-                        }
-                        if(btnOrderQuantity.getNumber().equals("0")){
-                            Toast.makeText(ViewFoodDetail.this, "Not a proper number", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            int quantity = Integer.parseInt(btnOrderQuantity.getNumber());
-                            int price = Integer.parseInt(foodOrder.getPrice());
-                            total[0] += (quantity - oldQuantity[0])*price;
-
-                            db.child(foodOrder.getFoodName()).setValue(foodOrder);
-                            db.getParent().child("total").setValue(String.valueOf(total[0]));
-                            db.getParent().child("userName").setValue(Common.currentUser.getUserName());
-                            Toast.makeText(ViewFoodDetail.this, "Add Food To Cart successfully !", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-                else{
-                    Toast.makeText(ViewFoodDetail.this, "Please check your connection!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-        });
-
-        fabViewFoodInCart.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                Intent cart = new Intent(ViewFoodDetail.this, Cart.class);
-                startActivity(cart);
             }
         });
     }
@@ -165,12 +190,12 @@ public class ViewFoodDetail extends AppCompatActivity {
                 foodOrder.setFoodName(food.getFoodName());
                 foodOrder.setPrice(food.getFoodPrice());
                 foodOrder.setFoodStallName(food.getFoodStallName());
-                FoodRemaining = Integer.parseInt(food.getFoodRemaining());
+                //FoodRemaining = Integer.parseInt(food.getFoodRemaining());
                 txtFoodName.setText(food.getFoodName());
                 txtFoodPrice.setText("Price : " + food.getFoodPrice()+" VND");
                 txtFoodType.setText("Type : "+food.getFoodType());
                 txtFoodStall.setText("Stall : "+food.getFoodStallName());
-                txtFoodRemaining.setText("Food Remaining :"+food.getFoodRemaining());
+                //txtFoodRemaining.setText("Food Remaining :"+food.getFoodRemaining());
                 txtFoodDescr.setText(food.getFoodDescription());
                 byte[] decodedString = Base64.decode(food.getFoodImage(), Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);

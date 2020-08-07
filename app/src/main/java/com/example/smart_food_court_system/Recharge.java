@@ -57,6 +57,7 @@ public class Recharge extends AppCompatActivity {
                             mDatabase.child("User")
                                     .child(Common.currentUser.getUserName())
                                     .child("accountBalance").setValue(newBalance);
+                            Common.currentUser.setAccountBalance(newBalance);
                         }
 
                         @Override

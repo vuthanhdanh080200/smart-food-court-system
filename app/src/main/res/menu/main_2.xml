@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_ready"
+        android:title="Wait"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/action_cook"
+        android:title="Cook"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/action_cook_done"
+        android:title="Cook done"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/action_complete"
+        android:title="Complete"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/action_go_home"
+        android:title="Home"
+        android:icon="@drawable/ic_baseline_home_24"
+        app:showAsAction="always"
+        />
+</menu>

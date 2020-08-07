@@ -45,6 +45,7 @@ public class Payment extends AppCompatActivity {
 
     Button btnPay;
     DatabaseReference mDatabase;
+    String methodPayment = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,6 +175,7 @@ public class Payment extends AppCompatActivity {
                             mDatabase.child("User").child(Common.currentUser.getUserName())
                                     .child("accountBalance")
                                     .setValue(String.valueOf(newBalance));
+                            Common.currentUser.setAccountBalance(Integer.toString(newBalance));
                         }
                     }
 
@@ -191,15 +193,26 @@ public class Payment extends AppCompatActivity {
     }
     protected void updateOrder(DatabaseReference mDatabase, String OrderID, UserCart cart){
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
         String timestamp = df.format(c.getTime());
 
+
+        if(rdUseAccountBalance.isChecked()) {
+            methodPayment = "account balance";
+        }
+        else if(rdCashSettlement.isChecked()) {
+            methodPayment = "cash";
+        }
+        else if(rdEwallet.isChecked()) {
+            methodPayment = "ewall";
+        }
         Order newOrder = new Order(OrderID,
                 Common.currentUser.getUserName(),
                 cart.getFoodOrderList(),
                 cart.getTotal(),
                 timestamp,
-                "Cook");
+                "ready " + Common.currentUser.getUserName(),
+                methodPayment);
         //Update order
         mDatabase.child("Order")
                 .child(String.valueOf(OrderID) + " : " + Common.currentUser.getUserName())

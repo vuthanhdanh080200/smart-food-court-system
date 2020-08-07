@@ -466,16 +466,16 @@ public class Home extends AppCompatActivity
                     //tvMessage.setText("message: " + message);
                 } else if(data.getIntExtra("status", -1) == 2) {
                     //TOKEN FAIL
-                    tvMessage.setText("message: " + this.getString(R.string.not_receive_info));
+                    //tvMessage.setText("message: " + this.getString(R.string.not_receive_info));
                 } else {
                     //TOKEN FAIL
-                    tvMessage.setText("message: " + this.getString(R.string.not_receive_info));
+                    //tvMessage.setText("message: " + this.getString(R.string.not_receive_info));
                 }
             } else {
-                tvMessage.setText("message: " + this.getString(R.string.not_receive_info));
+                //tvMessage.setText("message: " + this.getString(R.string.not_receive_info));
             }
         } else {
-            tvMessage.setText("message: " + this.getString(R.string.not_receive_info_err));
+            //tvMessage.setText("message: " + this.getString(R.string.not_receive_info_err));
         }
     }
 
@@ -541,7 +541,6 @@ public class Home extends AppCompatActivity
         changePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDialog.show();
                 final DatabaseReference mDatabase;
                 mDatabase = FirebaseDatabase.getInstance().getReference("Duy/User");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -550,7 +549,6 @@ public class Home extends AppCompatActivity
                         User user = dataSnapshot.child(Common.currentUser.getUserName()).getValue(User.class);
                         if (user.getPassword().equals(edtOldPassword.getText().toString())){
                             if(edtNewPassword.getText().toString().equals(edtConfirmNewPassword.getText().toString())){
-                                mDialog.dismiss();
                                 Toast.makeText(Home.this, Common.changePasswordSuccessMessage, Toast.LENGTH_SHORT).show();
                                 user.setPassword(edtNewPassword.getText().toString());
                                 Common.currentUser.setPassword(edtNewPassword.getText().toString());
@@ -559,12 +557,10 @@ public class Home extends AppCompatActivity
                                 builder.dismiss();
                             }
                             else{
-                                mDialog.dismiss();
                                 Toast.makeText(Home.this, Common.confirmPasswordErrorMessage, Toast.LENGTH_SHORT).show();
                             }
                         }
                         else {
-                            mDialog.dismiss();
                             Toast.makeText(Home.this, Common.currentPasswordIsNotCorrectErrorMessage, Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -605,7 +601,6 @@ public class Home extends AppCompatActivity
         changeProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDialog.show();
                 final DatabaseReference mDatabase;
                 mDatabase = FirebaseDatabase.getInstance().getReference("Duy/User");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -624,7 +619,6 @@ public class Home extends AppCompatActivity
 
                         if(user.getName().isEmpty() || user.getUserName().isEmpty() || user.getPassword().isEmpty() ||
                                 user.getEmailAddress().isEmpty() || user.getPhoneNumber().isEmpty()){
-                                mDialog.dismiss();
                                 Toast.makeText(Home.this, Common.fillAllErrorMessage, Toast.LENGTH_SHORT).show();
                         }
                         else{
@@ -647,21 +641,17 @@ public class Home extends AppCompatActivity
                             }
                             if(isEmailAddressExists || isPhoneNumberExists){
                                 if(!isPhoneNumberExists){
-                                    mDialog.dismiss();
                                     Toast.makeText(Home.this, Common.emailAddressExistsErrorMessage, Toast.LENGTH_SHORT).show();
                                 }
                                 else if(!isEmailAddressExists){
-                                    mDialog.dismiss();
                                     Toast.makeText(Home.this, Common.phoneNumberExistsErrorMessage, Toast.LENGTH_SHORT).show();
                                 }
                                 else{
-                                    mDialog.dismiss();
                                     Toast.makeText(Home.this, Common.emailAddressExistsErrorMessage, Toast.LENGTH_SHORT).show();
                                 }
                             }
                             //Add to Database
                             else {
-                                mDialog.dismiss();
                                 mDatabase.child(Common.currentUser.getUserName()).setValue(user);
                                 Common.currentUser = user;
                                 Toast.makeText(Home.this, Common.updateInforSuccessMessage, Toast.LENGTH_SHORT).show();
