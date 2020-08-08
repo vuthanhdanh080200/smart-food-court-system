@@ -1,39 +1,25 @@
 package com.example.smart_food_court_system;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.smart_food_court_system.common.Common;
-import com.example.smart_food_court_system.common.Text;
-import com.example.smart_food_court_system.model.Food;
 import com.example.smart_food_court_system.model.Order;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 public class OrderHistory extends AppCompatActivity {
 
@@ -70,16 +56,16 @@ public class OrderHistory extends AppCompatActivity {
                 totalPrice.setText("Total: " + order.getTotal());
                 TextView status = view.findViewById(R.id.txtStatus);
                 if(order.getStatus().equals("ready " + order.getUserName())){
-                    status.setText("Status order: Food is waiting to cook");
+                    status.setText("Status order: Preparing for cooking");
                 }
                 else if(order.getStatus().equals("cook " + order.getUserName())){
-                    status.setText("Status order: Food is cooking");
+                    status.setText("Status order: Food is being cooked");
                 }
                 else if(order.getStatus().equals("cook done " + order.getUserName())){
-                    status.setText("Status order: cook done, waiting for customer get");
+                    status.setText("Status order: Cook done, waiting for customer to get the food");
                 }
                 else if(order.getStatus().equals("complete " + order.getUserName())){
-                    status.setText("Status order: complete");
+                    status.setText("Status order: Completed");
                 }
 
 
@@ -178,20 +164,20 @@ public class OrderHistory extends AppCompatActivity {
                 totalPrice.setText("Total: " + order.getTotal());
                 TextView status = view.findViewById(R.id.txtStatus);
                 if(order.getStatus().equals("ready " + order.getUserName())){
-                    textView.setText("Order is waiting to cook");
-                    status.setText("Status order: Food is waiting to cook");
+                    textView.setText("Order: Ready");
+                    status.setText("Status order: Preparing for cooking");
                 }
                 else if(order.getStatus().equals("cook " + order.getUserName())){
-                    textView.setText("Order is cooking");
-                    status.setText("Status order: Food is cooking");
+                    textView.setText("Order: Cook");
+                    status.setText("Status order: Food is being cooked");
                 }
                 else if(order.getStatus().equals("cook done " + order.getUserName())){
-                    textView.setText("Order cook done, waiting for customer get");
-                    status.setText("Status order: cook done, waiting for customer get");
+                    textView.setText("Order: Cook done");
+                    status.setText("Status order: Cook done, waiting for customer to get the food");
                 }
                 else if(order.getStatus().equals("complete " + order.getUserName())){
-                    textView.setText("Order complete");
-                    status.setText("Status order: complete");
+                    textView.setText("Order: Complete");
+                    status.setText("Status order: Completed");
                 }
 
                 view.setOnClickListener(new View.OnClickListener() {
