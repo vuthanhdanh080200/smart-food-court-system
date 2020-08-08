@@ -1,36 +1,29 @@
 package com.example.smart_food_court_system;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.smart_food_court_system.common.Common;
 import com.example.smart_food_court_system.model.FoodOrder;
 import com.example.smart_food_court_system.model.Order;
-import com.example.smart_food_court_system.model.User;
-import com.example.smart_food_court_system.model.UserCart;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import io.paperdb.Paper;
 
 public class ViewOrderDetails extends AppCompatActivity {
     TextView txtUserName, txtTotalPrice, txtStatus;
@@ -71,7 +64,7 @@ public class ViewOrderDetails extends AppCompatActivity {
                         } else if (order.getStatus().equals("cook done " + order.getUserName())) {
                             txtStatus.setText("Order status: Cook done, waiting for customer to get the food");
                             btnCancelOrder.setVisibility(View.GONE);
-                        } else if (order.getStatus().equals("completed " + order.getUserName())) {
+                        } else if (order.getStatus().equals("complete " + order.getUserName())) {
                             txtStatus.setText("Order status: Completed");
                             btnCancelOrder.setVisibility(View.GONE);
                         }
