@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -211,6 +212,7 @@ public class HomeCook extends AppCompatActivity
         }
 
         //
+        /*
         btnAll = (Button)findViewById(R.id.btnAll);
         btnReady = (Button)findViewById(R.id.btnReady);
         btnCook = (Button)findViewById(R.id.btnCook);
@@ -243,6 +245,7 @@ public class HomeCook extends AppCompatActivity
                 viewState("complete");
             }
         });
+         */
 
         //
 
@@ -280,6 +283,13 @@ public class HomeCook extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_4, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the HomeCook/Up button, so long
@@ -290,8 +300,17 @@ public class HomeCook extends AppCompatActivity
         if (id == R.id.action_go_home) {
             return true;
         }
-        else if (id == R.id.action_search) {
-            return true;
+        else if (id == R.id.action_ready) {
+            viewAll();
+        }
+        else if (id == R.id.action_cook) {
+            viewState("ready");
+        }
+        else if (id == R.id.action_cook_done) {
+            viewState("cook ");
+        }
+        else if (id == R.id.action_complete) {
+            viewState("complete");
         }
 
         return super.onOptionsItemSelected(item);

@@ -290,9 +290,9 @@ public class Home extends AppCompatActivity
                 startActivity(intent);
             }
             else if(id == R.id.recharge){
-                //Intent HomeToRecharge = new Intent(Home.this, Recharge.class);
-                //startActivity(HomeToRecharge);
-                openRecharge();
+                Intent HomeToRecharge = new Intent(Home.this, Recharge.class);
+                startActivity(HomeToRecharge);
+                //openRecharge();
             }
             else if(id == R.id.view_cart){
                 Intent HomeToCart = new Intent(Home.this, Cart.class);
