@@ -2,46 +2,55 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:layout_margin="10dp">
+    android:padding="20dp">
 
     <TextView
         android:id="@+id/txtUserName"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/txtTotalPrice"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/txtStatus"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="italic" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@id/imgFood">
+        android:layout_below="@id/imgFood"
+        android:layout_weight="3">
 
         <Button
             android:id="@+id/btnBackStage"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_baseline_arrow_left_24"
-            />
+            android:drawableLeft="@drawable/ic_baseline_arrow_left_24" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4" />
 
         <Button
             android:id="@+id/btnNextStage"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:rotation="-180"
             android:drawableLeft="@drawable/ic_baseline_arrow_left_24"
-            />
+            android:rotation="-180" />
 
     </LinearLayout>
 

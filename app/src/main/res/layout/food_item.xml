@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
+        android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
         android:orientation="horizontal"
         android:textStyle="bold">
 
@@ -34,8 +34,8 @@
                 android:id="@+id/txtFoodName"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:autoText="false"
                 android:layout_marginLeft="10dp"
+                android:autoText="false"
                 android:background="@color/colorText"
                 android:gravity="center_vertical"
                 android:text="Name of food"
@@ -56,10 +56,10 @@
                 android:id="@+id/txtFoodDesc"
                 android:layout_width="match_parent"
                 android:layout_height="18sp"
+                android:layout_marginLeft="8dp"
                 android:autoText="true"
                 android:background="@color/design_default_color_background"
                 android:gravity="left"
-                android:layout_marginLeft="8dp"
                 android:text="Discription"
                 android:textSize="14sp" />
         </LinearLayout>

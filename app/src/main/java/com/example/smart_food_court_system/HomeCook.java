@@ -24,6 +24,8 @@ import com.example.smart_food_court_system.model.User;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseListOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,6 +52,9 @@ public class HomeCook extends AppCompatActivity
     EditText edtName, edtEmailAddress, edtPhoneNumber;
     DatabaseReference mDatabase, db;
     String orderId="";
+    //
+    Button btnAll, btnReady, btnCook, btnComplete;
+    //
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -82,6 +87,7 @@ public class HomeCook extends AppCompatActivity
         txtEmail.setText(Common.currentUser.getEmailAddress());
         txtRole.setText(Common.currentUser.getRole());
         txtStall.setText(Common.currentUser.getStall());
+
 
         Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Order");
         listOrderView = (ListView) findViewById(R.id.lVOrder);
@@ -203,6 +209,44 @@ public class HomeCook extends AppCompatActivity
             //TO DO--------------------------------------------------------
             //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
         }
+
+        //
+        btnAll = (Button)findViewById(R.id.btnAll);
+        btnReady = (Button)findViewById(R.id.btnReady);
+        btnCook = (Button)findViewById(R.id.btnCook);
+        btnComplete = (Button)findViewById(R.id.btnComplete);
+
+        btnAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewAll();
+            }
+        });
+
+        btnReady.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewState("ready");
+            }
+        });
+
+        btnCook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewState("cook ");
+            }
+        });
+
+        btnComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewState("complete");
+            }
+        });
+
+        //
+
+
     }
 
 
@@ -485,5 +529,264 @@ public class HomeCook extends AppCompatActivity
                 builder.dismiss();
             }
         });
+    }
+
+
+    private void viewAll() {
+        adapter.stopListening();
+
+        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Order");
+        listOrderView = (ListView) findViewById(R.id.lVOrder);
+
+        FirebaseListOptions<com.example.smart_food_court_system.model.Order> options = new FirebaseListOptions.Builder<com.example.smart_food_court_system.model.Order>()
+                .setLayout(R.layout.order_management_item)
+                .setQuery(query, com.example.smart_food_court_system.model.Order.class)
+                .build();
+
+        adapter = new FirebaseListAdapter<com.example.smart_food_court_system.model.Order>(options) {
+            protected void populateView(@NonNull View view, @NonNull com.example.smart_food_court_system.model.Order order, final int position) {
+                TextView userName = view.findViewById(R.id.txtUserName);
+                userName.setText("User name: " + order.getUserName());
+                TextView totalPrice = view.findViewById(R.id.txtTotalPrice);
+                totalPrice.setText("Total: " + order.getTotal());
+                TextView status = view.findViewById(R.id.txtStatus);
+                if(order.getStatus().equals("ready " + order.getUserName())){
+                    status.setText("Order status: Preparing for cooking");
+                }
+                else if(order.getStatus().equals("cook " + order.getUserName())){
+                    status.setText("Order status: Food is being cooked");
+                }
+                else if(order.getStatus().equals("cook done " + order.getUserName())){
+                    status.setText("Order status: Cook done, waiting for customer to get the food");
+                }
+                else if(order.getStatus().equals("complete " + order.getUserName())){
+                    Log.e("ERRR", order.getUserName());
+                    status.setText("Order status: Complete");
+                }
+                Button backStage = view.findViewById(R.id.btnBackStage);
+                Button nextStage = view.findViewById(R.id.btnNextStage);
+
+                backStage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        orderId = adapter.getRef(position).getKey();
+                        db=FirebaseDatabase.getInstance().getReference("Duy/Order");
+                        db.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                com.example.smart_food_court_system.model.Order order=dataSnapshot.child(orderId).getValue(com.example.smart_food_court_system.model.Order.class);
+                                if(order.getStatus().equals("ready "+order.getUserName())){
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("ready "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook done "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("complete "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook done "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
+
+                nextStage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        orderId = adapter.getRef(position).getKey();
+                        db=FirebaseDatabase.getInstance().getReference("Duy/Order");
+                        db.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                com.example.smart_food_court_system.model.Order order=dataSnapshot.child(orderId).getValue(com.example.smart_food_court_system.model.Order.class);
+                                if(order.getStatus().equals("ready "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook done "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook done "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("complete "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(HomeCook.this, ViewOrderDetails.class);
+                        intent.putExtra("userName", adapter.getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
+            }
+        };
+
+        adapter.startListening();
+
+        try{
+            listOrderView.setAdapter(adapter);
+        }catch(Exception e){
+            Log.e("Error " ,""+ e.getMessage());
+            //TO DO--------------------------------------------------------
+            //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
+        }
+    }
+    //
+    private void viewState(final String status) {
+        adapter.stopListening();
+
+        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Order").orderByChild("status").startAt(status).endAt(status+"\uf8ff");
+
+        listOrderView = (ListView) findViewById(R.id.lVOrder);
+
+        FirebaseListOptions<com.example.smart_food_court_system.model.Order> options = new FirebaseListOptions.Builder<com.example.smart_food_court_system.model.Order>()
+                .setLayout(R.layout.order_management_item)
+                .setQuery(query, com.example.smart_food_court_system.model.Order.class)
+                .build();
+
+        adapter = new FirebaseListAdapter<com.example.smart_food_court_system.model.Order>(options) {
+            protected void populateView(@NonNull View view, @NonNull com.example.smart_food_court_system.model.Order order, final int position) {
+
+                //
+                TextView userName = view.findViewById(R.id.txtUserName);
+                userName.setText("User name: " + order.getUserName());
+                TextView totalPrice = view.findViewById(R.id.txtTotalPrice);
+                totalPrice.setText("Total: " + order.getTotal());
+                TextView status = view.findViewById(R.id.txtStatus);
+                if(order.getStatus().equals("ready " + order.getUserName())){
+                    status.setText("Order status: Preparing for cooking");
+                }
+                else if(order.getStatus().equals("cook " + order.getUserName())){
+                    status.setText("Order status: Food is being cooked");
+                }
+                else if(order.getStatus().equals("cook done " + order.getUserName())){
+                    status.setText("Order status: Cook done, waiting for customer to get the food");
+                }
+                else if(order.getStatus().equals("complete " + order.getUserName())){
+                    Log.e("ERRR", order.getUserName());
+                    status.setText("Order status: Complete");
+                }
+                Button backStage = view.findViewById(R.id.btnBackStage);
+                Button nextStage = view.findViewById(R.id.btnNextStage);
+
+                backStage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        orderId = adapter.getRef(position).getKey();
+                        db=FirebaseDatabase.getInstance().getReference("Duy/Order");
+                        db.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                com.example.smart_food_court_system.model.Order order=dataSnapshot.child(orderId).getValue(com.example.smart_food_court_system.model.Order.class);
+                                if(order.getStatus().equals("ready "+order.getUserName())){
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("ready "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook done "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("complete "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook done "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
+
+                nextStage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        orderId = adapter.getRef(position).getKey();
+                        db=FirebaseDatabase.getInstance().getReference("Duy/Order");
+                        db.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                com.example.smart_food_court_system.model.Order order=dataSnapshot.child(orderId).getValue(com.example.smart_food_court_system.model.Order.class);
+                                if(order.getStatus().equals("ready "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("cook done "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(order.getStatus().equals("cook done "+order.getUserName())){
+                                    db.child(orderId).child("status").setValue("complete "+order.getUserName());
+                                    Toast.makeText(HomeCook.this, "Successful", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(HomeCook.this, "Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(HomeCook.this, ViewOrderDetails.class);
+                        intent.putExtra("userName", adapter.getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
+                //
+            }
+        };
+
+        adapter.startListening();
+
+        try{
+            listOrderView.setAdapter(adapter);
+        }catch(Exception e){
+            Log.e("Error " ,""+ e.getMessage());
+            //TO DO--------------------------------------------------------
+            //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
+        }
     }
 }

@@ -40,25 +40,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Choose payment method:"
-                    android:textSize="20dp" />
+                    android:textColor="@color/design_default_color_on_secondary"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"/>
 
                 <RadioButton
                     android:id="@+id/rdCashSettlement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Cash Settlement" />
+                    android:text="Cash Settlement"
+                    android:textStyle="italic" />
 
                 <RadioButton
                     android:id="@+id/rdUseAccountBalance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Pay using account balance" />
+                    android:text="Pay using account balance"
+                    android:textStyle="italic" />
 
                 <RadioButton
                     android:id="@+id/rdEwallet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Pay using e-wallet" />
+                    android:text="Pay using e-wallet"
+                    android:textStyle="italic" />
             </RadioGroup>
 
             <TextView
