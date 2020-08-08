@@ -187,7 +187,7 @@ public class ItStaffHome extends AppCompatActivity
                 Common.currentUser = new User();
                 ItStaffHome.super.onBackPressed();
                 builder.dismiss();
-                Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
+                Intent loginIntent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(loginIntent);
             }
         });

@@ -13,14 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StaffManagement"></activity>
+        <activity android:name=".HomeWaitor"></activity>
+        <activity android:name=".StaffManagement" />
+        <activity android:name=".OrderHistory" />
+        <activity android:name=".GenerateReport" />
+        <activity android:name=".OTPVerification" />
+        <activity android:name=".ForgotPassword" />
+        <activity android:name=".ViewOrderDetails" />
         <activity android:name=".FoodManagement" />
         <activity android:name=".HomeCook" />
         <activity android:name=".TurnOffSystem" />
         <activity android:name=".ItStaffHome" />
-        <activity android:name=".ViewUserDetail" />
         <activity android:name=".HomeManager" />
-        <activity android:name=".Test" />
         <activity android:name=".ViewFoodDetail" />
         <activity android:name=".Recharge" />
         <activity android:name=".Payment" />
@@ -28,7 +32,6 @@
         <activity android:name=".Home" />
         <activity android:name=".Cart" />
         <activity android:name=".SignUp" />
-        <activity android:name=".SignIn" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,15 +40,14 @@
             </intent-filter>
         </activity>
 
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.exportcsv.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
     </application>
 

@@ -15,17 +15,20 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.smart_food_court_system.common.Common;
+import com.example.smart_food_court_system.common.Text;
 import com.example.smart_food_court_system.model.Food;
 import com.example.smart_food_court_system.model.User;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -40,6 +43,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import java.io.ByteArrayOutputStream;
@@ -198,6 +202,29 @@ public class HomeManager extends AppCompatActivity
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchFood(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newQuery) {
+                searchFood(newQuery);
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the HomeCook/Up button, so long
@@ -215,6 +242,59 @@ public class HomeManager extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private void searchFood(String searchText){
+        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Food").orderByKey().startAt(searchText).endAt(searchText+"\uf8ff");
+        listFoodView = (ListView) findViewById(R.id.listFoodManagement);
+
+        FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
+                .setLayout(R.layout.food_management_item)
+                .setQuery(query, Food.class)
+                .build();
+
+        adapter.stopListening();
+
+        adapter = new FirebaseListAdapter<Food>(options) {
+            protected void populateView(@NonNull View view, @NonNull Food food, final int position) {
+                TextView foodName = view.findViewById(R.id.txtFoodName);
+                foodName.setText(food.getFoodName());
+
+                TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
+                foodPrice.setText(food.getFoodPrice()+" VND");
+
+                ImageView imageFood = view.findViewById(R.id.imageFood);
+                byte[] decodedString = Base64.decode(food.getFoodImage(), Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                imageFood.setImageBitmap(decodedByte);
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        nameFood = adapter.getRef(position).getKey();
+                        openChangeFood();
+                    }
+                });
+
+                Button removeUser = (Button) view.findViewById(R.id.btnRemove);
+                removeUser.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        nameFood = adapter.getRef(position).getKey();
+                        openRemoveFood();
+                    }
+                });
+            }
+        };
+        adapter.startListening();
+
+        try{
+            listFoodView.setAdapter(adapter);
+        }catch(Exception e){
+            Log.e("Error " ,""+ e.getMessage());
+            //TO DO--------------------------------------------------------
+            //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
+        }
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -222,8 +302,20 @@ public class HomeManager extends AppCompatActivity
 
         txtName = (TextView) findViewById(R.id.txtName);
         txtEmail = (TextView) findViewById(R.id.txtEmailAddress);
-        txtName.setText(Common.currentUser.getName());
-        txtEmail.setText(Common.currentUser.getEmailAddress());
+        DatabaseReference UserDB = FirebaseDatabase.getInstance().getReference("Duy/User")
+                .child(Common.currentUser.getUserName());
+        UserDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                txtName.setText(user.getName());
+                txtEmail.setText(user.getEmailAddress());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         int id = item.getItemId();
         if (Common.isConnectedToInternet(getBaseContext())) {
@@ -274,7 +366,7 @@ public class HomeManager extends AppCompatActivity
                 Common.currentUser = new User();
                 HomeManager.super.onBackPressed();
                 builder.dismiss();
-                Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
+                Intent loginIntent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(loginIntent);
             }
         });
@@ -558,6 +650,8 @@ public class HomeManager extends AppCompatActivity
         builder.setContentView(R.layout.dialog_delete);
         builder.setTitle(R.string.dialog_popup);
         builder.show();
+        TextView tv = (TextView) builder.findViewById(R.id.dialog_info);
+        tv.setText("Are you sure to delete this food?");
         change = (Button) builder.findViewById(R.id.dialog_change);
         cancel = (Button) builder.findViewById(R.id.dialog_cancel);
         change.setOnClickListener(new View.OnClickListener() {

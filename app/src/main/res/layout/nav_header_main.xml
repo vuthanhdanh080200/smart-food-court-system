@@ -3,21 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="190dp"
-    android:background="@drawable/hcmut"
+    android:background="@drawable/background_material_red"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/profile_image"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_above="@id/txtName"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="24dp"
+        android:src="@drawable/profile"
         android:layout_marginLeft="24dp"
-        android:src="@drawable/profile" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="24dp"
+        android:layout_above="@id/txtName"/>
 
     <TextView
         android:id="@+id/txtName"
@@ -31,8 +33,7 @@
         android:text="Name"
         android:textColor="#FFF"
         android:textSize="14sp"
-        android:textStyle="bold"
-        android:background="#001CD4"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/txtAccountBalance"
@@ -45,8 +46,7 @@
         android:gravity="left"
         android:text="Balance"
         android:textColor="#fff"
-        android:textSize="14sp"
-        android:background="#001CD4"/>
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/txtEmail"
@@ -59,6 +59,5 @@
         android:gravity="left"
         android:text="Email"
         android:textColor="#fff"
-        android:textSize="14sp"
-        android:background="#001CD4"/>
+        android:textSize="14sp" />
 </RelativeLayout>

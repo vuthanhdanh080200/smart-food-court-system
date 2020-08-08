@@ -41,7 +41,6 @@ public class OTPVerification extends AppCompatActivity {
             Log.e("Mail", mail);
             startActivity = getIntent().getStringExtra("Start Activity");
             Log.e("Activity", startActivity);
-            Log.e("KAKA", Common.currentUser.getUserName());
         }
         if(!mail.isEmpty()){
             sendMail(mail);
@@ -59,7 +58,7 @@ public class OTPVerification extends AppCompatActivity {
                         mDatabase = FirebaseDatabase.getInstance().getReference("Duy/User");
                         mDatabase.child(Common.currentUser.getUserName()).setValue(Common.currentUser);
                         Toast.makeText(OTPVerification.this, "Sign Up successfully!", Toast.LENGTH_SHORT).show();
-                        Intent signIn = new Intent(OTPVerification.this, SignIn.class);
+                        Intent signIn = new Intent(OTPVerification.this, MainActivity.class);
                         startActivity(signIn);
                     }
                 }
@@ -75,7 +74,7 @@ public class OTPVerification extends AppCompatActivity {
             }
 
             public void onFinish() {
-                Intent intent = new Intent(OTPVerification.this, SignIn.class);
+                Intent intent = new Intent(OTPVerification.this, MainActivity.class);
                 startActivity(intent);
             }
         }.start();

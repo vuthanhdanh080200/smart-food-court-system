@@ -2,12 +2,14 @@ package com.example.smart_food_court_system;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,6 +51,11 @@ public class AddFood extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference("Duy");
 
         edtFoodStallName = (EditText)findViewById(R.id.edtFoodStallName);
+        if(Common.currentUser.getRole().equals("cook")){
+            edtFoodStallName.setText(Common.currentUser.getStall());
+            edtFoodStallName.setTag(edtFoodStallName.getKeyListener());
+            edtFoodStallName.setKeyListener(null);
+        }
         edtFoodName = (EditText)findViewById(R.id.edtFoodName);
         edtFoodType = (EditText)findViewById(R.id.edtFoodType);
         edtFoodPrice = (EditText)findViewById(R.id.edtFoodPrice);
@@ -74,31 +81,59 @@ public class AddFood extends AppCompatActivity {
 
             @Override
             public void onClick(View view){
-            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Food food = new Food(
-                            edtFoodStallName.getText().toString(),
-                            edtFoodName.getText().toString(),
-                            edtFoodType.getText().toString(),
-                            edtFoodPrice.getText().toString(),
-                            edtFoodDescription.getText().toString(),
-                            edtFoodRemaining.getText().toString(),
-                            imgeEncoded
-                            //edtFoodImage.getText().toString()
-                            );
-                    //To Do
-                    //Kiểm tra đã điền đầy đủ form chưa (phần mô tả và số lượng món ăn có thể để trống) ?
-                    //Kiểm tra tên món ăn đã bị trùng chưa ?
-                    //Kiểm tra tên quầy có chưa ? (quầy chưa có thì không được điền)
-                    mDatabase.child("Food").child(edtFoodName.getText().toString()).setValue(food);
-                    mDatabase.child("FoodStall").child(edtFoodStallName.getText().toString()).child("FoodList").child(edtFoodName.getText().toString()).setValue(food);
-                    Toast.makeText(AddFood.this, Common.addFoodSuccessMessage, Toast.LENGTH_SHORT).show();
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+                final ProgressDialog mDialog = new ProgressDialog(AddFood.this);
+                mDialog.setMessage("Please wait...");
+                mDialog.show();
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Food food = new Food(
+                                edtFoodStallName.getText().toString(),
+                                edtFoodName.getText().toString(),
+                                edtFoodType.getText().toString(),
+                                edtFoodPrice.getText().toString(),
+                                edtFoodDescription.getText().toString(),
+                                edtFoodRemaining.getText().toString(),
+                                imgeEncoded
+                                //edtFoodImage.getText().toString()
+                                );
+                        //To Do
+                        if(food.getFoodStallName().isEmpty()
+                        || food.getFoodName().isEmpty()
+                        || food.getFoodType().isEmpty()
+                        || food.getFoodPrice().isEmpty()
+                        || food.getFoodDescription().isEmpty()
+                        || food.getFoodRemaining().isEmpty()
+                        || food.getFoodImage().isEmpty()){
+                            mDialog.dismiss();
+                            Toast.makeText(AddFood.this, "Please fill in all information", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            if(dataSnapshot.child("Food").child(food.getFoodName()).exists()){
+                                mDialog.dismiss();
+                                Toast.makeText(AddFood.this, "Food name " + food.getFoodName() + " exists, please choose another food name.", Toast.LENGTH_SHORT).show();
+                            }
+                            else{
+                                mDialog.dismiss();
+                                mDatabase.child("Food").child(food.getFoodName()).setValue(food);
+                                Log.e("ERR", food.getFoodName());
+                                mDatabase.child("FoodStall").child(food.getFoodStallName()).child("FoodList").child(food.getFoodName()).setValue(food);
+                                Toast.makeText(AddFood.this, Common.addFoodSuccessMessage, Toast.LENGTH_SHORT).show();
+                                if (Common.currentUser.getRole().equals("cook")) {
+                                    Intent intent = new Intent(AddFood.this, FoodManagement.class);
+                                    startActivity(intent);
+                                }
+                                else if (Common.currentUser.getRole().equals("manager")) {
+                                    Intent intent = new Intent(AddFood.this, HomeManager.class);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
             }
         });
 

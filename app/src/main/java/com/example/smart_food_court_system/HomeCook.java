@@ -107,8 +107,9 @@ public class HomeCook extends AppCompatActivity
                 else if(order.getStatus().equals("cook done " + order.getUserName())){
                     status.setText("Order status: Cook done, waiting for customer to get the food");
                 }
-                else if(order.getStatus().equals("Completed " + order.getUserName())){
-                    status.setText("Order status: Completed");
+                else if(order.getStatus().equals("complete " + order.getUserName())){
+                    Log.e("ERRR", order.getUserName());
+                    status.setText("Order status: Complete");
                 }
                 Button backStage = view.findViewById(R.id.btnBackStage);
                 Button nextStage = view.findViewById(R.id.btnNextStage);
@@ -259,8 +260,21 @@ public class HomeCook extends AppCompatActivity
 
         txtName = (TextView) findViewById(R.id.txtName);
         txtEmail = (TextView) findViewById(R.id.txtEmailAddress);
-        txtName.setText(Common.currentUser.getName());
-        txtEmail.setText(Common.currentUser.getEmailAddress());
+        DatabaseReference UserDB = FirebaseDatabase.getInstance().getReference("Duy/User")
+                .child(Common.currentUser.getUserName());
+        UserDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                txtName.setText(user.getName());
+                txtEmail.setText(user.getEmailAddress());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         int id = item.getItemId();
         if (Common.isConnectedToInternet(getBaseContext())) {
@@ -306,9 +320,8 @@ public class HomeCook extends AppCompatActivity
                 Paper.book().destroy();
                 Common.currentUser = new User();
                 HomeCook.super.onBackPressed();
-                /*
-                Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
-                startActivity(loginIntent);*/
+                Intent loginIntent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(loginIntent);
                 builder.dismiss();
             }
         });

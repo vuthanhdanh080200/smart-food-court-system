@@ -139,6 +139,11 @@ public class FoodManagement extends AppCompatActivity {
         builder.show();
 
         foodStall = (TextView) builder.findViewById(R.id.txtFoodStallName);
+        if(Common.currentUser.getRole().equals("cook")){
+            foodStall.setText(Common.currentUser.getStall());
+            foodStall.setTag(foodStall.getKeyListener());
+            foodStall.setKeyListener(null);
+        }
         foodName = (EditText) builder.findViewById(R.id.edtFoodName);
         foodType = (EditText) builder.findViewById(R.id.edtFoodType);
         foodDescription = (EditText) builder.findViewById(R.id.edtFoodDescription);
@@ -151,7 +156,7 @@ public class FoodManagement extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Food food = dataSnapshot.getValue(Food.class);
-                foodStall.setText(food.getFoodStallName());
+                //foodStall.setText(food.getFoodStallName());
                 foodName.setText(food.getFoodName());
                 foodType.setText(food.getFoodType());
                 foodDescription.setText(food.getFoodDescription());
@@ -238,23 +243,7 @@ public class FoodManagement extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchFood(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newQuery) {
-                searchFood(newQuery);
-                return false;
-            }
-        });
-
+        getMenuInflater().inflate(R.menu.main_3, menu);
         return true;
     }
 
@@ -270,56 +259,8 @@ public class FoodManagement extends AppCompatActivity {
             Intent intent = new Intent(FoodManagement.this, HomeCook.class);
             startActivity(intent);
         }
-        else if (id == R.id.action_search) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void searchFood(String searchText){
-        Query query = FirebaseDatabase.getInstance().getReference().child("Duy").child("Food").orderByKey().startAt(searchText).endAt(searchText+"\uf8ff");
-        listFoodView = (ListView) findViewById(R.id.listFoodManagement);
-
-        FirebaseListOptions<Food> options = new FirebaseListOptions.Builder<Food>()
-                .setLayout(R.layout.food_item)
-                .setQuery(query, Food.class)
-                .build();
-
-        adapter.stopListening();
-
-        adapter = new FirebaseListAdapter<Food>(options) {
-            protected void populateView(@NonNull View view, @NonNull Food food, final int position) {
-                TextView foodName = view.findViewById(R.id.txtFoodName);
-                foodName.setText(food.getFoodName());
-
-                TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
-                foodPrice.setText(food.getFoodPrice()+" VND");
-
-                ImageView imageFood = view.findViewById(R.id.imageFood);
-                byte[] decodedString = Base64.decode(food.getFoodImage(), Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                imageFood.setImageBitmap(decodedByte);
-
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        nameFood = adapter.getRef(position).getKey();
-                        openChangeFood();
-                    }
-                });
-            }
-        };
-        adapter.startListening();
-
-
-        try{
-            listFoodView.setAdapter(adapter);
-        }catch(Exception e){
-            Log.e("Error " ,""+ e.getMessage());
-            //TO DO--------------------------------------------------------
-            //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
-        }
     }
 
     @Override

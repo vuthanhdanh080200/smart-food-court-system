@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="190dp"
-    android:background="@drawable/hcmut"
+    android:background="@drawable/background_material_red"
     android:orientation="vertical"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
@@ -31,8 +31,7 @@
         android:text="Name"
         android:textColor="#FFF"
         android:textSize="14sp"
-        android:textStyle="bold"
-        android:background="#001CD4"/>
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/txtEmailAddress"
@@ -45,8 +44,7 @@
         android:gravity="left"
         android:text="Email"
         android:textColor="#fff"
-        android:textSize="14sp"
-        android:background="#001CD4"/>
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/txtRole"
@@ -59,7 +57,6 @@
         android:gravity="left"
         android:text="Role"
         android:textColor="#fff"
-        android:textSize="14sp"
-        android:background="#001CD4"/>
+        android:textSize="14sp"/>
 
 </RelativeLayout>

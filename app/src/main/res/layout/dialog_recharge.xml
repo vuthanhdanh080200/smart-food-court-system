@@ -12,7 +12,7 @@
         android:textSize="30dp"
         android:text="Recharge"/>
 
-    <EditText
+    <com.aldoapps.autoformatedittext.AutoFormatEditText
         android:id="@+id/edtRechargeAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

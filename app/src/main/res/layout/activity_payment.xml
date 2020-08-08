@@ -11,83 +11,100 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:orientation="vertical">
 
-
-        <RadioGroup
-            android:id="@+id/grpPaymentOption"
+        <include
+            layout="@layout/app_bar_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0">
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="vertical">
+
+
+            <RadioGroup
+                android:id="@+id/grpPaymentOption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Choose payment method:"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/rdCashSettlement"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cash Settlement" />
+
+                <RadioButton
+                    android:id="@+id/rdUseAccountBalance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pay using account balance" />
+
+                <RadioButton
+                    android:id="@+id/rdEwallet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pay using e-wallet" />
+            </RadioGroup>
 
             <TextView
+                android:id="@+id/txtCashSettlement"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Choose payment method:"
-                android:textSize="20dp" />
+                android:text="Wait"
+                android:visibility="gone" />
 
-            <RadioButton
-                android:id="@+id/rdCashSettlement"
+            <TextView
+                android:id="@+id/txtUseAccountBalanceCurrent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cash Settlement" />
+                android:text="Current balance: "
+                android:visibility="gone" />
 
-            <RadioButton
-                android:id="@+id/rdUseAccountBalance"
+            <TextView
+                android:id="@+id/txtUseAccountBalanceUse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pay using account balance" />
+                android:text="Use: "
+                android:visibility="gone" />
 
-            <RadioButton
-                android:id="@+id/rdEwallet"
+            <TextView
+                android:id="@+id/txtUseAccountBalanceRemaining"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pay using e-wallet" />
-        </RadioGroup>
+                android:text="Remaining: "
+                android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/txtCashSettlement"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Wait"
-            android:visibility="gone" />
+            <Button
+                android:id="@+id/btnPay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="0"
+                android:background="#0027FF"
+                android:clickable="false"
+                android:text="Pay"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textColorLink="#2196F3"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtUseAccountBalanceCurrent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Current balance: "
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/txtUseAccountBalanceUse"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Use: "
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/txtUseAccountBalanceRemaining"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Remaining: "
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/btnPay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_weight="0"
-            android:background="#0027FF"
-            android:clickable="false"
-            android:text="Pay"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#FFFFFF"
-            android:textColorLink="#2196F3"
-            android:textStyle="bold" />
     </LinearLayout>
+
+
 </RelativeLayout>

@@ -10,7 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:text="@string/change_food"/>
+        android:text="@string/change_food"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/txtFoodStallName"
@@ -47,7 +49,7 @@
         android:inputType="text"
         android:layout_below="@id/edtFoodType"/>
 
-    <EditText
+    <com.aldoapps.autoformatedittext.AutoFormatEditText
         android:id="@+id/edtFoodPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

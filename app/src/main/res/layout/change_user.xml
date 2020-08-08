@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/txtChangeUser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Change Stall Of User"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="18sp"
+        android:textSize="15sp"
+        android:text="Name"
+        android:layout_below="@id/txtChangeUser"/>
+
+    <TextView
+        android:id="@+id/txtUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="18sp"
+        android:textSize="15sp"
+        android:text="UserName"
+        android:layout_below="@id/txtName" />
+
+    <TextView
+        android:id="@+id/txtEmailAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="18sp"
+        android:textSize="18sp"
+        android:text="EmailAdress"
+        android:layout_below="@id/txtUserName"/>
+
+    <TextView
+        android:id="@+id/txtPhoneNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="18sp"
+        android:textSize="15sp"
+        android:text="PhoneNumber"
+        android:layout_below="@id/txtEmailAddress"/>
+
+    <TextView
+        android:id="@+id/txtRole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="18sp"
+        android:textSize="15sp"
+        android:text="Role"
+        android:layout_below="@id/txtPhoneNumber"/>
+
+    <EditText
+        android:id="@+id/edtStall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="18sp"
+        android:textSize="15sp"
+        android:inputType="text"
+        android:text="Stall"
+        android:layout_below="@id/txtRole"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/llbtn"
+        android:layout_below="@id/edtStall">
+
+        <Button
+            android:id="@+id/dialog_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:background="#E0E0E0"
+            android:text="Cancel"
+            android:clickable="true"
+            />
+        <Button
+            android:id="@+id/dialog_change"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:background="#E0E0E0"
+            android:text="Change"
+            android:clickable="true"
+            android:icon="@drawable/shopping_cart"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvNotify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llbtn"
+        android:padding="20sp"
+        android:textSize="18sp"
+        android:scrollbars = "vertical"
+        android:textColor="@color/design_default_color_error" />
+
+</RelativeLayout>
+

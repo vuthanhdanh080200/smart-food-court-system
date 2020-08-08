@@ -81,6 +81,7 @@ dependencies {
     implementation 'com.github.momodevelopment:androidsdkV2.2:1.1'
     // OkHTTP
     implementation("com.squareup.okhttp3:okhttp:4.8.0")
+    implementation 'com.aldoapps:autoformatedittext:0.9.3'
 
 }
 

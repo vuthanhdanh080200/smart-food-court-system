@@ -12,12 +12,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -132,6 +134,13 @@ public class StaffManagement extends AppCompatActivity {
                     }
                 });
 
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        userName = adapter.getRef(position).getKey();
+                        openChangeUser();
+                    }
+                });
             }
         };
 
@@ -318,6 +327,80 @@ public class StaffManagement extends AppCompatActivity {
         });
 
         cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.dismiss();
+            }
+        });
+    }
+
+    public void openChangeUser() {
+        final Dialog builder = new Dialog(this); // Context, this, etc.
+        builder.setContentView(R.layout.change_user);
+        builder.setTitle(R.string.dialog_popup);
+        builder.show();
+        final TextView txtName = (TextView) builder.findViewById(R.id.txtName);
+        final TextView txtUserName = (TextView) builder.findViewById(R.id.txtUserName);
+        final TextView txtEmailAddress = (TextView) builder.findViewById(R.id.txtEmailAddress);
+        final TextView txtPhoneNumber = (TextView) builder.findViewById(R.id.txtPhoneNumber);
+        final TextView txtRole = (TextView) builder.findViewById(R.id.txtRole);
+        final EditText edtStall = (EditText) builder.findViewById(R.id.edtStall);
+
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("Duy");
+
+        mDatabase.child("User").child(userName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                txtName.setText(user.getName());
+                txtUserName.setText(user.getUserName());
+                txtEmailAddress.setText(user.getEmailAddress());
+                txtPhoneNumber.setText(user.getPhoneNumber());
+                txtRole.setText(user.getRole());
+                edtStall.setText(user.getStall());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        Button btnChange = (Button) builder.findViewById(R.id.dialog_change);
+        Button btnCancel = (Button) builder.findViewById(R.id.dialog_cancel);
+        final TextView tvNotify = (TextView) builder.findViewById(R.id.tvNotify);
+
+        btnChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String notifyStall = "";
+                        for (DataSnapshot item : dataSnapshot.child("FoodStall").getChildren()) {
+                            notifyStall = notifyStall + item.getKey() + "/ ";
+                        }
+
+                        for (DataSnapshot item : dataSnapshot.child("FoodStall").getChildren()) {
+                            if (!edtStall.getText().toString().equals(item.getKey())) {
+                                tvNotify.setText("Stall name must be one of name: " + notifyStall);
+                                tvNotify.setMovementMethod(new ScrollingMovementMethod());
+                            } else {
+                                builder.dismiss();
+                                mDatabase.child("User").child(userName).child("stall").setValue(edtStall.getText().toString());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 builder.dismiss();

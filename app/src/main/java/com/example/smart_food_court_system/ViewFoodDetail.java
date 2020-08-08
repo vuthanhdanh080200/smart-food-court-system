@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -86,7 +87,8 @@ public class ViewFoodDetail extends AppCompatActivity {
                             if (quantity > FoodRemaining) {
                                 Toast.makeText(ViewFoodDetail.this, "Insufficient remaining food", Toast.LENGTH_SHORT).show();
                                 btnOrderQuantity.setNumber(Integer.toString(quantity - 1));
-                            } else {
+                            }
+                            else {
                                 foodOrder.setQuantity(btnOrderQuantity.getNumber());
                                 Log.e("Error quantity", btnOrderQuantity.getNumber());
                             }

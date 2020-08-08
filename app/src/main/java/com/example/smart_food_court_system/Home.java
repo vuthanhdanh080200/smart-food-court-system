@@ -8,10 +8,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -87,8 +89,6 @@ public class Home extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mDialog = new ProgressDialog(Home.this);
-        mDialog.setMessage("Please wait...");
-        mDialog.show();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         AppMoMoLib.getInstance().setEnvironment(AppMoMoLib.ENVIRONMENT.DEVELOPMENT); // AppMoMoLib.ENVIRONMENT.PRODUCTION
@@ -106,7 +106,6 @@ public class Home extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         circleImageView = (CircleImageView) findViewById(R.id.profile_image);
-
         View headerView = navigationView.getHeaderView(0);
         txtName = (TextView)headerView.findViewById(R.id.txtName);
         txtAccountBalance = (TextView)headerView.findViewById(R.id.txtAccountBalance);
@@ -125,7 +124,6 @@ public class Home extends AppCompatActivity
         });
         DatabaseReference UserDB = FirebaseDatabase.getInstance().getReference("Duy/User")
                 .child(Common.currentUser.getUserName());
-        Log.e("Error", Common.currentUser.getUserName());
         UserDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -176,12 +174,12 @@ public class Home extends AppCompatActivity
         // Now set the adapter with a given layout
         try{
             listFoodView.setAdapter(adapter);
-            mDialog.dismiss();
         }catch(Exception e){
             Log.e("Error " ,""+ e.getMessage());
             //TO DO--------------------------------------------------------
             //Hiển thị lên màn hình giao diện đồ ăn hiện tại không sẵn sàng
         }
+
     }
 
 
@@ -261,8 +259,21 @@ public class Home extends AppCompatActivity
 
         txtName = (TextView) findViewById(R.id.txtName);
         txtEmail = (TextView) findViewById(R.id.txtEmail);
-        txtName.setText(Common.currentUser.getName());
-        txtEmail.setText(Common.currentUser.getEmailAddress());
+        DatabaseReference UserDB = FirebaseDatabase.getInstance().getReference("Duy/User")
+                .child(Common.currentUser.getUserName());
+        UserDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                txtName.setText(user.getName());
+                txtEmail.setText(user.getEmailAddress());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         int id = item.getItemId();
         if (Common.isConnectedToInternet(getBaseContext())) {
@@ -320,7 +331,7 @@ public class Home extends AppCompatActivity
                 builder.dismiss();
                 Common.currentUser = new User();
                 Home.super.onBackPressed();
-                Intent loginIntent = new Intent(getApplicationContext(), SignIn.class);
+                Intent loginIntent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(loginIntent);
             }
         });
@@ -343,6 +354,7 @@ public class Home extends AppCompatActivity
         btnRecharge = (Button) builder.findViewById(R.id.btnRecharge);
         cancel = (Button) builder.findViewById(R.id.dialog_cancel);
         edtRechargeAmount = (EditText)builder.findViewById(R.id.edtRechargeAmount);
+
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Duy");
         btnRecharge.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -500,6 +512,9 @@ public class Home extends AppCompatActivity
 
                 TextView foodPrice = view.findViewById(R.id.txtFoodPrice);
                 foodPrice.setText(food.getFoodPrice()+" VND");
+
+                TextView foodDesc = view.findViewById(R.id.txtFoodDesc);
+                foodDesc.setText(food.getFoodDescription());
 
                 ImageView imageFood = view.findViewById(R.id.imageFood);
                 byte[] decodedString = Base64.decode(food.getFoodImage(), Base64.DEFAULT);
