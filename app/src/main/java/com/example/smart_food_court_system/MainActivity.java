@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
                                         Paper.book().write(Common.PWD_KEY, edtPassword.getText().toString());
                                     }
                                     //Get User information
-                                    mDialog.dismiss();
                                     User user = dataSnapshot.child("User").child(edtUserName.getText().toString()).getValue(User.class);
                                     if (user.getPassword().equals(edtPassword.getText().toString())) {
                                         String powerMode = dataSnapshot.child("PowerMode").getValue(String.class);
@@ -138,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                                         Common.currentUser = user;
                                     } else {
                                         if (Common.currentUser == null) {
+                                            mDialog.dismiss();
                                             Toast.makeText(MainActivity.this, "Wrong password!", Toast.LENGTH_SHORT).show();
                                         }
                                     }
@@ -153,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                     });
+
                 }
                 else{
                     Toast.makeText(MainActivity.this, "Please check your connection!", Toast.LENGTH_SHORT).show();

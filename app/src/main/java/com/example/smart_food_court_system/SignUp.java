@@ -2,6 +2,7 @@ package com.example.smart_food_court_system;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -54,6 +55,9 @@ public class SignUp extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final ProgressDialog mDialog = new ProgressDialog(SignUp.this);
+                mDialog.setMessage("Please wait...");
+                mDialog.show();
 
                 if (Common.isConnectedToInternet(getBaseContext())) {
 
@@ -73,9 +77,11 @@ public class SignUp extends AppCompatActivity {
                             Common.currentUser = user;
                             if (user.getName().isEmpty() || user.getUserName().isEmpty() || user.getPassword().isEmpty() ||
                                     user.getEmailAddress().isEmpty() || user.getPhoneNumber().isEmpty()) {
+                                mDialog.dismiss();
                                 Toast.makeText(SignUp.this, "Please fill in all information!", Toast.LENGTH_SHORT).show();
                             } else {
                                 if (dataSnapshot.child("User").child(user.getUserName()).exists()) {
+                                    mDialog.dismiss();
                                     Toast.makeText(SignUp.this, "Username " + user.getUserName() + " exists, please choose another username.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     boolean isEmailAddressExists = false, isPhoneNumberExists = false;
@@ -92,6 +98,7 @@ public class SignUp extends AppCompatActivity {
                                         }
                                     }
                                     if (isEmailAddressExists || isPhoneNumberExists) {
+                                        mDialog.dismiss();
                                         if (!isPhoneNumberExists) {
                                             Toast.makeText(SignUp.this, "This email address has been used!", Toast.LENGTH_SHORT).show();
                                         } else if (!isEmailAddressExists) {

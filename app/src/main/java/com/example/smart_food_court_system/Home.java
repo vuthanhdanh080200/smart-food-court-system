@@ -374,6 +374,7 @@ public class Home extends AppCompatActivity
                 }
                 else{
                     total_amount = Integer.parseInt(edtRechargeAmount.getText().toString());
+                    Log.e("ERRR", edtRechargeAmount.getText().toString());
                     requestPayment();
                 }
 
