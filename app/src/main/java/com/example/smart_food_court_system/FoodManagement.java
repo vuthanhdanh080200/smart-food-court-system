@@ -209,6 +209,7 @@ public class FoodManagement extends AppCompatActivity {
                         mDatabase.child("FoodStall").child(foodStall.getText().toString()).child("FoodList").child(nameFood).removeValue();
                         mDatabase.child("FoodStall").child(foodStall.getText().toString()).child("FoodList").child(foodName.getText().toString()).setValue(food);
                         Toast.makeText(FoodManagement.this, Common.changeFoodSuccessMessage, Toast.LENGTH_SHORT).show();
+                        builder.dismiss();
                     }
 
                     @Override
@@ -216,7 +217,7 @@ public class FoodManagement extends AppCompatActivity {
 
                     }
                 });
-                builder.dismiss();
+
             }
         });
 

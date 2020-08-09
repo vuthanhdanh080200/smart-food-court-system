@@ -300,13 +300,13 @@ public class HomeCook extends AppCompatActivity
         if (id == R.id.action_go_home) {
             return true;
         }
-        else if (id == R.id.action_ready) {
+        else if (id == R.id.action_all) {
             viewAll();
         }
-        else if (id == R.id.action_cook) {
+        else if (id == R.id.action_ready) {
             viewState("ready");
         }
-        else if (id == R.id.action_cook_done) {
+        else if (id == R.id.action_cook) {
             viewState("cook ");
         }
         else if (id == R.id.action_complete) {

@@ -136,10 +136,10 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                         Common.currentUser = user;
                                     } else {
-                                        if (Common.currentUser == null) {
-                                            mDialog.dismiss();
-                                            Toast.makeText(MainActivity.this, "Wrong password!", Toast.LENGTH_SHORT).show();
-                                        }
+
+                                        mDialog.dismiss();
+                                        Toast.makeText(MainActivity.this, "Wrong password!", Toast.LENGTH_SHORT).show();
+
                                     }
                                 } else {
                                     mDialog.dismiss();
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
             mDialog.setMessage("Please wait...");
             mDialog.show();
 
-            table_user.addValueEventListener(new ValueEventListener() {
+            table_user.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     //NEW: Check if all of the fields have been filled yet.
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                                     Intent test = new Intent(MainActivity.this, ItStaffHome.class);
                                     startActivity(test);
                                 }
-                                else if (powerMode.equals("maintenance")){
+                                else if (powerMode.equals("maintenan")){
                                     Intent turnoff = new Intent(MainActivity.this, TurnOffSystem.class);
                                     startActivity(turnoff);
                                     finish();

@@ -78,7 +78,7 @@ public class ViewOrderDetails extends AppCompatActivity {
                         } else if (order.getStatus().equals("cook done " + order.getUserName())) {
                             txtStatus.setText("Order status: Cook done, waiting for customer to get the food");
                             btnCancelOrder.setVisibility(View.GONE);
-                        } else if (order.getStatus().equals("completed " + order.getUserName())) {
+                        } else if (order.getStatus().equals("complete " + order.getUserName())) {
                             txtStatus.setText("Order status: Completed");
                             btnCancelOrder.setVisibility(View.GONE);
                         }
