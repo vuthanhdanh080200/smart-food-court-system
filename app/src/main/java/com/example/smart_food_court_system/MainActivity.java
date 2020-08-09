@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                                     Intent test = new Intent(MainActivity.this, ItStaffHome.class);
                                     startActivity(test);
                                 }
-                                else if (powerMode.equals("maintenan")){
+                                else if (powerMode.equals("maintenance")){
                                     Intent turnoff = new Intent(MainActivity.this, TurnOffSystem.class);
                                     startActivity(turnoff);
                                     finish();
